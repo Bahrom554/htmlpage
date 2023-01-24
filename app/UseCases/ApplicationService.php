@@ -16,13 +16,21 @@ class ApplicationService
     public function dash(Request $request)
     {
         $all = $this->commonAll($request)->count();
+        $all_by_mont=$this->commonAll($request)->selectRaw('year(updated_at) year, monthname(updated_at) month, count(*) total')->groupBy('year', 'month')
+        ->orderBy('year', 'desc')
+        ->get();
         $by_status = $this->commonAll($request)->groupBy('status')->selectRaw('count(*) as total, status')->get();
-        $by_cert = $this->commonAll($request)->whereNotNull('certificates')->count();
-        $by_lic = $this->commonAll($request)->whereNotNull('licenses')->count();
-        $by_sub = $this->commonAll($request, 0)->leftJoin('users', 'applications.user_id', 'users.id')->groupBy('subject')->selectRaw('count(*) as total, subject')->get()->sortByDesc('total');
-        $by_dev = $this->commonAll($request, 0)->leftJoin('devices', 'applications.device_id', 'devices.id')->groupBy('devices.id')->selectRaw('count(*) as total, devices.*')->get()->sortByDesc('total');
+        $by_cert = $this->commonAll($request)->whereNotNull('certificates')->selectRaw('year(updated_at) year, monthname(updated_at) month, count(*) total')->groupBy('year', 'month')
+        ->orderBy('year', 'desc')
+        ->get();
+        $by_lic = $this->commonAll($request)->whereNotNull('licenses')->selectRaw('year(updated_at) year, monthname(updated_at) month, count(*) total')->groupBy('year', 'month')
+        ->orderBy('year', 'desc')
+        ->get();
+        $by_sub = $this->commonAll($request)->leftJoin('users', 'applications.user_id', 'users.id')->groupBy('subject')->selectRaw('count(*) as total, subject')->get()->sortByDesc('total');
+        $by_dev = $this->commonAll($request)->leftJoin('devices', 'applications.device_id', 'devices.id')->groupBy('devices.id')->selectRaw('count(*) as total, devices.*')->get()->sortByDesc('total');
         $responce = [
             "applications" => $all,
+            "allInMont"=>$all_by_mont,
             "certificate" => $by_cert,
             "license" => $by_lic,
             "status"=>$by_status,
@@ -115,13 +123,13 @@ class ApplicationService
         return $application;
     }
 
-    private function commonAll(Request $request, $s = 1)
+    private function commonAll(Request $request)
     {
         $query = QueryBuilder::for(Application::class);
         $query->withoutGlobalScope('permission');
         if ($request->filled('between')) {
-            return $s ? $query->whereBetween('updated_at', explode(',', $request->between))
-                : $query->whereBetween('users.updated_at', explode(',', $request->between));
+            return $query->whereBetween('applications.updated_at', explode(',', $request->between));
+               
         }
 
         return $query;
