@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Staff;
+use App\Telecomunication;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,28 +20,31 @@ class Application extends Model
 
     protected $fillable = [
         'name',
-        'definition',
-        'certificates',
-        'licenses',
-        'device_id',
         'user_id',
+        'staffs',
+        'scope_and_purpose',
+        'importance_id',
         'error_or_broken',
-        'telecommunication_network',
+        'devices',
+        'documents',
+        'telecommunication',
         'provide_cyber_security',
         'threats_to_information_security',
         'consequences_of_an_incident',
         'organizational_and_technical_measures_to_ensure_security',
-        'status'
+        'status',
+        'reason'
     ];
     protected $casts = [
-        'certificates' => 'array',
-        'licenses' => 'array'
+        'staffs' => 'array',
+        'documents' => 'array',
+        'telecommunications'=>'array',
+        'devices'=>'array'
     ];
 
-    public function device(): BelongsTo
-    {
-        return $this->belongsTo(Device::class);
-    }
+    protected $dates = ['deleted_at'];
+
+    
 
     public function user()
     {
@@ -55,14 +60,27 @@ class Application extends Model
         }
     }
 
-    public function getCertificateAttribute(){
+    public function getDocumentAttribute(){
 
-        return Files::whereIn('id',$this->certificates? : [])->get();
+        return Files::whereIn('id',$this->documents? : [])->get();
 
     }
 
-    public function getLicenseAttribute(){
-        return Files::whereIn('id',$this->licenses? : [])->get();
+    public function getStaffAttribute(){
+
+        return Staff::whereIn('id',$this->staffs? : [])->get();
+
+    }
+
+    public function getTeleComunicationAttribute(){
+
+        return Telecomunication::whereIn('id',$this->telecomunications? : [])->get();
+
+    }
+    public function getDeviceAttribute(){
+
+        return Device::whereIn('id',$this->devices? : [])->get();
+
     }
 
     protected static function booted(){

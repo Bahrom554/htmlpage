@@ -9,8 +9,10 @@ class Files extends Model
     protected $table = 'files';
 
     protected $fillable = [
+        'from',
+        'to',
+        'definition',
         'title',
-        'description',
         'slug',
         'ext',
         'file',

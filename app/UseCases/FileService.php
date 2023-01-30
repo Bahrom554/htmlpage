@@ -30,7 +30,7 @@ class FileService
             foreach ($files as $file) {
                 $dto = new GeneratePathFileDTO();
                 $dto->file = $file;
-                $response[] = $this->uploadFile($dto);
+                $response[] = $this->uploadFile($dto,$request);
             }
 
             return $response;
@@ -42,10 +42,10 @@ class FileService
             $dto = new GeneratePathFileDTO();
             $dto->file = $files;
 
-            return $this->uploadFile($dto);
+            return $this->uploadFile($dto,$request);
         }
     }
-    public function uploadFile(GeneratePathFileDTO $dto)
+    public function uploadFile(GeneratePathFileDTO $dto, Request $request)
     {
         DB::beginTransaction();
         try {
@@ -53,7 +53,7 @@ class FileService
             $generatedDTO->origin_name = $dto->file->getClientOriginalName();
             $generatedDTO->file_size = $dto->file->getSize();
             $dto->file->move($generatedDTO->file_folder, $generatedDTO->file_name . '.' . $generatedDTO->file_ext);
-            $file = $this->createFileModel($generatedDTO);
+            $file = $this->createFileModel($generatedDTO,$request);
 //                $this->createThumbnails($file);
             DB::commit();
         } catch (\Exception $e) {
@@ -110,9 +110,12 @@ class FileService
         unlink($file->folder.'/'.$file->file);
     }
 
-    private function createFileModel(GeneratedPathFileDTO $generatedDTO)
+    private function createFileModel(GeneratedPathFileDTO $generatedDTO,Request $request)
     {
         $data = [
+            'from'=>$request->from,
+            'to'=>$request->to,
+            'definition'=>$request->definition,
             'title' => $generatedDTO->origin_name,
             'slug' => $generatedDTO->file_name,
             'ext' => $generatedDTO->file_ext,
