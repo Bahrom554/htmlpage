@@ -26,8 +26,9 @@ class Application extends Model
         'importance_id',
         'error_or_broken',
         'devices',
-        'documents',
-        'telecommunication',
+        'licenses',
+        'certificates',
+        'telecommunications',
         'provide_cyber_security',
         'threats_to_information_security',
         'consequences_of_an_incident',
@@ -37,7 +38,6 @@ class Application extends Model
     ];
     protected $casts = [
         'staffs' => 'array',
-        'documents' => 'array',
         'telecommunications'=>'array',
         'devices'=>'array'
     ];
@@ -60,9 +60,15 @@ class Application extends Model
         }
     }
 
-    public function getDocumentAttribute(){
+    public function getCertificateAttribute(){
 
-        return Files::whereIn('id',$this->documents? : [])->get();
+        return Files::whereIn('id',$this->certificates? : [])->get();
+
+    }
+
+    public function getLicenseAttribute(){
+
+        return Files::whereIn('id',$this->licenses? : [])->get();
 
     }
 

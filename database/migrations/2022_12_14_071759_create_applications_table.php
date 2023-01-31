@@ -32,9 +32,10 @@ class CreateApplicationsTable extends Migration
             $table->json('devices')->nullable();
             // МАИ объектида фойдаланиладиган аппарат, дастурий-аппарат 
              //ва дастурий ахборотлаштириш воситалари ҳақида маълумот, шунингдек, уларнинг ахборот хавфсизлигига мувофиқлиги сертификати;
-             $table->json('documents')->nullable();
+             $table->unsignedInteger('licenses')->nullable();
+             $table->unsignedInteger('certificates')->nullable();
             //  МАИ объектини умумий телекоммуникация тармоғи, шунингдек, Интернетга уланиш ва фойдаланиш тартиби;
-            $table->json('telecommunication')->nullable();
+            $table->json('telecommunications')->nullable();
             // МАИ объектида киберхавфсизликни таъминлаш бўйича қўлланиладиган чора ва воситалар;
             $table->text('provide_cyber_security')->nullable();
             // МАИ объектига нисбатан ахборот хавфсизлиги таҳдидлари 

@@ -64,8 +64,8 @@ class ApplicationService
         $responce = [
             "applications" => $all,
             "allInMont"=>$all_by_mont,
-            "certificate" => $by_cert,
-            "license" => $by_lic,
+            "certificates" => $by_cert,
+            "licenses" => $by_lic,
             "status"=>$by_status,
             "subject"=>$by_sub,
             "device"=>$by_dev
@@ -80,16 +80,19 @@ class ApplicationService
     {
         $app = Application::make($request->only(
             'name',
-            'definition',
-            'certificates',
-            'licenses',
-            'device_id',
+            'staffs',
+            'scope_and_purpose',
+            'importance_id',
             'error_or_broken',
-            'telecommunication_network',
+            'devices',
+            'licenses',
+            'certificates',
+            'telecommunications',
             'provide_cyber_security',
             'threats_to_information_security',
             'consequences_of_an_incident',
-            'organizational_and_technical_measures_to_ensure_security'
+            'organizational_and_technical_measures_to_ensure_security',
+            'reason'
         ));
         $app->user_id = Auth::user()->id;
         $app->save();
@@ -100,16 +103,19 @@ class ApplicationService
     {
         $application->update($request->only([
             'name',
-            'definition',
-            'certificates',
-            'licenses',
-            'device_id',
+            'staffs',
+            'scope_and_purpose',
+            'importance_id',
             'error_or_broken',
-            'telecommunication_network',
+            'devices',
+            'licenses',
+            'certificates',
+            'telecommunications',
             'provide_cyber_security',
             'threats_to_information_security',
             'consequences_of_an_incident',
             'organizational_and_technical_measures_to_ensure_security',
+            'reason'
         ]));
         return $application;
 

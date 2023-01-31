@@ -7,69 +7,38 @@ use Illuminate\Http\Request;
 
 class StaffController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        
-    }
+  
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+  
     public function store(Request $request)
     {
-        //
+        $request->validate([
+
+            'name'=>'nullable|string',
+            'phone'=>'nullable|string',
+            'statue'=>'nullable|string',
+            'definition'=>'nullable|string'
+        ]);
+        $staff=Staff::create($request->validated());
+        return $staff;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Staff  $staff
-     * @return \Illuminate\Http\Response
-     */
+  
     public function show(Staff $staff)
     {
-        //
+        return $stuff;
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Staff  $staff
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Staff $staff)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Staff  $staff
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Staff $staff)
     {
-        //
+        $request->validate([
+
+            'name'=>'nullable|string',
+            'phone'=>'nullable|string',
+            'statue'=>'nullable|string',
+            'definition'=>'nullable|string'
+        ]);
+        $staff->update($request->validated());
+        return $staff;
     }
 
     /**
@@ -80,6 +49,7 @@ class StaffController extends Controller
      */
     public function destroy(Staff $staff)
     {
-        //
+        $staff->delete();
+        return 'deleted';
     }
 }
