@@ -9,20 +9,14 @@ class DeviceService
     public function create(Request $request)
     {
         $request->validate([
-            'ram'=>'nullable|array',
-            'hdd'=>'nullable|array',
-            'ssd'=>'nullable|array',
-            'cpu'=>'nullable|array',
-            'architecture'=>'nullable|array',
-            'power'=>'nullable|array',
-            'os'=>'nullable|array',
-            'version'=>'nullable|array',
-            'case'=>'nullable|array',
-            'type'=>'nullable|array',
-            'slot'=>'nullable|array',
-            'definition'=>'nullable|string'
+           'name'=>'required|string',
+           'manufacturer'=>'required|string',
+           'model'=>'required|string',
+           'version'=>'required|string',
+           'documents'=>'required|array|exists:files,id'
         ]);
-        $device = Device::make($request->only('ram', 'hdd', 'ssd', 'cpu', 'architecture', 'power', 'os', 'version', 'case', 'type', 'slot', 'definition'));
+        
+        $device = Device::make($request->only('name', 'manufacturer', 'model', 'version', 'documents'));
         $device->save();
         return $device;
     }
@@ -30,20 +24,13 @@ class DeviceService
     public function edit(Request $request, Device $device)
     {
         $request->validate([
-            'ram'=>'nullable|array',
-            'hdd'=>'nullable|array',
-            'ssd'=>'nullable|array',
-            'cpu'=>'nullable|array',
-            'architecture'=>'nullable|array',
-            'power'=>'nullable|array',
-            'os'=>'nullable|array',
-            'version'=>'nullable|array',
-            'case'=>'nullable|array',
-            'type'=>'nullable|array',
-            'slot'=>'nullable|array',
-            'definition'=>'nullable|string'
+            'name'=>'required|string',
+            'manufacturer'=>'required|string',
+            'model'=>'required|string',
+            'version'=>'required|string',
+            'documents'=>'required|array|exists:files,id'
         ]);
-        $device->update($request->only('ram', 'hdd', 'ssd', 'cpu', 'architecture', 'power', 'os', 'version', 'case', 'type', 'slot', 'definition'));
+        $device->update($request->only('name', 'manufacturer', 'model', 'version', 'documents'));
         return $device;
 
     }

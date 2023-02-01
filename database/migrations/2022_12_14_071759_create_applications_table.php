@@ -19,6 +19,10 @@ class CreateApplicationsTable extends Migration
             $table->string('name');
             $table->unsignedBigInteger('user_id')->nullable();
             // subject many to many
+            $table->string('subject');
+            $table->string('subject_type');
+            $table->string('subject_definition')->nullable();
+            $table->unsignedBigInteger('subject_document')->nullable();
             // shaxs to'grisidegi malumot
             $table->json('staffs')->nullable();
             // МАИ объектининг кўлами ва мақсади;
@@ -32,8 +36,8 @@ class CreateApplicationsTable extends Migration
             $table->json('devices')->nullable();
             // МАИ объектида фойдаланиладиган аппарат, дастурий-аппарат 
              //ва дастурий ахборотлаштириш воситалари ҳақида маълумот, шунингдек, уларнинг ахборот хавфсизлигига мувофиқлиги сертификати;
-             $table->unsignedInteger('licenses')->nullable();
-             $table->unsignedInteger('certificates')->nullable();
+             $table->unsignedInteger('license_id')->nullable();
+             $table->unsignedInteger('certificate_id')->nullable();
             //  МАИ объектини умумий телекоммуникация тармоғи, шунингдек, Интернетга уланиш ва фойдаланиш тартиби;
             $table->json('telecommunications')->nullable();
             // МАИ объектида киберхавфсизликни таъминлаш бўйича қўлланиладиган чора ва воситалар;

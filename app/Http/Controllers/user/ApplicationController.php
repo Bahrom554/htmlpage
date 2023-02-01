@@ -93,6 +93,10 @@ class ApplicationController extends Controller
 
         return $this->service->success($request,$application);
     }
+    public function importance(Request $request, Application $application){
+
+        return $this->service->importance($request,$application);
+    }
 
 
 

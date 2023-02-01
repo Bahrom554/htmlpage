@@ -25,14 +25,23 @@ Route::group(['middleware'=>['auth:api','role:'.User::ROLE_ADMIN.'|'.User::ROLE_
         Route::get('dash','ApplicationController@dash');
         Route::apiResource('device','DeviceController');
         Route::apiResource('staff','StaffController');
+        Route::apiResource('telecomunication','TelecomunicationController');
     });
 
 });
 
+Route::group(['middleware'=>['auth:api','role:'.User::ROLE_ADMIN]],function () {
+    Route::group(['namespace'=>'user'],function (){
+      Route::put('application/{application}/success','ApplicationController@success');
+      Route::put('application/{application}/importance','ApplicationController@importance');
+
+    });
+    
+});
 Route::group(['middleware'=>['auth:api','role:'.User::ROLE_ADMIN.'|'.User::ROLE_MANAGER]],function () {
     Route::group(['namespace'=>'user'],function (){
       Route::put('application/{application}/reject','ApplicationController@reject');
       Route::put('application/{application}/register','ApplicationController@register');
-      Route::put('application/{application}/success','ApplicationController@success');
     });
+    
 });

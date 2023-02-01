@@ -1,64 +1,35 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\user;
 
-use App\Telecomunication;
 use Illuminate\Http\Request;
+use App\Models\Telecomunication;
+use NunoMaduro\Collision\Provider;
+use App\Http\Controllers\Controller;
 
 class TelecomunicationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    
     public function store(Request $request)
     {
-        //
+        $validated=$request->validate([
+            'provider'=>'required|string',
+            'contract'=>'required|string',
+            'documents'=>'required|array|exists:files,id',
+            
+
+        ]);
+        $telec=Telecomunication::create($validated); 
+        return $telec;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Telecomunication  $telecomunication
-     * @return \Illuminate\Http\Response
-     */
+   
     public function show(Telecomunication $telecomunication)
     {
-        //
+        return $telecomunication;
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Telecomunication  $telecomunication
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Telecomunication $telecomunication)
-    {
-        //
-    }
+   
 
     /**
      * Update the specified resource in storage.
@@ -69,7 +40,13 @@ class TelecomunicationController extends Controller
      */
     public function update(Request $request, Telecomunication $telecomunication)
     {
-        //
+        $validated=$request->validate([
+            'provider'=>'required|string',
+            'contract'=>'required|string',
+            'documents'=>'required|array|exists:files,id'
+         ]);
+         $telecomunication->update($request->only('provider','contract','documents'));
+         return $telecomunication;
     }
 
     /**
@@ -80,6 +57,7 @@ class TelecomunicationController extends Controller
      */
     public function destroy(Telecomunication $telecomunication)
     {
-        //
+        $telecomunication->delete();
+        return 'deleted';
     }
 }

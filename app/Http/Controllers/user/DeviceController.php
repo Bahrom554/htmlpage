@@ -18,6 +18,7 @@ class DeviceController extends Controller
 
     public function store(Request $request)
     {
+        
         return $this->service->create($request);
     }
     public function show(Request $request, $id)

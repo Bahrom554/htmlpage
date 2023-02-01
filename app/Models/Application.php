@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use App\Importance;
-use App\Staff;
-use App\Telecomunication;
+use App\Models\Staff;
+use App\Models\Telecomunication;
+use App\Subject;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,7 +36,11 @@ class Application extends Model
         'consequences_of_an_incident',
         'organizational_and_technical_measures_to_ensure_security',
         'status',
-        'reason'
+        'reason',
+        'subject',
+        'subject_type',
+        'subject_definition',
+        'subject_document'
     ];
     protected $casts = [
         'staffs' => 'array',
@@ -57,14 +62,7 @@ class Application extends Model
     public function importance(){
         return $this->belongsTo(Importance::class);
     }
-
-    public function scopePopular($query, $request)
-    {
-        if ($request->filled('between')) {
-            return $query->whereBetween('updated_at', explode(',',$request->between));
-        }
-    }
-
+   
     public function getCertificateAttribute(){
 
         return Files::whereIn('id',$this->certificates? : [])->get();
@@ -74,6 +72,11 @@ class Application extends Model
     public function getLicenseAttribute(){
 
         return Files::whereIn('id',$this->licenses? : [])->get();
+
+    }
+    public function getSubjectDocumentAttribute(){
+
+        return Files::whereIn('id',$this->subject_document? : [])->get();
 
     }
 
@@ -94,6 +97,13 @@ class Application extends Model
 
     }
 
+    public function scopePopular($query, $request)
+    {
+        if ($request->filled('between')) {
+            return $query->whereBetween('updated_at', explode(',',$request->between));
+        }
+    }
+
     protected static function booted(){
         static::addGlobalScope('permission', function (Builder $builder) {
             if(!Gate::any(['admin','manager'])){
@@ -101,5 +111,6 @@ class Application extends Model
             }
         });
     }
+   
 
 }

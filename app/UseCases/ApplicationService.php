@@ -79,20 +79,22 @@ class ApplicationService
     public function create(ApplicationCreateRequest $request)
     {
         $app = Application::make($request->only(
-            'name',
-            'staffs',
-            'scope_and_purpose',
-            'importance_id',
-            'error_or_broken',
-            'devices',
-            'licenses',
-            'certificates',
-            'telecommunications',
-            'provide_cyber_security',
-            'threats_to_information_security',
-            'consequences_of_an_incident',
-            'organizational_and_technical_measures_to_ensure_security',
-            'reason'
+        'name',
+        'staffs',
+        'scope_and_purpose',
+        'error_or_broken',
+        'devices',
+        'licenses',
+        'certificates',
+        'telecommunications',
+        'provide_cyber_security',
+        'threats_to_information_security',
+        'consequences_of_an_incident',
+        'organizational_and_technical_measures_to_ensure_security',
+        'subject',
+        'subject_type',
+        'subject_definition',
+        'subject_document'
         ));
         $app->user_id = Auth::user()->id;
         $app->save();
@@ -102,20 +104,22 @@ class ApplicationService
     public function edit(ApplicationEditRequest $request, Application $application)
     {
         $application->update($request->only([
-            'name',
-            'staffs',
-            'scope_and_purpose',
-            'importance_id',
-            'error_or_broken',
-            'devices',
-            'licenses',
-            'certificates',
-            'telecommunications',
-            'provide_cyber_security',
-            'threats_to_information_security',
-            'consequences_of_an_incident',
-            'organizational_and_technical_measures_to_ensure_security',
-            'reason'
+        'name',
+        'staffs',
+        'scope_and_purpose',
+        'error_or_broken',
+        'devices',
+        'licenses',
+        'certificates',
+        'telecommunications',
+        'provide_cyber_security',
+        'threats_to_information_security',
+        'consequences_of_an_incident',
+        'organizational_and_technical_measures_to_ensure_security',
+        'subject',
+        'subject_type',
+        'subject_definition',
+        'subject_document'
         ]));
         return $application;
 
@@ -130,33 +134,44 @@ class ApplicationService
     public function reject(Request $request, Application $application){
 
         $request->validate([
-            'definition' => 'nullable|string'
+            'reason' => 'nullable|string'
         ]);
         $application->status=Application::STATUS_REJECT;
-        if($request->filled('definition')){
-            $application->definition=$request->definition;
+        if($request->filled('reason')){
+            $application->reason=$request->reason;
         }
         $application->save();
         return $application;
     }
     public function register(Request $request, Application $application){
         $request->validate([
-            'definition' => 'nullable|string'
+            'reason' => 'nullable|string'
         ]);
         $application->status=Application::STATUS_PROCESS;
-        if($request->filled('definition')){
-            $application->definition=$request->definition;
+        if($request->filled('reason')){
+            $application->reason=$request->reason;
         }
         $application->save();
         return $application;
     }
     public function success(Request $request, Application $application){
         $request->validate([
-            'definition' => 'nullable|string'
+            'reason' => 'nullable|string'
         ]);
         $application->status=Application::STATUS_SUCCESS;
-        if($request->filled('definition')){
-            $application->definition=$request->definition;
+        if($request->filled('reason')){
+            $application->reason=$request->reason;
+        }
+        $application->save();
+        return $application;
+    }
+    public function importance(Request $request, Application $application){
+        $request->validate([
+            'importance_id' => 'nullable|integer|exists:importances,id'
+        ]);
+        $application->status=Application::STATUS_SUCCESS;
+        if($request->filled('importance_id')){
+            $application->importance_id=$request->importance_id;
         }
         $application->save();
         return $application;

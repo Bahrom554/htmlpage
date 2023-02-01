@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\admin;
-use App\Importance;
+use App\Models\Importance;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -15,7 +15,7 @@ class ImportanceController extends Controller
      */
     public function index(Request $request)
     {
-        $query = QueryBuilder::for(User::class);
+        $query = QueryBuilder::for(Importance::class);
         $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
         $query->allowedSorts(request()->sort);
         return $query->paginate(10);
@@ -41,7 +41,7 @@ class ImportanceController extends Controller
     public function store(Request $request)
     {
         $validated=$request->validate([
-           "nmae"=>"required|string",
+           "name"=>"required|string",
            "definition"=>"required|string"
 
         ]);
@@ -55,12 +55,14 @@ class ImportanceController extends Controller
      * @param  \App\Importance  $importance
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request , $id)
+    public function show(Request $request, Importance $importance)
     {
-        $query = QueryBuilder::for(Importance::class);
+        $query=QueryBuilder::for(Importance::class);
         $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
-        $query->find($id);
-        return $query;
+        return $query->where('id',$importance->id)->firstOrFail();
+        
+
+
         
     }
 
@@ -85,7 +87,7 @@ class ImportanceController extends Controller
     public function update(Request $request, Importance $importance)
     {
         $validated=$request->validate([
-            "nmae"=>"required|string",
+            "name"=>"required|string",
             "definition"=>"required|string"
  
          ]);

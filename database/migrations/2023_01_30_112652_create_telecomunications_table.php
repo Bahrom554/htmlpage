@@ -15,6 +15,9 @@ class CreateTelecomunicationsTable extends Migration
     {
         Schema::create('telecomunications', function (Blueprint $table) {
             $table->id();
+            $table->string('provider')->nullable();
+            $table->string('contract')->nullable();
+            $table->json('documents')->nullable();
             $table->timestamps();
         });
     }
