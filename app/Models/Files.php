@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Files extends Model
@@ -27,15 +28,16 @@ class Files extends Model
 //    protected $appends = [
 //        'thumbnails'
 //    ];
-    /**
-     * @var mixed
-     */
+public function setFromAttribute($value)
+{
+   if($value) {$this->attributes['from'] =  Carbon::parse($value);} 
+}
+public function setToAttribute($value)
+{
+    if($value) $this->attributes['to'] =  Carbon::parse($value);
+}
 
-
-    /**
-     * @return bool
-     */
-    public function getIsImage()
+public function getIsImage()
     {
         return in_array($this->ext,FileManagerHelper::getImagesExt());
 

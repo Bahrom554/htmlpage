@@ -12,6 +12,7 @@ Route::group(['middleware'=>['auth:api','role:'.User::ROLE_ADMIN.'|'.User::ROLE_
         Route::post('users/{user}/roles',  'UserController@assignRole');
         Route::delete('/users/{user}/roles/{role}', 'UserController@removeRole');
         Route::put('users/{user}/change-password','UserController@changePassword');
+        Route::apiResource('importance','ImportanceController');
     });
     Route::group(['namespace'=>'user'],function (){
         Route::get('profile','ProfileController@show');
@@ -23,7 +24,7 @@ Route::group(['middleware'=>['auth:api','role:'.User::ROLE_ADMIN.'|'.User::ROLE_
         Route::apiResource('application','ApplicationController');
         Route::get('dash','ApplicationController@dash');
         Route::apiResource('device','DeviceController');
-        Route::apiResource('stuff','StuffController');
+        Route::apiResource('staff','StaffController');
     });
 
 });

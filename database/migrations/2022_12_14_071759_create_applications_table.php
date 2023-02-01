@@ -47,7 +47,7 @@ class CreateApplicationsTable extends Migration
             $table->text('organizational_and_technical_measures_to_ensure_security')->nullable();
             $table->unsignedInteger('status')->default(1);
             $table->string('reason')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('sett null');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->softDeletes();
             $table->timestamps();
         });

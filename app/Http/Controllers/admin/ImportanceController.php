@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\admin;
 use App\Importance;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class ImportanceController extends Controller
 {
@@ -12,9 +13,13 @@ class ImportanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $query = QueryBuilder::for(User::class);
+        $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
+        $query->allowedSorts(request()->sort);
+        return $query->paginate(10);
+        
     }
 
     /**
@@ -24,7 +29,7 @@ class ImportanceController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -35,7 +40,13 @@ class ImportanceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated=$request->validate([
+           "nmae"=>"required|string",
+           "definition"=>"required|string"
+
+        ]);
+        $importance=Importance::create($validated);
+        return $importance;
     }
 
     /**
@@ -44,9 +55,13 @@ class ImportanceController extends Controller
      * @param  \App\Importance  $importance
      * @return \Illuminate\Http\Response
      */
-    public function show(Importance $importance)
+    public function show(Request $request , $id)
     {
-        //
+        $query = QueryBuilder::for(Importance::class);
+        $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
+        $query->find($id);
+        return $query;
+        
     }
 
     /**
@@ -57,7 +72,7 @@ class ImportanceController extends Controller
      */
     public function edit(Importance $importance)
     {
-        //
+        
     }
 
     /**
@@ -69,7 +84,13 @@ class ImportanceController extends Controller
      */
     public function update(Request $request, Importance $importance)
     {
-        //
+        $validated=$request->validate([
+            "nmae"=>"required|string",
+            "definition"=>"required|string"
+ 
+         ]);
+         $importance->update($validated);
+         return $importance;
     }
 
     /**
@@ -80,6 +101,7 @@ class ImportanceController extends Controller
      */
     public function destroy(Importance $importance)
     {
-        //
+        $importance->delete();
+        return 'deleted';
     }
 }

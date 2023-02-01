@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\user;
 
-use App\Staff;
+use App\Models\Staff;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class StaffController extends Controller
 {
@@ -12,32 +13,32 @@ class StaffController extends Controller
   
     public function store(Request $request)
     {
-        $request->validate([
+       $validated=$request->validate([
 
-            'name'=>'nullable|string',
-            'phone'=>'nullable|string',
+            'name'=>'required|string',
+            'phone'=>'required|string',
             'statue'=>'nullable|string',
             'definition'=>'nullable|string'
         ]);
-        $staff=Staff::create($request->validated());
+        $staff=Staff::create($validated);
         return $staff;
     }
 
   
     public function show(Staff $staff)
     {
-        return $stuff;
+        return $staff;
     }
     public function update(Request $request, Staff $staff)
     {
-        $request->validate([
+        $validated=$request->validate([
 
-            'name'=>'nullable|string',
-            'phone'=>'nullable|string',
+            'name'=>'required|string',
+            'phone'=>'required|string',
             'statue'=>'nullable|string',
             'definition'=>'nullable|string'
         ]);
-        $staff->update($request->validated());
+        $staff->update($validated);
         return $staff;
     }
 

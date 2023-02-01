@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Importance;
 use App\Staff;
 use App\Telecomunication;
 use Illuminate\Database\Eloquent\Builder;
@@ -51,6 +52,10 @@ class Application extends Model
 
         return $this->belongsTo(User::class);
 
+    }
+
+    public function importance(){
+        return $this->belongsTo(Importance::class);
     }
 
     public function scopePopular($query, $request)

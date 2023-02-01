@@ -48,7 +48,7 @@ class FilemanagerController extends Controller
     {    
         $request->validate([
             'from'=>'nullable|date',
-            'to'=>'nullable|date',
+            'to'=>'nullable|date|after:now',
             'definition'=>'nullable|string'
         ]);
         return $this->service->uploads($request);
