@@ -26,7 +26,7 @@ return [
 
     'Access-Control-Allow-Origin'=> '*',
 
-    'Access-Control-Allow-Headers'=> 'Origin, Content-Type',
+    'Access-Control-Allow-Headers'=> 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
 
     'allowed_origins_patterns' => [],
 
