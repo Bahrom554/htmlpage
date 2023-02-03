@@ -18,24 +18,21 @@ return [
     
      
     
-    'paths' => ['*'],
+    'paths' => ['api/*', 'oauth/*'],
 
     'allowed_methods' => ['*'],
 
     'allowed_origins' => ['*'],
 
-    'Access-Control-Allow-Origin'=> '*',
-
-    'Access-Control-Allow-Headers'=> 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-
     'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],
 
-    'exposed_headers' => false,
+    'exposed_headers' => [],
 
-    'max_age' => false,
+    'max_age' => 0,
 
     'supports_credentials' => false,
+
 
 ];
