@@ -17,16 +17,28 @@ class UserService
              $user->password = bcrypt($request->password);
          }
         $user->save();
+        if($request->filled('role')) {
+            $user->syncRoles($request->role);
+            if ($user->hasRole(User::ROLE_ADMIN) )
+            {
+                $user->removeRole(User::ROLE_ADMIN);
+            }
+        }
         return $user;
     }
 
     public function edit(UserEditRequest $request , User $user){
         $user->update($request->only([
             'name',
-            'email',
-            'subject',
-            'phone'
+            'email'
         ]));
+        if($request->filled('role')){
+            if (!$user->hasRole(User::ROLE_ADMIN)) {
+                         $user->syncRoles($request->role);
+                        if ($user->hasRole(User::ROLE_ADMIN) ) {$user->removeRole(User::ROLE_ADMIN);}
+                 }
+            }
+        
         return $user;
 
     }
