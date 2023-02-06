@@ -15,7 +15,6 @@ class ApplicationEditRequest extends FormRequest
             'subject_type'=>'string',
             'subject_definition'=>'string',
             'subject_document'=>'nullable|array|exists:files,id',
-            'certificates'=>'nullable|integer|exists:files,id',
             'staffs'=>'required|array|exists:staff,id',
             'scope_and_purpose'=>'string',
             'error_or_broken'=>'string',
