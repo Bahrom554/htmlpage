@@ -89,7 +89,7 @@ class Application extends Model
 
     public function getTeleCommunicationAttribute(){
 
-        return Telecommunication::whereIn('id',$this->telecomunications? : [])->get();
+        return Telecommunication::whereIn('id',$this->telecommunications? : [])->get();
 
     }
     public function getDeviceAttribute(){
