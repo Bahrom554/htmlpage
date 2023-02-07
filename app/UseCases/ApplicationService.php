@@ -168,7 +168,7 @@ class ApplicationService
             $from=Carbon::parse($request->from);
             $to=Carbon::parse($request->to);      
     
-            return $query->whereBetween('updated_at',$from,$to);
+            return $query->whereBetween('updated_at',[$from,$to]);
                
         }
 
