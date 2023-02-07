@@ -11,6 +11,7 @@ class Telecommunication extends Model
     protected $casts=[
         'documents'=>'array'
     ];
+    protected $appends = ['document'];
     public function getDocumentAttribute(){
         return Files::whereIn('id',$this->certificates? : [])->get();
        }

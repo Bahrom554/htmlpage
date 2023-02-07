@@ -13,6 +13,8 @@ class Device extends Model
     ];
 
 
+     protected $appends = ['document'];
+
    public function getDocumentAttribute(){
     return Files::whereIn('id',$this->certificates? : [])->get();
    }
