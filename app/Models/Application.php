@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Subject;
-use App\Importance;
+use App\Models\Importance;
 use App\Models\Staff;
 use App\Models\Telecommunication;
 use Illuminate\Support\Facades\Auth;
