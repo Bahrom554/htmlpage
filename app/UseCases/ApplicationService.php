@@ -17,7 +17,7 @@ class ApplicationService
     public function dash(Request $request)
     {
         $all = Application::withoutGlobalScope('permission')->when($request->filled('from','to'),function($query) use($request){
-            return $query->whereBetween('updated_at',[Carbon::parse($request->from),Carbon::parse($request->to)]);
+            return $query->whereBetween('created_at',[Carbon::parse($request->from),Carbon::parse($request->to)]);
         })->count();
         // ----------------------------//
         $all_by_mont=$this->commonAll($request)
