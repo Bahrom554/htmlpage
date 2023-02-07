@@ -164,7 +164,7 @@ class ApplicationService
         $query = QueryBuilder::for(Application::class);
         $query->withoutGlobalScope('permission');
         if ($request->filled('between')) {
-            return $query->whereBetween('updated_at', explode(',', $request->between));
+            // return $query->whereBetween('updated_at', explode(',', $request->between));
                
         }
 
