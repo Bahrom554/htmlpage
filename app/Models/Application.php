@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use App\Subject;
 use App\Importance;
 use App\Models\Staff;
-use App\Models\Telecomunication;
-use App\Subject;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Telecommunication;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 
 class Application extends Model
@@ -51,7 +51,7 @@ class Application extends Model
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['subject_documents','staff','telecomunication','device'];
+    protected $appends = ['subject_documents','staff','telecommunication','device'];
    
     public function user()
     {
@@ -87,9 +87,9 @@ class Application extends Model
 
     }
 
-    public function getTeleComunicationAttribute(){
+    public function getTeleCommunicationAttribute(){
 
-        return Telecomunication::whereIn('id',$this->telecomunications? : [])->get();
+        return Telecommunication::whereIn('id',$this->telecomunications? : [])->get();
 
     }
     public function getDeviceAttribute(){
