@@ -52,15 +52,7 @@ class ApplicationService
        ->get()
        ->sortByDesc('total');
         // ---------------------------------//
-        $by_dev = DB::table('applications')
-        ->leftJoin('devices', 'applications.device_id', 'devices.id')
-        ->when($request->filled('between'),function($query) use($request){
-            return $query->whereBetween('applications.updated_at', explode(',', $request->between));
-           })
-        ->groupBy('devices.id')
-        ->selectRaw('count(*) as total, devices.*')
-        ->get()
-        ->sortByDesc('total');
+        
         $responce = [
             "applications" => $all,
             "allInMont"=>$all_by_mont,
@@ -68,7 +60,7 @@ class ApplicationService
             "licenses" => $by_lic,
             "status"=>$by_status,
             "subject"=>$by_sub,
-            "device"=>$by_dev
+            
         ];
 
         return response($responce);
