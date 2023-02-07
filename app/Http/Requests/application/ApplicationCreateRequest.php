@@ -25,7 +25,7 @@ class ApplicationCreateRequest extends FormRequest
             'subject'=>'required|string',
             'subject_type'=>'required|string',
             'subject_definition'=>'nullable|string',
-            'subject_document'=>'nullable|array|exists:files,id',
+            'subject_document'=>'nullable|integer|exists:files,id',
             'staffs'=>'required|array|exists:staff,id',
             'scope_and_purpose'=>'required|string',
             'error_or_broken'=>'required|string',

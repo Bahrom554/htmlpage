@@ -46,7 +46,6 @@ class Application extends Model
         'staffs' => 'array',
         'telecommunications'=>'array',
         'devices'=>'array',
-        'subject_document'=>'array'
     ];
 
     protected $dates = ['deleted_at'];
@@ -75,9 +74,9 @@ class Application extends Model
         return $this->belongsTo(Files::class,'license_id','id');
 
     }
-    public function getSubjectDocumentsAttribute(){
+    public function subjectDocument(){
 
-        return Files::whereIn('id',$this->subject_document? : [])->get();
+        return $this->belongsTo(Files::class,'subject_document','id');
 
     }
 
