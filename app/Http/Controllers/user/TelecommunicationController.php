@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers\user;
 
-use App\Telecommunication;
+
 use Illuminate\Http\Request;
+use App\Models\Telecommunication;
 use App\Http\Controllers\Controller;
 
 class TelecommunicationController extends Controller
