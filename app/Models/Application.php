@@ -28,8 +28,8 @@ class Application extends Model
         'importance_id',
         'error_or_broken',
         'devices',
-        'licenses',
-        'certificates',
+        'license_id',
+        'certificate_id',
         'telecommunications',
         'provide_cyber_security',
         'threats_to_information_security',
@@ -51,8 +51,8 @@ class Application extends Model
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['certificate','license','subject_documents','staff','telecomunication','device'];
-
+    // protected $appends = ['subject_documents','staff','telecomunication','device'];
+   
     public function user()
     {
 
@@ -64,15 +64,15 @@ class Application extends Model
         return $this->belongsTo(Importance::class);
     }
    
-    public function getCertificateAttribute(){
+    public function certificate(){
 
-        return Files::whereIn('id',$this->certificates? : [])->get();
+        return $this->belongsTo(Files::class,'certificate_id','id');
 
     }
 
-    public function getLicenseAttribute(){
+    public function license(){
 
-        return Files::whereIn('id',$this->licenses? : [])->get();
+        return $this->belongsTo(Files::class,'license_id','id');
 
     }
     public function getSubjectDocumentsAttribute(){
