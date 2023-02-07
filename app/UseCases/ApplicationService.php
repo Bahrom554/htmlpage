@@ -165,9 +165,9 @@ class ApplicationService
         $query = QueryBuilder::for(Application::class);
         $query->withoutGlobalScope('permission');
         if ($request->filled('from','to')) {
-            $from = Carbon::parse($request->from)->toDateTimeString();
-            $to = Carbon::parse($request->to)->toDateTimeString();
-            return $query->whereBetween('updated_at', [$from, $to]);
+            $from = Carbon::parse($request->from);
+            $to = Carbon::parse($request->to);
+            return $query->whereDateBetween('updated_at', [$from, $to]);
             }
 
         return $query;
