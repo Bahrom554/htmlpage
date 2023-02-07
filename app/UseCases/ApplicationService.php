@@ -29,14 +29,14 @@ class ApplicationService
         ->get();
         // ------------------------------
         $by_cert = $this->commonAll($request)
-        ->whereNotNull('certificates')
+        ->whereNotNull('certificate_id')
         ->selectRaw('year(updated_at) year, monthname(updated_at) month, count(*) total')
         ->groupBy('year', 'month')
         ->orderBy('year', 'desc')
         ->get();
         // --------------------------------//
         $by_lic = $this->commonAll($request)
-        ->whereNotNull('licenses')
+        ->whereNotNull('license_id')
         ->selectRaw('year(updated_at) year, monthname(updated_at) month, count(*) total')
         ->groupBy('year', 'month')
         ->orderBy('year', 'desc')
