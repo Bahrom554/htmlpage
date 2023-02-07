@@ -3,13 +3,14 @@
 namespace App\UseCases;
 
 
-use App\Http\Requests\application\ApplicationCreateRequest;
-use App\Http\Requests\application\ApplicationEditRequest;
+use Carbon\Carbon;
 use App\Models\Application;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
+use App\Http\Requests\application\ApplicationEditRequest;
+use App\Http\Requests\application\ApplicationCreateRequest;
 
 class ApplicationService
 {
@@ -163,10 +164,11 @@ class ApplicationService
     {
         $query = QueryBuilder::for(Application::class);
         $query->withoutGlobalScope('permission');
-        if ($request->filled('between')) {
-            // return $query->whereBetween('updated_at', explode(',', $request->between));
-               
-        }
+        if ($request->filled('from','to')) {
+            $from = Carbon::parse($request->from)->toDateTimeString();
+            $to = Carbon::parse($request->to)->toDateTimeString();
+            return $query->whereBetween('reservation_from', [$from, $to]);
+            }
 
         return $query;
     }
