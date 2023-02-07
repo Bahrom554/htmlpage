@@ -13,7 +13,7 @@ class DeviceService
            'manufacturer'=>'required|string',
            'model'=>'required|string',
            'version'=>'required|string',
-           'documents'=>'required|array|exists:files,id'
+           'documents'=>'nullable|array|exists:files,id'
         ]);
         
         $device = Device::make($request->only('name', 'manufacturer', 'model', 'version', 'documents'));
@@ -28,7 +28,7 @@ class DeviceService
             'manufacturer'=>'required|string',
             'model'=>'required|string',
             'version'=>'required|string',
-            'documents'=>'required|array|exists:files,id'
+            'documents'=>'nullable|array|exists:files,id'
         ]);
         $device->update($request->only('name', 'manufacturer', 'model', 'version', 'documents'));
         return $device;
