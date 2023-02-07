@@ -45,12 +45,13 @@ class Application extends Model
     protected $casts = [
         'staffs' => 'array',
         'telecommunications'=>'array',
-        'devices'=>'array'
+        'devices'=>'array',
+        'subject_document'=>'array'
     ];
 
     protected $dates = ['deleted_at'];
 
-    
+    protected $appends = ['certificate','license','subject_documents','staff','telecomunication','device'];
 
     public function user()
     {
@@ -74,7 +75,7 @@ class Application extends Model
         return Files::whereIn('id',$this->licenses? : [])->get();
 
     }
-    public function getSubjectDocumentAttribute(){
+    public function getSubjectDocumentsAttribute(){
 
         return Files::whereIn('id',$this->subject_document? : [])->get();
 
