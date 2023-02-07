@@ -6,7 +6,6 @@ namespace App\UseCases;
 use App\Http\Requests\application\ApplicationCreateRequest;
 use App\Http\Requests\application\ApplicationEditRequest;
 use App\Models\Application;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -16,9 +15,7 @@ class ApplicationService
 {
     public function dash(Request $request)
     {
-        $all = Application::withoutGlobalScope('permission')->when($request->filled('from','to'),function($query) use($request){
-            return $query->whereBetween('created_at',[Carbon::parse($request->from),Carbon::parse($request->to)]);
-        })->count();
+        $all = $this->commonAll($request)->count();
         // ----------------------------//
         $all_by_mont=$this->commonAll($request)
         ->selectRaw('year(updated_at) year, monthname(updated_at) month, count(*) total')
@@ -166,11 +163,8 @@ class ApplicationService
     {
         $query = QueryBuilder::for(Application::class);
         $query->withoutGlobalScope('permission');
-        if ($request->filled('from','to')) {
-            $from=Carbon::parse($request->from);
-            $to=Carbon::parse($request->to);      
-    
-            return $query->whereBetween('updated_at',[$from,$to]);
+        if ($request->filled('between')) {
+            return $query->whereBetween('updated_at', explode(',', $request->between));
                
         }
 
