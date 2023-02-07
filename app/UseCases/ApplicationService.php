@@ -42,24 +42,14 @@ class ApplicationService
         ->orderBy('year', 'desc')
         ->get();
         // --------------------------------//
-        $by_sub = DB::table('applications')
-        ->leftJoin('users', 'applications.user_id', 'users.id')
-        ->when($request->filled('between'),function($query) use($request){
-         return $query->whereBetween('applications.updated_at', explode(',', $request->between));
-        })
-         ->groupBy('subject')
-        ->selectRaw('count(*) as total, subject')
-       ->get()
-       ->sortByDesc('total');
-        // ---------------------------------//
-        
+      
         $responce = [
             "applications" => $all,
             "allInMont"=>$all_by_mont,
             "certificates" => $by_cert,
             "licenses" => $by_lic,
             "status"=>$by_status,
-            "subject"=>$by_sub,
+            
             
         ];
 
