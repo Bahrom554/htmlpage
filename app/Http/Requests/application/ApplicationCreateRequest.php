@@ -32,7 +32,7 @@ class ApplicationCreateRequest extends FormRequest
             'devices'=>'nullable|array|exists:devices,id',
             'license_id'=>'nullable|integer|exists:files,id',
             'certificate_id'=>'nullable|integer|exists:files,id',
-            'telecommunications'=>'required|array|exists:telecomunications,id',
+            'telecommunications'=>'required|array|exists:telecommunications,id',
             'provide_cyber_security'=>'required|string',
             'threats_to_information_security'=>'required|string',
             'consequences_of_an_incident'=>'required|string',

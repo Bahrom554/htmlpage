@@ -21,7 +21,7 @@ class ApplicationEditRequest extends FormRequest
             'devices'=>'nullable|array|exists:devices,id',
             'license_id'=>'nullable|integer|exists:files,id',
             'certificate_id'=>'nullable|integer|exists:files,id',
-            'telecommunications'=>'array|exists:telecomunications,id',
+            'telecommunications'=>'array|exists:telecommunications,id',
             'provide_cyber_security'=>'string',
             'threats_to_information_security'=>'string',
             'consequences_of_an_incident'=>'string',
