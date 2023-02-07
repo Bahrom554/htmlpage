@@ -167,7 +167,7 @@ class ApplicationService
         if ($request->filled('from','to')) {
             $from = Carbon::parse($request->from)->toDateTimeString();
             $to = Carbon::parse($request->to)->toDateTimeString();
-            return $query->whereBetween('reservation_from', [$from, $to]);
+            return $query->whereBetween('updated_at', [$from, $to]);
             }
 
         return $query;
