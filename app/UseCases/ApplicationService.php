@@ -152,7 +152,6 @@ class ApplicationService
         $request->validate([
             'importance_id' => 'nullable|integer|exists:importances,id'
         ]);
-        $application->status=Application::STATUS_SUCCESS;
         if($request->filled('importance_id')){
             $application->importance_id=$request->importance_id;
         }
