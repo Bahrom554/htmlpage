@@ -122,6 +122,7 @@ class ApplicationService
         $application->status=Application::STATUS_REJECT;
         if($request->filled('reason')){
             $application->reason=$request->reason;
+            $application->importance_id=null;
         }
         $application->save();
         return $application;
