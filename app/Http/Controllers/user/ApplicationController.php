@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\user;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\application\ApplicationCreateRequest;
-use App\Http\Requests\application\ApplicationEditRequest;
-use App\Models\Application;
+use Carbon\Carbon;
 use App\Models\User;
-use App\UseCases\ApplicationService;
-use Illuminate\Auth\Access\Gate;
+use App\Models\Application;
 use Illuminate\Http\Request;
+use Illuminate\Auth\Access\Gate;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\UseCases\ApplicationService;
 use Illuminate\Support\Facades\Auth;
-use League\Flysystem\Plugin\AbstractPlugin;
-use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
+use League\Flysystem\Plugin\AbstractPlugin;
+use App\Http\Requests\application\ApplicationEditRequest;
+use App\Http\Requests\application\ApplicationCreateRequest;
 
 
 class ApplicationController extends Controller
@@ -31,31 +33,13 @@ class ApplicationController extends Controller
     }
     public function index(Request $request)
     {
-        $filters = $request->get('filter');
-        $filter = [];
-        if (!empty($filters)) {
-            foreach ($filters as $k => $item) {
-                $filter[] = AllowedFilter::exact($k);
-            }
-        }
-        $query = QueryBuilder::for(Application::class);
-        if (!empty($request->get('search'))) {
-            $query->where('name', 'like', '%' . $request->get('search') . '%');
-        }
-        $query->allowedAppends(!empty($request->append) ? explode(',', $request->get('append')) : []);
-        $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
-        $query->allowedFilters($filter);
-        $query->allowedSorts($request->sort);
-        return $query->paginate($request->per_page);
+        return $this->service->list($request);
 
     }
-
     public function store(ApplicationCreateRequest $request)
     {
         return $this->service->create($request);
     }
-
-
     public function show(Request $request, $id)
     {
         $query = QueryBuilder::for(Application::class);
@@ -69,18 +53,17 @@ class ApplicationController extends Controller
         return $app;
 
     }
-
     public function update(ApplicationEditRequest $request, Application $application)
     {
+        if(!$application->editable()){
+            abort(403);
+        }
         return $this->service->edit($request,$application);
     }
-
     public function destroy(Application $application)
     {
         return $this->service->remove($application);
     }
-
-
     public function reject(Request $request, Application $application)
     {
         return $this->service->reject($request, $application);
@@ -95,6 +78,13 @@ class ApplicationController extends Controller
     }
     public function importance(Request $request, Application $application){
 
+        return $this->service->importance($request,$application);
+    }
+    public function rester(Request $request, Application $application){
+       
+        if($application->updated_at < $application->rejected_at){
+           return response()->json(['msg'=>`Arizangizni qayta ko'rib chiqing`],403);
+        }
         return $this->service->importance($request,$application);
     }
 

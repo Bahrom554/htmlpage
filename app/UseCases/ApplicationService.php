@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
 use App\Http\Requests\application\ApplicationEditRequest;
 use App\Http\Requests\application\ApplicationCreateRequest;
 
@@ -59,6 +60,32 @@ class ApplicationService
 
     }
 
+    public function list(Request $request){
+        $filters = $request->get('filter');
+        $filter = [];
+        if (!empty($filters)) {
+            foreach ($filters as $k => $item) {
+                $filter[] = AllowedFilter::exact($k);
+            }
+        }
+        $query = QueryBuilder::for(Application::class);
+        if (!empty($request->get('search'))) {
+            $query->where('name', 'like', '%' . $request->get('search') . '%');
+        }
+        if ($request->filled('from','to')) {
+            $from = Carbon::createFromFormat('Y-m-d',$request->from)->startOfDay();
+            $to = Carbon::createFromFormat('Y-m-d',$request->to)->endOfDay();
+             $query->whereBetween(DB::raw('DATE(created_at)'), [$from, $to]);
+            }
+        $query->allowedAppends(!empty($request->append) ? explode(',', $request->get('append')) : []);
+        $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
+        $query->allowedFilters($filter);
+        $query->allowedSorts($request->sort);
+        $query->orderBy('updated_at', 'desc');
+        return $query->paginate($request->per_page);
+
+    }
+
     public function create(ApplicationCreateRequest $request)
     {
         $app = Application::make($request->only(
@@ -87,25 +114,24 @@ class ApplicationService
     public function edit(ApplicationEditRequest $request, Application $application)
     {
         $application->update($request->only([
-        'name',
-        'staffs',
-        'scope_and_purpose',
-        'error_or_broken',
-        'devices',
-        'license_id',
-        'certificate_id',
-        'telecommunications',
-        'provide_cyber_security',
-        'threats_to_information_security',
-        'consequences_of_an_incident',
-        'organizational_and_technical_measures_to_ensure_security',
-        'subject',
-        'subject_type',
-        'subject_definition',
-        'subject_document'
-        ]));
-        return $application;
-
+            'name',
+            'staffs',
+            'scope_and_purpose',
+            'error_or_broken',
+            'devices',
+            'license_id',
+            'certificate_id',
+            'telecommunications',
+            'provide_cyber_security',
+            'threats_to_information_security',
+            'consequences_of_an_incident',
+            'organizational_and_technical_measures_to_ensure_security',
+            'subject',
+            'subject_type',
+            'subject_definition',
+            'subject_document'
+            ]));
+            return $application;
     }
 
     public function remove(Application $application)
@@ -120,6 +146,7 @@ class ApplicationService
             'reason' => 'nullable|string'
         ]);
         $application->status=Application::STATUS_REJECT;
+        $application->rejected_at=Carbon::now();
         if($request->filled('reason')){
             $application->reason=$request->reason;
             $application->importance_id=null;
@@ -160,6 +187,12 @@ class ApplicationService
         return $application;
     }
 
+    public function rester(Request $request, Application $application){
+        $application->status=Application::STATUS_WAITING;
+        $application->save();
+        return $application;
+    }
+
     private function commonAll(Request $request)
     {
         $query = QueryBuilder::for(Application::class);
@@ -167,7 +200,7 @@ class ApplicationService
         if ($request->filled('from','to')) {
             $from = Carbon::createFromFormat('Y-m-d',$request->from)->startOfDay();
             $to = Carbon::createFromFormat('Y-m-d',$request->to)->endOfDay();
-            return $query->whereBetween('created_at', [$from, $to]);
+            return $query->whereBetween(DB::raw('DATE(created_at)'), [$from, $to]);
             }
 
         return $query;

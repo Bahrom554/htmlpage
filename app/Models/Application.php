@@ -40,7 +40,8 @@ class Application extends Model
         'subject',
         'subject_type',
         'subject_definition',
-        'subject_document'
+        'subject_document',
+        'rejected_at'
     ];
     protected $casts = [
         'staffs' => 'array',
@@ -102,6 +103,13 @@ class Application extends Model
         if ($request->filled('between')) {
             return $query->whereBetween('updated_at', explode(',',$request->between));
         }
+    }
+
+    public function editable(){
+        if($this->status==static::STATUS_REJECT || $this->status==static::STATUS_WAITING ){
+            return true;
+        }
+        return false;
     }
 
     protected static function booted(){
