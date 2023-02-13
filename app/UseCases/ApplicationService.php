@@ -44,15 +44,15 @@ class ApplicationService
         ->orderBy('year', 'desc')
         ->get();
         // --------------------------------//
-      
+
         $responce = [
             "applications" => $all,
             "allInMont"=>$all_by_mont,
             "certificates" => $by_cert,
             "licenses" => $by_lic,
             "status"=>$by_status,
-            
-            
+
+
         ];
 
         return response($responce);
@@ -113,6 +113,9 @@ class ApplicationService
 
     public function edit(ApplicationEditRequest $request, Application $application)
     {
+
+
+
         $application->update($request->only([
             'name',
             'staffs',
@@ -129,8 +132,8 @@ class ApplicationService
             'subject',
             'subject_type',
             'subject_definition',
-            'subject_document'
-            ]));
+            'subject_document']));
+             Application::findOrFail($application->id)->update(['status'=>1]);
             return $application;
     }
 

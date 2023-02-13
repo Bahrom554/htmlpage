@@ -3,6 +3,7 @@
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 Route::group(['middleware'=>['auth:api','role:'.User::ROLE_ADMIN.'|'.User::ROLE_MANAGER.'|'.User::ROLE_USER]],function () {
 
     Route::group(['middleware'=>'role:admin','namespace'=>'admin'],function (){
@@ -37,12 +38,12 @@ Route::group(['middleware'=>['auth:api','role:'.User::ROLE_ADMIN]],function () {
       Route::put('application/{application}/importance','ApplicationController@importance');
 
     });
-    
+
 });
 Route::group(['middleware'=>['auth:api','role:'.User::ROLE_ADMIN.'|'.User::ROLE_MANAGER]],function () {
     Route::group(['namespace'=>'user'],function (){
       Route::put('application/{application}/reject','ApplicationController@reject');
       Route::put('application/{application}/register','ApplicationController@register');
     });
-    
+
 });

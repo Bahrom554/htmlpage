@@ -80,13 +80,7 @@ class ApplicationController extends Controller
 
         return $this->service->importance($request,$application);
     }
-    public function rester(Request $request, Application $application){
-       
-        if($application->updated_at < $application->rejected_at){
-           return response()->json(['msg'=>`Arizangizni qayta ko'rib chiqing`],403);
-        }
-        return $this->service->importance($request,$application);
-    }
+
 
 
 

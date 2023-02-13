@@ -25,8 +25,7 @@ class ApplicationEditRequest extends FormRequest
             'provide_cyber_security'=>'string',
             'threats_to_information_security'=>'string',
             'consequences_of_an_incident'=>'string',
-            'organizational_and_technical_measures_to_ensure_security'=>'string',
-
-        ];
+            'organizational_and_technical_measures_to_ensure_security'=>'string'
+           ];
     }
 }
