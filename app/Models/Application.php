@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use App\Subject;
-use App\Models\Importance;
+use App\Technique;
 use App\Models\Staff;
+use App\Models\Importance;
 use App\Models\Telecommunication;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -28,8 +29,9 @@ class Application extends Model
         'importance_id',
         'error_or_broken',
         'devices',
-        'license_id',
-        'certificate_id',
+        'techniques',
+        'license',
+        'certificate',
         'telecommunications',
         'provide_cyber_security',
         'threats_to_information_security',
@@ -47,11 +49,12 @@ class Application extends Model
         'staffs' => 'array',
         'telecommunications'=>'array',
         'devices'=>'array',
+        'techniques'=>'array'
     ];
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['staff','telecommunication','device'];
+    protected $appends = ['staff','telecommunication','device','techniques'];
    
     public function user()
     {
@@ -64,17 +67,6 @@ class Application extends Model
         return $this->belongsTo(Importance::class);
     }
    
-    public function certificate(){
-
-        return $this->belongsTo(Files::class,'certificate_id','id');
-
-    }
-
-    public function license(){
-
-        return $this->belongsTo(Files::class,'license_id','id');
-
-    }
     public function subjectDocument(){
 
         return $this->belongsTo(Files::class,'subject_document','id');
@@ -95,6 +87,12 @@ class Application extends Model
     public function getDeviceAttribute(){
 
         return Device::whereIn('id',$this->devices? : [])->get();
+
+    }
+
+    public function getTechniqueAttribute(){
+
+        return Technique::whereIn('id',$this->techniques? : [])->get();
 
     }
 

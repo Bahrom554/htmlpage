@@ -24,6 +24,7 @@ Route::group(['middleware'=>['auth:api','role:'.User::ROLE_ADMIN.'|'.User::ROLE_
         Route::apiResource('application','ApplicationController');
         Route::get('dash','ApplicationController@dash');
         Route::apiResource('device','DeviceController');
+        Route::apiResource('technique','TechniqueController');
         Route::apiResource('staff','StaffController');
         Route::apiResource('telecommunication','TelecommunicationController');
         Route::put('application/{application}/rester','ApplicationController@rester');
