@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use App\Subject;
-use App\Models\Importance;
 use App\Models\Staff;
+use App\Models\Comment;
+use App\Models\Importance;
 use App\Models\Telecommunication;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -15,10 +16,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Application extends Model
 {
-    public const STATUS_REJECT = 0;
-    public const STATUS_WAITING = 1;
-    public const STATUS_PROCESS = 2;
-    public const STATUS_SUCCESS = 3;
+    //User actions
+    public const STATUS_WAITING = 0;
+    public const STATUS_REJECT =1;
+    //Manager actions
+    public const STATUS_MANAGER_TO_ADMIN = 2;
+    public const STATUS_MANAGER_TO_USER = 3;
+    //Admin actions
+    public const STATUS_ADMIN_TO_MANAGER = 4;
+    public const STATUS_SUCCESS = 5;
+
 
     protected $fillable = [
         'name',
@@ -26,99 +33,140 @@ class Application extends Model
         'staffs',
         'scope_and_purpose',
         'importance_id',
-        'error_or_broken',
+        'document_id',
+        'techniques',
         'devices',
-        'license_id',
-        'certificate_id',
+        'licenses',
+        'certificates',
         'telecommunications',
+        'error_or_broken',
         'provide_cyber_security',
         'threats_to_information_security',
         'consequences_of_an_incident',
         'organizational_and_technical_measures_to_ensure_security',
         'status',
-        'reason',
         'subject',
         'subject_type',
         'subject_definition',
         'subject_document',
-        'rejected_at'
     ];
     protected $casts = [
         'staffs' => 'array',
-        'telecommunications'=>'array',
-        'devices'=>'array',
+        'telecommunications' => 'array',
+        'devices' => 'array',
+        'techniques' => 'array',
+        'licenses' => 'array',
+        'certificates' => 'array'
     ];
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['staff','telecommunication','device'];
-   
+    protected $appends = ['staff', 'telecommunication', 'device', 'technique', 'license', 'certificate'];
+
     public function user()
     {
 
         return $this->belongsTo(User::class);
-
     }
 
-    public function importance(){
+    public function importance()
+    {
         return $this->belongsTo(Importance::class);
     }
-   
-    public function certificate(){
 
-        return $this->belongsTo(Files::class,'certificate_id','id');
+    public function subjectDocument()
+    {
 
+        return $this->belongsTo(Files::class, 'subject_document', 'id');
     }
 
-    public function license(){
+    public function Document()
+    {
 
-        return $this->belongsTo(Files::class,'license_id','id');
-
-    }
-    public function subjectDocument(){
-
-        return $this->belongsTo(Files::class,'subject_document','id');
-
+        return $this->belongsTo(Files::class, 'document_id', 'id');
     }
 
-    public function getStaffAttribute(){
-
-        return Staff::whereIn('id',$this->staffs? : [])->get();
-
+    public function comment(){
+        return $this->hasMany(Comment::class);
     }
 
-    public function getTeleCommunicationAttribute(){
+    public function getCertificateAttribute()
+    {
 
-        return Telecommunication::whereIn('id',$this->telecommunications? : [])->get();
-
+        return Files::whereIn('id', $this->certificates ?: [])->get();
     }
-    public function getDeviceAttribute(){
 
-        return Device::whereIn('id',$this->devices? : [])->get();
+    public function getLicenseAttribute()
+    {
 
+        return Files::whereIn('id', $this->licenses ?: [])->get();
+    }
+
+
+    public function getStaffAttribute()
+    {
+
+        return Staff::whereIn('id', $this->staffs ?: [])->get();
+    }
+
+    public function getTeleCommunicationAttribute()
+    {
+
+        return Telecommunication::whereIn('id', $this->telecommunications ?: [])->get();
+    }
+    public function getDeviceAttribute()
+    {
+        return Device::whereIn('id', $this->devices ?: [])->get();
+    }
+
+    public function getTechniqueAttribute()
+    {
+        return Technique::whereIn('id', $this->techniques ?: [])->get();
     }
 
     public function scopePopular($query, $request)
     {
         if ($request->filled('between')) {
-            return $query->whereBetween('updated_at', explode(',',$request->between));
+            return $query->whereBetween('updated_at', explode(',', $request->between));
         }
     }
 
-    public function editable(){
-        if($this->status==static::STATUS_REJECT || $this->status==static::STATUS_WAITING ){
+    public function userActions()
+    {
+        if ($this->status == static::STATUS_MANAGER_TO_USER || $this->status == static::STATUS_WAITING) {
             return true;
         }
         return false;
     }
 
-    protected static function booted(){
+    public function managerActions(){
+        if ($this->status == static::STATUS_ADMIN_TO_MANAGER || $this->status == static::STATUS_WAITING) {
+            return true;
+        }
+        return false;
+    }
+
+    public function adminActions(){
+
+        if ($this->status == static::STATUS_MANAGER_TO_ADMIN) {
+            return true;
+        }
+        return false;
+    }
+
+    protected static function booted()
+    {
         static::addGlobalScope('permission', function (Builder $builder) {
-            if(!Gate::any(['admin','manager'])){
-                $builder->where('user_id',(int)Auth::user()->id);
+            if (!Gate::any(['admin', 'manager'])) {
+                $builder->where('user_id', (int)Auth::user()->id);
+            }
+            else if(!Gate::allows('manager')){
+                $builder->whereIn('status', [self::STATUS_ADMIN_TO_MANAGER,self::STATUS_WAITING]);
+            }
+
+            else if(!Gate::allows('admin')){
+                $builder->where('status', [self::STATUS_MANAGER_TO_ADMIN, self::STATUS_SUCCESS]);
             }
         });
     }
-   
-
 }

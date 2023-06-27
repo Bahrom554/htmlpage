@@ -31,14 +31,14 @@ class ApplicationService
         ->get();
         // ------------------------------
         $by_cert = $this->commonAll($request)
-        ->whereNotNull('certificate_id')
+        ->whereNotNull('certificates')
         ->selectRaw('year(updated_at) year, monthname(updated_at) month, count(*) total')
         ->groupBy('year', 'month')
         ->orderBy('year', 'desc')
         ->get();
         // --------------------------------//
         $by_lic = $this->commonAll($request)
-        ->whereNotNull('license_id')
+        ->whereNotNull('licenses')
         ->selectRaw('year(updated_at) year, monthname(updated_at) month, count(*) total')
         ->groupBy('year', 'month')
         ->orderBy('year', 'desc')
@@ -89,22 +89,25 @@ class ApplicationService
     public function create(ApplicationCreateRequest $request)
     {
         $app = Application::make($request->only(
-        'name',
-        'staffs',
-        'scope_and_purpose',
-        'error_or_broken',
-        'devices',
-        'license_id',
-        'certificate_id',
-        'telecommunications',
-        'provide_cyber_security',
-        'threats_to_information_security',
-        'consequences_of_an_incident',
-        'organizational_and_technical_measures_to_ensure_security',
-        'subject',
-        'subject_type',
-        'subject_definition',
-        'subject_document'
+            'name',
+            'staffs',
+            'scope_and_purpose',
+            'importance_id',
+            'document_id',
+            'techniques',
+            'devices',
+            'licenses',
+            'certificates',
+            'telecommunications',
+            'error_or_broken',
+            'provide_cyber_security',
+            'threats_to_information_security',
+            'consequences_of_an_incident',
+            'organizational_and_technical_measures_to_ensure_security',
+            'subject',
+            'subject_type',
+            'subject_definition',
+            'subject_document'
         ));
         $app->user_id = Auth::user()->id;
         $app->save();
@@ -113,18 +116,19 @@ class ApplicationService
 
     public function edit(ApplicationEditRequest $request, Application $application)
     {
-
-
-
+        
         $application->update($request->only([
             'name',
             'staffs',
             'scope_and_purpose',
-            'error_or_broken',
+            'importance_id',
+            'document_id',
+            'techniques',
             'devices',
-            'license_id',
-            'certificate_id',
+            'licenses',
+            'certificates',
             'telecommunications',
+            'error_or_broken',
             'provide_cyber_security',
             'threats_to_information_security',
             'consequences_of_an_incident',
@@ -132,15 +136,32 @@ class ApplicationService
             'subject',
             'subject_type',
             'subject_definition',
-            'subject_document']));
-             Application::findOrFail($application->id)->update(['status'=>1]);
+            'subject_document'
+        ]));
+             Application::findOrFail($application->id)->update(['status'=>0]);
             return $application;
     }
 
     public function remove(Application $application)
+    {  
+       
+            $application->delete();
+            return 'deleted';
+        
+        
+    }
+
+    private function commonAll(Request $request)
     {
-        $application->delete();
-        return 'deleted';
+        $query = QueryBuilder::for(Application::class);
+        $query->withoutGlobalScope('permission');
+        if ($request->filled('from','to')) {
+            $from = Carbon::createFromFormat('Y-m-d',$request->from)->startOfDay();
+            $to = Carbon::createFromFormat('Y-m-d',$request->to)->endOfDay();
+            return $query->whereBetween(DB::raw('DATE(created_at)'), [$from, $to]);
+            }
+
+        return $query;
     }
 
     public function reject(Request $request, Application $application){
@@ -157,17 +178,6 @@ class ApplicationService
         $application->save();
         return $application;
     }
-    public function register(Request $request, Application $application){
-        $request->validate([
-            'reason' => 'nullable|string'
-        ]);
-        $application->status=Application::STATUS_PROCESS;
-        if($request->filled('reason')){
-            $application->reason=$request->reason;
-        }
-        $application->save();
-        return $application;
-    }
     public function success(Request $request, Application $application){
         $request->validate([
             'reason' => 'nullable|string'
@@ -179,34 +189,10 @@ class ApplicationService
         $application->save();
         return $application;
     }
-    public function importance(Request $request, Application $application){
-        $request->validate([
-            'importance_id' => 'nullable|integer|exists:importances,id'
-        ]);
-        if($request->filled('importance_id')){
-            $application->importance_id=$request->importance_id;
-        }
-        $application->save();
-        return $application;
-    }
-
     public function rester(Request $request, Application $application){
         $application->status=Application::STATUS_WAITING;
         $application->save();
         return $application;
-    }
-
-    private function commonAll(Request $request)
-    {
-        $query = QueryBuilder::for(Application::class);
-        $query->withoutGlobalScope('permission');
-        if ($request->filled('from','to')) {
-            $from = Carbon::createFromFormat('Y-m-d',$request->from)->startOfDay();
-            $to = Carbon::createFromFormat('Y-m-d',$request->to)->endOfDay();
-            return $query->whereBetween(DB::raw('DATE(created_at)'), [$from, $to]);
-            }
-
-        return $query;
     }
 
 

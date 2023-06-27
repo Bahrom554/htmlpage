@@ -75,26 +75,57 @@ class UserController extends Controller
         return response()->json([], Response::HTTP_RESET_CONTENT);
     }
 
-    public function assignRole(Request $request, User $user)
-    {
-        if ($user->hasAnyRole($request->role)) {
-            return response()->json([], Response::HTTP_NOT_MODIFIED);
-        }
-        $user->syncRoles($request->role);
-        if($user->hasRole(User::ROLE_ADMIN)){
-            $user->syncRoles(User::ROLE_ADMIN);
-        }
-        return $user;
-    }
 
-    public function removeRole(User $user, Role $role)
-    {
-        if ($user->hasRole($role) ) {
-            $user->removeRole($role);
-            return response()->json([], Response::HTTP_NO_CONTENT);
-        }
 
-        return response()->json([], Response::HTTP_NOT_MODIFIED);
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    // public function assignRole(Request $request, User $user)
+    // {
+    //     if ($user->hasAnyRole($request->role)) {
+    //         return response()->json([], Response::HTTP_NOT_MODIFIED);
+    //     }
+    //     $user->syncRoles($request->role);
+    //     if($user->hasRole(User::ROLE_ADMIN)){
+    //         $user->syncRoles(User::ROLE_ADMIN);
+    //     }
+    //     return $user;
+    // }
+
+    // public function removeRole(User $user, Role $role)
+    // {
+    //     if ($user->hasRole($role) ) {
+    //         $user->removeRole($role);
+    //         return response()->json([], Response::HTTP_NO_CONTENT);
+    //     }
+
+    //     return response()->json([], Response::HTTP_NOT_MODIFIED);
+    // }
 
 }

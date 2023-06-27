@@ -55,31 +55,38 @@ class ApplicationController extends Controller
     }
     public function update(ApplicationEditRequest $request, Application $application)
     {
-        if(!$application->editable()){
+        if(!$application->userActions()){
             abort(403);
         }
         return $this->service->edit($request,$application);
     }
     public function destroy(Application $application)
     {
+        if(!$application->userActions()){
+            abort(403);
+        }
         return $this->service->remove($application);
     }
+
+
     public function reject(Request $request, Application $application)
     {
+        if(!($application->managerActions() || $application->adminActions())){
+            abort(403);
+        }
         return $this->service->reject($request, $application);
     }
-    public function register(Request $request, Application $application){
+    public function writeComment(Request $request, Application $application){
 
         return $this->service->register($request,$application);
     }
     public function success(Request $request, Application $application){
-
+        if(!$application->adminActions()){
+            abort(403);
+        }
         return $this->service->success($request,$application);
     }
-    public function importance(Request $request, Application $application){
-
-        return $this->service->importance($request,$application);
-    }
+   
 
 
 
