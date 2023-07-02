@@ -18,8 +18,7 @@ class CreateCommentsTable extends Migration
             $table->unsignedBigInteger('application_id');
             $table->text('description');
             $table->unsignedBigInteger('column_id');
-            $table->unsignedBigInteger('creator_id');
-            $table->unsignedBigInteger('recipient_id');
+            $table->unsignedBigInteger('author');
             $table->foreign('application_id')->references('id')->on('applications')->onDelete('cascade');
             $table->timestamps();
 

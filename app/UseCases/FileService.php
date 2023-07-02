@@ -84,7 +84,7 @@ class FileService
             $i
         ];
         $file_hash = Str::random(32);
-        $basePath = storage_path('app/public/static');
+        $basePath = storage_path('app/public');
         $folderPath = '';
         foreach ($folders as $folder) {
             $basePath .= '/' . $folder;
@@ -107,7 +107,7 @@ class FileService
         return $generatedPathFileDTO;
     }
     public function delete(Files $file){
-        unlink($file->folder.'/'.$file->file);
+        return ($file->folder.'/'.$file->file);
     }
 
     private function createFileModel(GeneratedPathFileDTO $generatedDTO,Request $request)

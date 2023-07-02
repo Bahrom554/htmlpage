@@ -22,7 +22,7 @@ class ApplicationCreateRequest extends FormRequest
     {
         return [
             'name'=>'required|string',
-            'staffs'=>'required|array|exists:staff,id',
+            'staffs'=>'required|array|exists:users,id',
             'scope_and_purpose'=>'required|string',
             'error_or_broken'=>'required|string',
             'devices'=>'nullable|array|exists:devices,id',
@@ -34,10 +34,7 @@ class ApplicationCreateRequest extends FormRequest
             'threats_to_information_security'=>'required|string',
             'consequences_of_an_incident'=>'required|string',
             'organizational_and_technical_measures_to_ensure_security'=>'required|string',
-            'subject'=>'required|string',
-            'subject_type'=>'required|string',
-            'subject_definition'=>'nullable|string',
-            'subject_document'=>'nullable|integer|exists:files,id',
+            'subject_id'=>'required|integer|exists:subjects,id',
             'document_id'=>'nullable|integer|exists:files,id',
             'importance_id'=>'required|integer|exists:importances,id'
 

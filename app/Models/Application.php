@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Subject;
+use App\Models\Subject;
 use App\Models\Staff;
 use App\Models\Comment;
 use App\Models\Importance;
@@ -45,10 +45,8 @@ class Application extends Model
         'consequences_of_an_incident',
         'organizational_and_technical_measures_to_ensure_security',
         'status',
-        'subject',
-        'subject_type',
-        'subject_definition',
-        'subject_document',
+        'subject_id',
+        
     ];
     protected $casts = [
         'staffs' => 'array',
@@ -61,23 +59,20 @@ class Application extends Model
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['staff', 'telecommunication', 'device', 'technique', 'license', 'certificate'];
+    // protected $appends = ['staff', 'telecommunication', 'device', 'technique', 'license', 'certificate'];
 
     public function user()
     {
-
-        return $this->belongsTo(User::class);
+       return $this->belongsTo(User::class);
     }
 
     public function importance()
     {
         return $this->belongsTo(Importance::class);
     }
-
-    public function subjectDocument()
+    public function subject()
     {
-
-        return $this->belongsTo(Files::class, 'subject_document', 'id');
+        return $this->belongsTo(Subject::class);
     }
 
     public function Document()
@@ -140,7 +135,7 @@ class Application extends Model
     }
 
     public function managerActions(){
-        if ($this->status == static::STATUS_ADMIN_TO_MANAGER || $this->status == static::STATUS_WAITING) {
+        if ($this->status == static::STATUS_ADMIN_TO_MANAGER || $this->status == static::STATUS_WAITING || $this->status == static::STATUS_REJECT) {
             return true;
         }
         return false;
@@ -148,7 +143,7 @@ class Application extends Model
 
     public function adminActions(){
 
-        if ($this->status == static::STATUS_MANAGER_TO_ADMIN) {
+        if ($this->status == static::STATUS_MANAGER_TO_ADMIN || $this->status == static::STATUS_SUCCESS) {
             return true;
         }
         return false;
@@ -157,14 +152,14 @@ class Application extends Model
     protected static function booted()
     {
         static::addGlobalScope('permission', function (Builder $builder) {
-            if (!Gate::any(['admin', 'manager'])) {
+            if (Gate::allows('user')) {
                 $builder->where('user_id', (int)Auth::user()->id);
             }
-            else if(!Gate::allows('manager')){
-                $builder->whereIn('status', [self::STATUS_ADMIN_TO_MANAGER,self::STATUS_WAITING]);
+            elseif(Gate::allows('manager')){
+                $builder->whereIn('status', [self::STATUS_ADMIN_TO_MANAGER,self::STATUS_WAITING,self::STATUS_REJECT]);
             }
 
-            else if(!Gate::allows('admin')){
+            elseif(Gate::allows('admin')){
                 $builder->where('status', [self::STATUS_MANAGER_TO_ADMIN, self::STATUS_SUCCESS]);
             }
         });

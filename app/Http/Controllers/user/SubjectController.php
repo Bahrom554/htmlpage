@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\user;
 
-
-use App\Models\Technique;
+use App\Models\Subject;
 use Illuminate\Http\Request;
-use App\UseCases\TechniqueService;
+use App\UseCases\SubjectService;
 use App\Http\Controllers\Controller;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class TechniqueController extends Controller
+class SubjectController extends Controller
 {
     private $service;
-    public function __construct(TechniqueService $service)
+    public function __construct(SubjectService $service)
     {
         $this->service=$service;
     }
@@ -24,7 +23,7 @@ class TechniqueController extends Controller
     }
     public function show(Request $request, $id)
     {
-        $query = QueryBuilder::for(Technique::class);
+        $query = QueryBuilder::for(Subject::class);
         $task=$query->findOrFail($id);
         if (!empty($request->append)) {
             $task->append(explode(',', $request->append));
@@ -35,13 +34,13 @@ class TechniqueController extends Controller
         return $task;
     }
 
-    public function update(Request $request, Technique $technique)
+    public function update(Request $request, Subject $subject)
     {
-        return $this->service->edit($request,$technique);
+        return $this->service->edit($request,$subject);
     }
 
-    public function destroy(Technique $technique)
+    public function destroy(Subject $subject)
     {
-        return $this->service->remove($technique);
+        return $this->service->remove($subject);
     }
 }

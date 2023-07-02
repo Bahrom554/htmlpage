@@ -13,7 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable,HasRoles;
+    use HasApiTokens, Notifiable, HasRoles;
 
     public const ROLE_USER = 'user';
     public const ROLE_MANAGER = 'manager';
@@ -47,21 +47,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function applications():HasMany
+    public function applications(): HasMany
     {
         return $this->hasMany(Application::class);
     }
-
-
-    protected static function booted(){
-        static::addGlobalScope('users', function (Builder $builder) {
-            if(!Gate::allows('admin')){
-                $builder->reject(function($user){
-                    return $user->hasAnyRole(self::ROLE_ADMIN,self::ROLE_MANAGER);
-                });
-            }
-        });
-    }
-
-    
 }

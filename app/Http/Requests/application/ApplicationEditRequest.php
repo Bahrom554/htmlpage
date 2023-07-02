@@ -11,7 +11,7 @@ class ApplicationEditRequest extends FormRequest
     {
         return [
             'name'=>'string',
-            'staffs'=>'required|array|exists:staff,id',
+            'staffs'=>'required|array|exists:users,id',
             'scope_and_purpose'=>'string',
             'error_or_broken'=>'string',
             'devices'=>'nullable|array|exists:devices,id',
@@ -23,10 +23,7 @@ class ApplicationEditRequest extends FormRequest
             'threats_to_information_security'=>'string',
             'consequences_of_an_incident'=>'string',
             'organizational_and_technical_measures_to_ensure_security'=>'string',
-            'subject'=>'string',
-            'subject_type'=>'string',
-            'subject_definition'=>'string',
-            'subject_document'=>'nullable|integer|exists:files,id',
+            'subject_id'=>'nullable|integer|exists:subjects,id',
             'document_id'=>'nullable|integer|exists:files,id',
             'importance_id'=>'required|integer|exists:importances,id'
            ];

@@ -19,10 +19,7 @@ class CreateApplicationsTable extends Migration
             $table->string('name');
             $table->unsignedBigInteger('user_id')->nullable();
             // subject many to many
-            $table->string('subject');
-            $table->string('subject_type');
-            $table->string('subject_definition')->nullable();
-            $table->unsignedBigInteger('subject_document')->nullable();
+            $table->unsignedBigInteger('subject_id');
             // shaxs to'grisidegi malumot
             $table->json('staffs')->nullable();
             // МАИ объектининг кўлами ва мақсади;

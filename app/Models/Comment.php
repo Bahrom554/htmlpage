@@ -11,8 +11,7 @@ class Comment extends Model
         'application_id',
         'description',
         'column_id',
-        'creator_id',
-        'recipient_id'
+        'author',
     ];
 
 
@@ -20,11 +19,9 @@ class Comment extends Model
 
         return $this->belongsTo(Application::class);
     }
-    public function creator(){
-        return $this->belongsTo(User::class , 'creator_id' , 'id');
+    public function author(){
+        return $this->belongsTo(User::class , 'author' , 'id');
     }
 
-    public function recipient(){
-        return $this->belongsTo(User::class , 'recipient_id' , 'id');
-    }
+    
 }

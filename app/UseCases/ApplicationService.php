@@ -8,6 +8,7 @@ use App\Models\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Http\Requests\application\ApplicationEditRequest;
@@ -82,13 +83,13 @@ class ApplicationService
         $query->allowedFilters($filter);
         $query->allowedSorts($request->sort);
         $query->orderBy('updated_at', 'desc');
-        return $query->paginate($request->per_page);
+        return $query->paginate(30);
 
     }
 
     public function create(ApplicationCreateRequest $request)
     {
-        $app = Application::make($request->only(
+        $app = Application::make($request->only([ 
             'name',
             'staffs',
             'scope_and_purpose',
@@ -104,11 +105,9 @@ class ApplicationService
             'threats_to_information_security',
             'consequences_of_an_incident',
             'organizational_and_technical_measures_to_ensure_security',
-            'subject',
-            'subject_type',
-            'subject_definition',
-            'subject_document'
-        ));
+            'subject_id',
+            
+        ]));
         $app->user_id = Auth::user()->id;
         $app->save();
         return $app;
@@ -133,12 +132,10 @@ class ApplicationService
             'threats_to_information_security',
             'consequences_of_an_incident',
             'organizational_and_technical_measures_to_ensure_security',
-            'subject',
-            'subject_type',
-            'subject_definition',
-            'subject_document'
-        ]));
-             Application::findOrFail($application->id)->update(['status'=>0]);
+            'subject_id',
+            
+        ])+['status'=>0]);
+            //  Application::findOrFail($application->id)->update(['status'=>0]);
             return $application;
     }
 
@@ -154,7 +151,9 @@ class ApplicationService
     private function commonAll(Request $request)
     {
         $query = QueryBuilder::for(Application::class);
-        $query->withoutGlobalScope('permission');
+        if(Gate::denies('user')){
+            $query->withoutGlobalScope('permission');
+        }
         if ($request->filled('from','to')) {
             $from = Carbon::createFromFormat('Y-m-d',$request->from)->startOfDay();
             $to = Carbon::createFromFormat('Y-m-d',$request->to)->endOfDay();
@@ -164,36 +163,25 @@ class ApplicationService
         return $query;
     }
 
-    public function reject(Request $request, Application $application){
+    public function reject( Application $application){
 
-        $request->validate([
-            'reason' => 'nullable|string'
-        ]);
+        
         $application->status=Application::STATUS_REJECT;
-        $application->rejected_at=Carbon::now();
-        if($request->filled('reason')){
-            $application->reason=$request->reason;
-            $application->importance_id=null;
-        }
         $application->save();
         return $application;
     }
-    public function success(Request $request, Application $application){
-        $request->validate([
-            'reason' => 'nullable|string'
-        ]);
-        $application->status=Application::STATUS_SUCCESS;
-        if($request->filled('reason')){
-            $application->reason=$request->reason;
-        }
+    public function success( Application $application){
+        if(Gate::allows('admin')){
+            $application->status=Application::STATUS_SUCCESS;
+         }
+         else{
+            $application->status=Application::STATUS_MANAGER_TO_ADMIN;
+
+         }
         $application->save();
         return $application;
     }
-    public function rester(Request $request, Application $application){
-        $application->status=Application::STATUS_WAITING;
-        $application->save();
-        return $application;
-    }
+  
 
 
 }

@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\admin;
-use App\Http\Requests\user\UserCreateRequest;
-use App\Http\Requests\user\UserEditRequest;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\UseCases\UserService;
@@ -11,63 +10,78 @@ use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Spatie\QueryBuilder\QueryBuilder;
 use App\Http\Resources\UserListResource;
+use App\Http\Requests\user\UserEditRequest;
+use App\Http\Requests\user\UserCreateRequest;
 
 class UserController extends Controller
 {
     private $service;
     public function __construct(UserService $service)
     {
-        $this->service=$service;
+
+        $this->service = $service;
     }
     public function index(Request $request)
     {
         $query = QueryBuilder::for(User::class);
-        if (!empty(request()->get('search'))){
-            $query->where('name', 'like', '%'.request()->get('search').'%')
-                ->orWhere('username', 'like', '%'.request()->get('search').'%');
+        if (!empty(request()->get('search'))) {
+            $query->where('name', 'like', '%' . request()->get('search') . '%')
+                ->orWhere('username', 'like', '%' . request()->get('search') . '%');
         }
-        $query->where('id','<>',Auth::id());
+        $query->where('id', '<>', Auth::id());
         $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
         $query->allowedSorts(request()->sort);
+        if (Gate::denies('admin')) {
+            $query->whereHas('roles', function ($q) {
+                $q->where('name', User::ROLE_USER);
+            });
+        }
         return $query->paginate(10);
-
     }
 
-     public function store(UserCreateRequest $request)
+    public function store(UserCreateRequest $request)
     {
-        $user=$this->service->create($request);
+        $user = $this->service->create($request);
         return new UserListResource($user);
     }
 
-    public function show(User $user)
+    public function show($id)
     {
+        $user = $this->FilterByRole($id);
+
         return new UserListResource($user);
     }
 
 
-    public function update(UserEditRequest $request, User $user)
+    public function update(UserEditRequest $request, $id)
     {
+        $user = $this->FilterByRole($id);
 
-        $this->service->edit($request,$user);
+        $this->service->edit($request, $user);
         return new UserListResource(User::findOrFail($user->id));
     }
 
 
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        if(!$user->hasRole(User::ROLE_ADMIN)){
+        $user = $this->FilterByRole($id);
+
+        if (!$user->hasRole(User::ROLE_ADMIN)) {
             $this->service->remove($user);
         }
         return response()->json([], Response::HTTP_NO_CONTENT);
     }
 
-    public function changePassword(Request $request,User $user){
-        $this->validate($request,[
-            'password'=>'required|confirmed|string|min:6',
+    public function changePassword(Request $request, $id)
+    {
+        $user = $this->FilterByRole($id);
+        $this->validate($request, [
+            'password' => 'required|confirmed|string|min:6',
         ]);
-        $this->service->resetPassword($request,$user);
+        $this->service->resetPassword($request, $user);
         DB::table('oauth_access_tokens')
             ->where('user_id', $user->id)->update([
                 'revoked' => true
@@ -76,6 +90,16 @@ class UserController extends Controller
     }
 
 
+    protected function FilterByRole($id)
+    {
+        $user = User::where('id', $id);
+        if (Gate::denies('admin')) {
+            $user = $user->whereHas('roles', function ($q) {
+                $q->where('name', User::ROLE_USER);
+            });
+        }
+        return $user->firstOrFail();
+    }
 
 
 
@@ -104,7 +128,9 @@ class UserController extends Controller
 
 
 
-    
+
+
+
 
     // public function assignRole(Request $request, User $user)
     // {

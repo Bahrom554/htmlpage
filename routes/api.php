@@ -18,14 +18,14 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::group(['namespace' => 'admin'], function () {
             Route::apiResource('users', 'UserController'); //done
             Route::apiResource('importance', 'ImportanceController'); //done
+            Route::apiResource('comment','CommentController');
             Route::put('users/{user}/change-password', 'UserController@changePassword'); //done
         });
-
         Route::group(['namespace' => 'user'], function () {
-            Route::put('application/{application}/success', 'ApplicationController@success');
-            Route::put('application/{application}/reject', 'ApplicationController@reject');
-            Route::put('application/{application}/register', 'ApplicationController@register');
-            Route::put('application/{application}/rester', 'ApplicationController@rester');
+            Route::get('application/{application}/success', 'ApplicationController@success');
+            Route::get('application/{application}/reject', 'ApplicationController@reject');
+            Route::post('application/{application}/comment', 'ApplicationController@comment');
+
          
         });
     });
@@ -37,12 +37,16 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::put('profile/change-password', 'ProfileController@changePassword'); //done
         Route::get('file', 'FilemanagerController@index'); //done
         Route::delete('file/{id}', 'FilemanagerController@delete'); //done
+        Route::get('file/{id}', 'FilemanagerController@show'); //done
         Route::post('file', 'FilemanagerController@uploads'); //done
         Route::apiResource('application', 'ApplicationController'); //done
         Route::get('dash', 'ApplicationController@dash'); //done
         Route::apiResource('device', 'DeviceController'); //done
+        Route::apiResource('subject', 'SubjectController'); //done
         Route::apiResource('technique', 'TechniqueController'); //done
         Route::apiResource('staff', 'StaffController'); //done
         Route::apiResource('telecommunication', 'TelecommunicationController'); //done
     });
+
+    
 });
