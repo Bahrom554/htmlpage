@@ -163,24 +163,8 @@ class ApplicationService
         return $query;
     }
 
-    public function reject( Application $application){
-
-        
-        $application->status=Application::STATUS_REJECT;
-        $application->save();
-        return $application;
-    }
-    public function success( Application $application){
-        if(Gate::allows('admin')){
-            $application->status=Application::STATUS_SUCCESS;
-         }
-         else{
-            $application->status=Application::STATUS_MANAGER_TO_ADMIN;
-
-         }
-        $application->save();
-        return $application;
-    }
+   
+   
   
 
 

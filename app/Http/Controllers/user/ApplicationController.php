@@ -75,19 +75,27 @@ class ApplicationController extends Controller
 
     public function reject(Application $application)
     {
-
-        if (!($application->managerActions() || $application->adminActions())) {
-            abort(403);
+        if ($application->adminActions() && Gate::allows('admin')) {
+            $application->status = Application::STATUS_REJECT;
+            $application->save();
+        } elseif ($application->managerActions() && Gate::allows('manager')) {
+            $application->status = Application::STATUS_REJECT;
+            $application->save();
         }
-        return $this->service->reject($application);
+        return $application;
     }
 
     public function success(Application $application)
     {
-        if (!($application->adminActions() || $application->managerActions())) {
-            abort(403);
+        if ($application->adminActions() && Gate::allows('admin')) {
+            $application->status = Application::STATUS_SUCCESS;
+            $application->save();
+        } elseif ($application->managerActions() && Gate::allows('manager')) {
+            $application->status = Application::STATUS_MANAGER_TO_ADMIN;
+            $application->save();
         }
-        return $this->service->success($application);
+
+        return $application;
     }
 
     public function comment(Request $request, Application $application)
@@ -105,18 +113,17 @@ class ApplicationController extends Controller
                 if ($request->filled('column_' . $n)) {
 
                     $this->commentService->create([
-                        'application_id'=>$application->id,
-                        'description'=>$request->get('column_' . $n),
-                        'column_id'=>$n,
-                        'author'=>Auth::user()->id
-                   ]);
+                        'application_id' => $application->id,
+                        'description' => $request->get('column_' . $n),
+                        'column_id' => $n,
+                        'author' => Auth::user()->id
+                    ]);
                 }
             }
-            if(Gate::allows('manager') && $request->has('status')){
-                $application->update(['status'=>Application::STATUS_MANAGER_TO_USER]);
-            }
-            elseif(Gate::allows('admin') && $request->has('status')){
-                $application->update(['status'=>Application::STATUS_ADMIN_TO_MANAGER]);
+            if (Gate::allows('manager') && $request->has('status')) {
+                $application->update(['status' => Application::STATUS_MANAGER_TO_USER]);
+            } elseif (Gate::allows('admin') && $request->has('status')) {
+                $application->update(['status' => Application::STATUS_ADMIN_TO_MANAGER]);
             }
             DB::commit();
         } catch (\Exception $e) {

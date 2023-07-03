@@ -8,6 +8,11 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class ImportanceController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:admin|manager')->except('index');
+        
+    }
     /**
      * Display a listing of the resource.
      *

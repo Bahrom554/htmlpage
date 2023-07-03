@@ -17,7 +17,6 @@ Route::group(['middleware' => 'auth:api'], function () {
 
         Route::group(['namespace' => 'admin'], function () {
             Route::apiResource('users', 'UserController'); //done
-            Route::apiResource('importance', 'ImportanceController'); //done
             Route::apiResource('comment','CommentController');
             Route::put('users/{user}/change-password', 'UserController@changePassword'); //done
         });
@@ -46,6 +45,11 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::apiResource('technique', 'TechniqueController'); //done
         Route::apiResource('staff', 'StaffController'); //done
         Route::apiResource('telecommunication', 'TelecommunicationController'); //done
+        
+    });
+    Route::group(['namespace' => 'admin'], function () {
+        Route::apiResource('importance', 'ImportanceController'); //done
+        
     });
 
     
