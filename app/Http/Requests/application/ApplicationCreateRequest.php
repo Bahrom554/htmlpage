@@ -35,7 +35,7 @@ class ApplicationCreateRequest extends FormRequest
             'consequences_of_an_incident'=>'required|string',
             'organizational_and_technical_measures_to_ensure_security'=>'required|string',
             'subject_id'=>'required|integer|exists:subjects,id',
-            'document_id'=>'nullable|integer|exists:files,id',
+            'documents'=>'nullable|array|exists:files,id',
             'importance_id'=>'required|integer|exists:importances,id'
 
         ];

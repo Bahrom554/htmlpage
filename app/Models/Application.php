@@ -33,7 +33,7 @@ class Application extends Model
         'staffs',
         'scope_and_purpose',
         'importance_id',
-        'document_id',
+        'documents',
         'techniques',
         'devices',
         'licenses',
@@ -54,7 +54,8 @@ class Application extends Model
         'devices' => 'array',
         'techniques' => 'array',
         'licenses' => 'array',
-        'certificates' => 'array'
+        'certificates' => 'array',
+        'documents'=>'array'
     ];
 
     protected $dates = ['deleted_at'];
@@ -75,12 +76,6 @@ class Application extends Model
         return $this->belongsTo(Subject::class);
     }
 
-    public function Document()
-    {
-
-        return $this->belongsTo(Files::class, 'document_id', 'id');
-    }
-
     public function comment(){
         return $this->hasMany(Comment::class);
     }
@@ -96,6 +91,13 @@ class Application extends Model
 
         return Files::whereIn('id', $this->licenses ?: [])->get();
     }
+   
+    public function getDocumentAttribute()
+    {
+
+        return Files::whereIn('id', $this->documents ?: [])->get();
+    }
+
 
 
     public function getStaffAttribute()

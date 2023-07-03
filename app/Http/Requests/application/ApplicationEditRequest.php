@@ -24,7 +24,7 @@ class ApplicationEditRequest extends FormRequest
             'consequences_of_an_incident'=>'string',
             'organizational_and_technical_measures_to_ensure_security'=>'string',
             'subject_id'=>'nullable|integer|exists:subjects,id',
-            'document_id'=>'nullable|integer|exists:files,id',
+            'documents'=>'nullable|array|exists:files,id',
             'importance_id'=>'required|integer|exists:importances,id'
            ];
           

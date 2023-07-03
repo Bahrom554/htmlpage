@@ -34,7 +34,7 @@ class CreateApplicationsTable extends Migration
             // МАИ объектида фойдаланиладиган аппарат, дастурий-аппарат 
              //ва дастурий ахборотлаштириш воситалари ҳақида маълумот, шунингдек, уларнинг ахборот хавфсизлигига мувофиқлиги сертификати;
              $table->json('techniques')->nullable();
-             $table->unsignedBigInteger('document_id')->nullable();
+             $table->json('documents')->nullable();
              $table->json('licenses')->nullable();
              $table->json('certificates')->nullable();
             //  МАИ объектини умумий телекоммуникация тармоғи, шунингдек, Интернетга уланиш ва фойдаланиш тартиби;
