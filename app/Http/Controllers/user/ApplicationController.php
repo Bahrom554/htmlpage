@@ -7,7 +7,6 @@ use App\Models\User;
 use DomainException;
 use App\Models\Application;
 use Illuminate\Http\Request;
-use App\UseCases\CommentService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\UseCases\ApplicationService;
@@ -23,13 +22,11 @@ use App\Http\Requests\application\ApplicationCreateRequest;
 class ApplicationController extends Controller
 {
     private $service;
-    private $commentService;
 
-    public function __construct(ApplicationService $service, CommentService $commentService)
+    public function __construct(ApplicationService $service)
     {
         $this->middleware('role:user')->only('store', 'update', 'destroy');
         $this->service = $service;
-        $this->commentService = $commentService;
     }
     public function dash(Request $request)
     {
@@ -75,10 +72,7 @@ class ApplicationController extends Controller
 
     public function reject(Application $application)
     {
-        if ($application->adminActions() && Gate::allows('admin')) {
-            $application->status = Application::STATUS_REJECT;
-            $application->save();
-        } elseif ($application->managerActions() && Gate::allows('manager')) {
+        if ($application->adminActions() && $application->managerActions()) {
             $application->status = Application::STATUS_REJECT;
             $application->save();
         }
@@ -87,10 +81,10 @@ class ApplicationController extends Controller
 
     public function success(Application $application)
     {
-        if ($application->adminActions() && Gate::allows('admin')) {
+        if ($application->adminActions()) {
             $application->status = Application::STATUS_SUCCESS;
             $application->save();
-        } elseif ($application->managerActions() && Gate::allows('manager')) {
+        } elseif ($application->managerActions()) {
             $application->status = Application::STATUS_MANAGER_TO_ADMIN;
             $application->save();
         }
@@ -104,33 +98,14 @@ class ApplicationController extends Controller
         $request->validate([
             'column_*' => 'nullable|string'
         ]);
-
-        DB::beginTransaction();
-        try {
-
-
-            for ($n = 1; $n < 15; $n++) {
-                if ($request->filled('column_' . $n)) {
-
-                    $this->commentService->create([
-                        'application_id' => $application->id,
-                        'description' => $request->get('column_' . $n),
-                        'column_id' => $n,
-                        'author' => Auth::user()->id
-                    ]);
-                }
-            }
-            if (Gate::allows('manager') && $request->has('status')) {
-                $application->update(['status' => Application::STATUS_MANAGER_TO_USER]);
-            } elseif (Gate::allows('admin') && $request->has('status')) {
-                $application->update(['status' => Application::STATUS_ADMIN_TO_MANAGER]);
-            }
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw new DomainException($e->getMessage(), $e->getCode());
+        if ($application->adminActions() || $application->managerActions()) {
+            return $this->service->writeComment($request,$application);
+        }
+        else{
+            abort(403);
         }
 
-        return $application;
+
+       
     }
 }

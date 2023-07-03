@@ -4,8 +4,10 @@ namespace App\UseCases;
 
 
 use Carbon\Carbon;
+use DomainException;
 use App\Models\Application;
 use Illuminate\Http\Request;
+use App\UseCases\CommentService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -14,8 +16,16 @@ use Spatie\QueryBuilder\AllowedFilter;
 use App\Http\Requests\application\ApplicationEditRequest;
 use App\Http\Requests\application\ApplicationCreateRequest;
 
+
 class ApplicationService
 {
+    
+    private $commentService;
+
+    public function __construct( CommentService $commentService)
+    {
+    $this->commentService = $commentService;
+    }
     public function dash(Request $request)
     {
         $all = $this->commonAll($request)->count();
@@ -163,7 +173,37 @@ class ApplicationService
         return $query;
     }
 
-   
+    public function writeComment(Request $request, Application $application){
+
+        
+        DB::beginTransaction();
+        try {
+
+
+            for ($n = 1; $n < 15; $n++) {
+                if ($request->filled('column_' . $n)) {
+
+                    $this->commentService->create([
+                        'application_id' => $application->id,
+                        'description' => $request->get('column_' . $n),
+                        'column_id' => $n,
+                        'author' => Auth::user()->id
+                    ]);
+                }
+            }
+            if (Gate::allows('manager') && $request->has('status')) {
+                $application->update(['status' => Application::STATUS_MANAGER_TO_USER]);
+            } elseif (Gate::allows('admin') && $request->has('status')) {
+                $application->update(['status' => Application::STATUS_ADMIN_TO_MANAGER]);
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new DomainException($e->getMessage(), $e->getCode());
+        }
+
+        return $application;
+    }
    
   
 

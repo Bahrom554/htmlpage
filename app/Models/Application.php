@@ -128,14 +128,14 @@ class Application extends Model
 
     public function userActions()
     {
-        if ($this->status == static::STATUS_MANAGER_TO_USER || $this->status == static::STATUS_WAITING) {
+        if ($this->status == static::STATUS_MANAGER_TO_USER || $this->status == static::STATUS_WAITING || $this->status == static::STATUS_REJECT) {
             return true;
         }
         return false;
     }
 
     public function managerActions(){
-        if ($this->status == static::STATUS_ADMIN_TO_MANAGER || $this->status == static::STATUS_WAITING || $this->status == static::STATUS_REJECT) {
+        if (Gate::allows('manager') && ($this->status == static::STATUS_ADMIN_TO_MANAGER || $this->status == static::STATUS_WAITING )) {
             return true;
         }
         return false;
@@ -143,7 +143,7 @@ class Application extends Model
 
     public function adminActions(){
 
-        if ($this->status == static::STATUS_MANAGER_TO_ADMIN || $this->status == static::STATUS_SUCCESS) {
+        if (Gate::allows('admin') && ($this->status == static::STATUS_MANAGER_TO_ADMIN || $this->status == static::STATUS_SUCCESS)) {
             return true;
         }
         return false;
@@ -155,13 +155,13 @@ class Application extends Model
             if (Gate::allows('user')) {
                 $builder->where('user_id', (int)Auth::user()->id);
             }
-            elseif(Gate::allows('manager')){
-                $builder->whereIn('status', [self::STATUS_ADMIN_TO_MANAGER,self::STATUS_WAITING,self::STATUS_REJECT]);
-            }
+            // elseif(Gate::allows('manager')){
+            //     $builder->whereIn('status', [self::STATUS_ADMIN_TO_MANAGER,self::STATUS_WAITING,self::STATUS_REJECT]);
+            // }
 
-            elseif(Gate::allows('admin')){
-                $builder->where('status', [self::STATUS_MANAGER_TO_ADMIN, self::STATUS_SUCCESS]);
-            }
+            // elseif(Gate::allows('admin')){
+            //     $builder->where('status', [self::STATUS_MANAGER_TO_ADMIN, self::STATUS_SUCCESS]);
+            // }
         });
     }
 }

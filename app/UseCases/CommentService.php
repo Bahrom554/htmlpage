@@ -19,13 +19,14 @@ class CommentService
 
     public function edit(Request $request, Comment $comment)
     {
+        
         $request->validate([
             'application_id'=>'required|integer|exists:applications,id',
             'description'=>'required|string',
             'column_id'=>'required|string',
         ]);
         if(Auth::user()->id==$comment->author){
-            $comment->update($request->only('name', 'manufacturer', 'model', 'version', 'documents'));
+            $comment->update($request->only('application_id', 'description', 'column_id'));
          }
         return $comment;
 
