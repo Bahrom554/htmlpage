@@ -22,7 +22,7 @@ class ApplicationCreateRequest extends FormRequest
     {
         return [
             'name'=>'required|string',
-            'staffs'=>'required|array|exists:users,id',
+            'staffs'=>'required|array|exists:staffs,id',
             'scope_and_purpose'=>'required|string',
             'error_or_broken'=>'required|string',
             'devices'=>'nullable|array|exists:devices,id',

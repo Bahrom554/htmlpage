@@ -11,7 +11,7 @@ class ApplicationEditRequest extends FormRequest
     {
         return [
             'name'=>'string',
-            'staffs'=>'required|array|exists:users,id',
+            'staffs'=>'required|array|exists:staffs,id',
             'scope_and_purpose'=>'string',
             'error_or_broken'=>'string',
             'devices'=>'nullable|array|exists:devices,id',
