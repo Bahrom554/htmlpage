@@ -60,7 +60,7 @@ class Application extends Model
 
     protected $dates = ['deleted_at'];
 
-    // protected $appends = ['staff', 'telecommunication', 'device', 'technique', 'license', 'certificate'];
+    protected $appends = ['staff'];
 
     public function user()
     {
