@@ -72,7 +72,7 @@ class ApplicationController extends Controller
 
     public function reject(Application $application)
     {
-        if ($application->adminActions() && $application->managerActions()) {
+        if ($application->adminActions() || $application->managerActions()) {
             $application->status = Application::STATUS_REJECT;
             $application->save();
         }
