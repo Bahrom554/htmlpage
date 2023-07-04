@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\Subject;
 use App\Models\Staff;
+use App\Models\Reject;
 use App\Models\Comment;
+use App\Models\Subject;
 use App\Models\Importance;
 use App\Models\Telecommunication;
 use Illuminate\Support\Facades\Auth;
@@ -76,8 +77,8 @@ class Application extends Model
         return $this->belongsTo(Subject::class);
     }
 
-    public function comment(){
-        return $this->hasMany(Comment::class);
+    public function reject(){
+        return $this->hasMany(Reject::class)->orderBy('id', 'DESC')->limit(1);
     }
 
     public function getCertificateAttribute()

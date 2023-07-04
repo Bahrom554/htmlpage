@@ -9,23 +9,16 @@ use Illuminate\Database\Eloquent\Builder;
 class Comment extends Model
 {
     protected $fillable = [
-        'application_id',
         'description',
         'column_id',
-        'author',
+        'reject_id',
+        'author'
+        
     ];
 
 
-    public function application(){
+    public function reject(){
 
-        return $this->belongsTo(Application::class);
+        return $this->belongsTo(Reject::class);
     }
-    public function author(){
-        return $this->belongsTo(User::class , 'author' , 'id');
-    }
-
-
-    
-
-    
 }

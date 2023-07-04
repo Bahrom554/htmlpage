@@ -49,7 +49,6 @@ class CreateApplicationsTable extends Migration
             // МАИ объектида хавфсизликни таъминлашнинг ташкилий ва техник чоралари.
             $table->text('organizational_and_technical_measures_to_ensure_security')->nullable();
             $table->unsignedInteger('status')->default(0);
-            $table->string('reason')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->softDeletes();
             $table->timestamps();

@@ -5,6 +5,8 @@ namespace App\UseCases;
 
 use Carbon\Carbon;
 use DomainException;
+use App\Models\Reject;
+use App\Models\Comment;
 use App\Models\Application;
 use Illuminate\Http\Request;
 use App\UseCases\CommentService;
@@ -15,7 +17,6 @@ use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Http\Requests\application\ApplicationEditRequest;
 use App\Http\Requests\application\ApplicationCreateRequest;
-
 
 class ApplicationService
 {
@@ -175,25 +176,30 @@ class ApplicationService
 
     public function writeComment(Request $request, Application $application){
 
-        
-        DB::beginTransaction();
+      DB::beginTransaction();
         try {
-
-
+            if(!$rejectID=$request->get('reject_id')){
+                $reject =Reject::create([
+                    'application_id'=>$application->id,
+                ]);
+                $rejectID=$reject->id;
+            }
+            
             for ($n = 1; $n < 15; $n++) {
                 if ($request->filled('column_' . $n)) {
-
-                    $this->commentService->create([
-                        'application_id' => $application->id,
+                    Comment::updateOrCreate(
+                        ['column_id' => $n,
+                         'reject_id' =>$rejectID,],
+                        [
                         'description' => $request->get('column_' . $n),
-                        'column_id' => $n,
-                        'author' => Auth::user()->id
+                        'author'=>Auth::user()->id
                     ]);
                 }
             }
-            if (Gate::allows('manager') && $request->has('status')) {
+
+            if (Gate::allows('manager') && $request->filled('status')) {
                 $application->update(['status' => Application::STATUS_MANAGER_TO_USER]);
-            } elseif (Gate::allows('admin') && $request->has('status')) {
+            } elseif (Gate::allows('admin') && $request->filled('status')) {
                 $application->update(['status' => Application::STATUS_ADMIN_TO_MANAGER]);
             }
             DB::commit();

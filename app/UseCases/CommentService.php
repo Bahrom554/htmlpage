@@ -11,8 +11,7 @@ class CommentService
     public function create($data)
     {
         
-        
-        $comment = Comment::create($data);
+    $comment = Comment::create($data);
         
         return $comment;
     }
