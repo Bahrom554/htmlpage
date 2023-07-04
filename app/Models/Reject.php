@@ -15,7 +15,7 @@ class Reject extends Model
     ];
 
 
-protected $with = ['comment'];
+// protected $with = ['comment'];
 
     public function application(){
 

@@ -80,6 +80,9 @@ class Application extends Model
     public function reject(){
         return $this->hasMany(Reject::class)->orderBy('id', 'DESC')->limit(1);
     }
+    public function rejectAll(){
+        return $this->hasMany(Reject::class,'application_id','id')->orderBy('id', 'DESC');
+    }
 
     public function getCertificateAttribute()
     {
