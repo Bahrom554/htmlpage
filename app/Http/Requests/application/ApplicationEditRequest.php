@@ -12,7 +12,7 @@ class ApplicationEditRequest extends FormRequest
         return [
             'name'=>'string',
             'staffs'=>'required|array|exists:staff,id',
-            'scope_and_purpose'=>'string',
+            'purpose_id'=>'integer||exists:purposes,id',
             'error_or_broken'=>'string',
             'devices'=>'nullable|array|exists:devices,id',
             'techniques'=>'nullable|array|exists:techniques,id',
@@ -23,9 +23,9 @@ class ApplicationEditRequest extends FormRequest
             'threats_to_information_security'=>'string',
             'consequences_of_an_incident'=>'string',
             'organizational_and_technical_measures_to_ensure_security'=>'string',
-            'subject_id'=>'nullable|integer|exists:subjects,id',
+            'subject_id'=>'integer|exists:subjects,id',
             'documents'=>'nullable|array|exists:files,id',
-            'importance_id'=>'required|integer|exists:importances,id'
+            'importance_id'=>'integer|exists:importances,id'
            ];
           
     }

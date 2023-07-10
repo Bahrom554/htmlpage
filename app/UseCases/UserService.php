@@ -13,7 +13,7 @@ class UserService
 {
     public function create(UserCreateRequest $request)
     {
-        $user = User::make($request->only('name', 'email'));
+        $user = User::make($request->only('name', 'email','subject_id'));
         $user->password = bcrypt($request->password);
         $user->save();
         if ($request->filled('role') && Auth::user()->hasRole(User::ROLE_ADMIN)) {
@@ -28,7 +28,8 @@ class UserService
     {
         $user->update($request->only([
             'name',
-            'email'
+            'email',
+            'subject_id'
         ]));
 
         if ($request->filled('role') && Auth::user()->hasRole(User::ROLE_ADMIN)) {

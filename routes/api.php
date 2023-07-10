@@ -24,6 +24,10 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::get('application/{application}/success', 'ApplicationController@success');
             Route::get('application/{application}/reject', 'ApplicationController@reject');
             Route::post('application/{application}/comment', 'ApplicationController@comment');
+            Route::apiResource('subject', 'SubjectController'); //done
+            Route::apiResource('purpose','PurposeController');
+            Route::apiResource('item','ItemController');
+
 
          
         });
@@ -41,7 +45,6 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::apiResource('application', 'ApplicationController'); //done
         Route::get('dash', 'ApplicationController@dash'); //done
         Route::apiResource('device', 'DeviceController'); //done
-        Route::apiResource('subject', 'SubjectController'); //done
         Route::apiResource('technique', 'TechniqueController'); //done
         Route::apiResource('staff', 'StaffController'); //done
         Route::apiResource('telecommunication', 'TelecommunicationController'); //done

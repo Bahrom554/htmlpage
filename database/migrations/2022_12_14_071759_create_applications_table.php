@@ -17,13 +17,14 @@ class CreateApplicationsTable extends Migration
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+
             $table->unsignedBigInteger('user_id')->nullable();
             // subject many to many
             $table->unsignedBigInteger('subject_id');
             // shaxs to'grisidegi malumot
             $table->json('staffs')->nullable();
             // МАИ объектининг кўлами ва мақсади;
-            $table->text('scope_and_purpose');
+            $table->unsignedBigInteger('purpose_id');
             // МАИ объектига берилган аҳамиятлилик тоифаси;
             $table->unsignedBigInteger('importance_id');
             // МАИ объекти фаолиятида хатолик бўлса ёки у ишдан чиққан тақдирда, юзага келиши мумкин //бўлган оқибатлар ва зарар;

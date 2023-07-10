@@ -103,7 +103,7 @@ class ApplicationService
         $app = Application::make($request->only([ 
             'name',
             'staffs',
-            'scope_and_purpose',
+            'purpose_id',
             'importance_id',
             'documents',
             'techniques',
@@ -116,10 +116,11 @@ class ApplicationService
             'threats_to_information_security',
             'consequences_of_an_incident',
             'organizational_and_technical_measures_to_ensure_security',
-            'subject_id',
+            
             
         ]));
         $app->user_id = Auth::user()->id;
+        $app->subject_id =Auth::user()->subject_id;
         $app->save();
         return $app;
     }
@@ -130,7 +131,7 @@ class ApplicationService
         $application->update($request->only([
             'name',
             'staffs',
-            'scope_and_purpose',
+            'purpose_id',
             'importance_id',
             'documents',
             'techniques',
@@ -143,7 +144,7 @@ class ApplicationService
             'threats_to_information_security',
             'consequences_of_an_incident',
             'organizational_and_technical_measures_to_ensure_security',
-            'subject_id',
+            
             
         ])+['status'=>0]);
             //  Application::findOrFail($application->id)->update(['status'=>0]);

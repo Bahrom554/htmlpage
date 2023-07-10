@@ -10,12 +10,12 @@ class SubjectService
     {
         $request->validate([
            'name'=>'required|string',
-           'type'=>'required|string',
-           'definition'=>'nullable|string',
+           'address'=>'nullable|string',
+           'parent_id'=>'nullable|integer|exists:subjects,id',
            'documents'=>'nullable|array|exists:files,id'
         ]);
         
-        $subject = Subject::make($request->only('name', 'type', 'definition', 'documents'));
+        $subject = Subject::make($request->only('name', 'address', 'parent_id', 'documents'));
         $subject->save();
         return $subject;
     }
@@ -24,11 +24,11 @@ class SubjectService
     {
         $request->validate([
             'name'=>'required|string',
-            'type'=>'required|string',
-            'definition'=>'nullable|string',
-            'documents'=>'nullable|array|exists:files,id'
+           'address'=>'nullable|string',
+           'parent_id'=>'nullable|integer|exists:subjects,id',
+           'documents'=>'nullable|array|exists:files,id'
         ]);
-        $subject->update($request->only('name', 'type', 'definition', 'documents'));
+        $subject->update($request->only('name', 'address', 'parent_id', 'documents'));
         return $subject;
 
     }

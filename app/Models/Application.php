@@ -32,7 +32,7 @@ class Application extends Model
         'name',
         'user_id',
         'staffs',
-        'scope_and_purpose',
+        'purpose_id',
         'importance_id',
         'documents',
         'techniques',
@@ -47,6 +47,8 @@ class Application extends Model
         'organizational_and_technical_measures_to_ensure_security',
         'status',
         'subject_id',
+        'organization',
+        'address'
         
     ];
     protected $casts = [
@@ -71,6 +73,9 @@ class Application extends Model
     public function importance()
     {
         return $this->belongsTo(Importance::class);
+    }
+    public function purpose(){
+        return $this->belongsTo(Purpose::class);
     }
     public function subject()
     {

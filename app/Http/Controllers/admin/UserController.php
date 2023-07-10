@@ -29,7 +29,7 @@ class UserController extends Controller
         $query = QueryBuilder::for(User::class);
         if (!empty(request()->get('search'))) {
             $query->where('name', 'like', '%' . request()->get('search') . '%')
-                ->orWhere('username', 'like', '%' . request()->get('search') . '%');
+                ->orWhere('email', 'like', '%' . request()->get('search') . '%');
         }
         $query->where('id', '<>', Auth::id());
         $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);

@@ -19,6 +19,7 @@ class UserListResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'subject'=>$this->subject,
+            'organization'=>$this->organization,
             'phone'=>$this->phone,
             'created_at' => $this->created_at,
             'roles'=>$this->roles
