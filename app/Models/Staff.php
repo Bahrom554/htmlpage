@@ -16,15 +16,20 @@ class Staff extends Model
         'phone',
         'statue',
         'definition',
-        'user_id'
+        'file_1',
+        'file_2',
+        'file_3',
+        'subject_id'
     ];
 
+    
+   
 
     protected static function booted()
     {
         static::addGlobalScope('permission', function (Builder $builder) {
             if (Gate::allows('user')) {
-                $builder->where('user_id', (int)Auth::user()->id);
+                $builder->where('subject_id', (int)Auth::user()->subject_id);
             }
     });
     }

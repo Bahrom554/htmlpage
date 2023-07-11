@@ -30,10 +30,13 @@ class StaffController extends Controller
             'name'=>'required|string',
             'phone'=>'required|string',
             'statue'=>'nullable|string',
-            'definition'=>'nullable|string'
+            'definition'=>'nullable|string',
+            'file_1'=>'nullable|string',
+            'file_2'=>'nullable|string',
+            'file_3'=>'nullable|string'
         ]);
         $staff=Staff::make($validated);
-        $staff->user_id=Auth::user()->id;
+        $staff->subject_id=Auth::user()->subject_id;
         $staff->save();
         return $staff;
     }
@@ -50,9 +53,12 @@ class StaffController extends Controller
             'name'=>'required|string',
             'phone'=>'required|string',
             'statue'=>'nullable|string',
-            'definition'=>'nullable|string'
+            'definition'=>'nullable|string',
+            'file_1'=>'nullable|string',
+            'file_2'=>'nullable|string',
+            'file_3'=>'nullable|string'
         ]);
-        $staff->update($request->only([ 'name','phone','statue','definition']));
+        $staff->update($request->only([ 'name','phone','statue','definition','file_1','file_2','file_3']));
         return $staff;
     }
 

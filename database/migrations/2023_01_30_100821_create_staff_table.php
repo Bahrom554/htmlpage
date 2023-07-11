@@ -19,8 +19,11 @@ class CreateStaffTable extends Migration
             $table->string('phone');
             // ustav
             $table->string('statue')->nullable();
+            $table->string('file_1')->nullable();
+            $table->string('file_2')->nullable();
+            $table->string('file_3')->nullable();
             $table->text('definition')->nullable();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('subject_id');
             $table->timestamps();
         });
     }

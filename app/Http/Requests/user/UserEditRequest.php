@@ -12,7 +12,7 @@ class UserEditRequest extends FormRequest
         return [
             'name'=>'string|max:255',
             'username'=>'string|max:255|unique:users',
-            'subject'=>'string|max:255',
+            'subject_id'=>'integer|exists:subjects,id',
             'phone'=>'string'
         ];
     }
