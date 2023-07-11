@@ -1,8 +1,9 @@
 <?php
 
 use App\Models\User;
-use Illuminate\Database\Seeder;
+use App\Models\Subject;
 use Illuminate\Support\Str;
+use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
 class UserSeeder extends Seeder
@@ -33,11 +34,19 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
 
+
+        $subject = Subject::create([
+            'name'=> 'test subject',
+            'address' => 'test'
+        ]);
+
+        
         $user = User::create([
             'name' => 'User',
             'email' => 'user@example.com',
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
             'remember_token' => Str::random(10),
+            'subject_id'=>$subject->id
         ]);
         $admin->assignRole($adminRole);
         $manager->assignRole($managerRole);
