@@ -1,34 +1,26 @@
 <?php
 
 namespace App\UseCases;
+
 use App\Models\Subject;
-use Illuminate\Http\Request;
+use App\Http\Requests\subject\SubjectCreateRequest;
+use App\Http\Requests\subject\SubjectEditRequest;
 
 class SubjectService
 {
-    public function create(Request $request)
+    public function create(SubjectCreateRequest $request)
     {
-        $request->validate([
-           'name'=>'required|string',
-           'address'=>'nullable|string',
-           'parent_id'=>'nullable|integer|exists:subjects,id',
-           'documents'=>'nullable|array|exists:files,id'
-        ]);
+       
         
-        $subject = Subject::make($request->only('name', 'address', 'parent_id', 'documents'));
+        $subject = Subject::make($request->only('name', 'address_legal','address_fact', 'subject_type_id', 'documents'));
         $subject->save();
         return $subject;
     }
 
-    public function edit(Request $request, Subject $subject)
+    public function edit(SubjectEditRequest $request, Subject $subject)
     {
-        $request->validate([
-            'name'=>'required|string',
-           'address'=>'nullable|string',
-           'parent_id'=>'nullable|integer|exists:subjects,id',
-           'documents'=>'nullable|array|exists:files,id'
-        ]);
-        $subject->update($request->only('name', 'address', 'parent_id', 'documents'));
+       
+        $subject->update($request->only('name', 'address_legal','address_fact', 'subject_type_id', 'documents'));
         return $subject;
 
     }

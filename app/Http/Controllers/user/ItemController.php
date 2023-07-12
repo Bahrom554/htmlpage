@@ -10,6 +10,11 @@ use Spatie\QueryBuilder\AllowedFilter;
 
 class ItemController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('role:admin|manager')->only('store', 'update', 'destroy');
+    }
+    
     public function index(Request $request)
     {
         $filters = $request->get('filter');

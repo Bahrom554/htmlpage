@@ -19,17 +19,13 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::apiResource('users', 'UserController'); //done
             Route::apiResource('comment','CommentController');
             Route::put('users/{user}/change-password', 'UserController@changePassword'); //done
+            Route::apiResource('subject-type','SubjectTypeController');
         });
         Route::group(['namespace' => 'user'], function () {
             Route::get('application/{application}/success', 'ApplicationController@success');
             Route::get('application/{application}/reject', 'ApplicationController@reject');
-            Route::post('application/{application}/comment', 'ApplicationController@comment');
-            Route::apiResource('subject', 'SubjectController'); //done
-            Route::apiResource('purpose','PurposeController');
-            Route::apiResource('item','ItemController');
-
-
-         
+            Route::post('application/{application}/comment', 'ApplicationController@comment'); 
+            
         });
     });
 
@@ -48,6 +44,9 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::apiResource('technique', 'TechniqueController'); //done
         Route::apiResource('staff', 'StaffController'); //done
         Route::apiResource('telecommunication', 'TelecommunicationController'); //done
+        Route::apiResource('subject', 'SubjectController'); //done
+        Route::apiResource('purpose','PurposeController');
+        Route::apiResource('item','ItemController');
         
     });
     Route::group(['namespace' => 'admin'], function () {

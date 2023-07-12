@@ -22,7 +22,7 @@ class UserCreateRequest extends FormRequest
     {
         return [
             'name'=>'required|string|max:255',
-            'email'=>'required|string|max:255|unique:users',
+            'email'=>'required|email|max:255|unique:users',
             'password'=>'required|confirmed|string|min:6',
             'subject_id'=>'required|integer|exists:subjects,id'
         ];

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Subject extends Model
 {
-    protected $fillable = ['name', 'parent_id', 'address', 'documents'];
+    protected $fillable = ['name', 'subject_type_id', 'address_legal','address_fact', 'documents'];
     // protected $with = ['subjects'];
     protected $casts=[
         'documents'=>'array'
@@ -28,13 +28,15 @@ class Subject extends Model
        return $this->hasMany(Application::class);
    }
 
-   public function user(){
+   public function users(){
     return $this->hasMany(User::class);
    }
 
-   public function subjects(){
-    return $this->hasMany(Subject::class,'parent_id','id');
+   public function type(){
+    return $this->belongsTo(SubjectType::class,'subject_type_id','id');
    }
+
+  
 
 //    protected static function booted()
 //     {

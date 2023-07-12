@@ -2,6 +2,7 @@
 
 use App\Models\User;
 use App\Models\Subject;
+use App\Models\SubjectType;
 use Illuminate\Support\Str;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
@@ -34,10 +35,15 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
         ]);
 
-
+        $subject_type=SubjectType::create([
+            'name'=>'Vazirlik'
+        ]);
+        
         $subject = Subject::create([
             'name'=> 'test subject',
-            'address' => 'test'
+            'address_legal' => 'test',
+            'address_fact' =>'test',
+            'subject_type_id'=> $subject_type->id
         ]);
 
         

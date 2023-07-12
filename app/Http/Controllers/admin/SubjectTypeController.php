@@ -1,24 +1,18 @@
 <?php
 
-namespace App\Http\Controllers\user;
+namespace App\Http\Controllers\admin;
 
-use App\Models\Purpose;
+
+use App\Models\SubjectType;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 
-class PurposeController extends Controller
+class SubjectTypeController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('role:admin|manager')->only('store', 'update', 'destroy');
-    }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+   
+  
     public function index(Request $request)
     {
         $filters = $request->get('filter');
@@ -28,7 +22,7 @@ class PurposeController extends Controller
                 $filter[] = AllowedFilter::exact($k);
             }
         }
-        $query = QueryBuilder::for(Purpose::class);
+        $query = QueryBuilder::for(SubjectType::class);
         if (!empty($request->get('search'))) {
             $query->where('name', 'like', '%' . $request->get('search') . '%');
         }
@@ -58,11 +52,11 @@ class PurposeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'=>'required|string',
+            'name'=>'required|string|unique:subject_types'
             
          ]);
          
-         return Purpose::create($request->only('name'));
+         return SubjectType::create($request->only('name'));
         
     }
 
@@ -72,14 +66,14 @@ class PurposeController extends Controller
      * @param  \App\Purpose  $purpose
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,Purpose $purpose)
+    public function show(Request $request,SubjectType $subject_type)
     {
         
         if (!empty($request->include)) {
-            $purpose->load(explode(',', $request->include));
+            $subject_type->load(explode(',', $request->include));
         }
 
-        return $purpose;
+        return $subject_type;
     }
 
     /**
@@ -88,11 +82,7 @@ class PurposeController extends Controller
      * @param  \App\Purpose  $purpose
      * @return \Illuminate\Http\Response
      */
-    public function edit(Purpose $purpose)
-    {
-        //
-    }
-
+   
     /**
      * Update the specified resource in storage.
      *
@@ -100,14 +90,14 @@ class PurposeController extends Controller
      * @param  \App\Purpose  $purpose
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Purpose $purpose)
+    public function update(Request $request, SubjectType $subject_type)
     {
         $request->validate([
-            'name'=>'required|string',
+            'name'=>'required|unique:subject_types,name,'.$subject_type->id,
             
          ]);
-         $purpose->update($request->only('name'));
-         return $purpose;
+         $subject_type->update($request->only('name'));
+         return $subject_type;
     }
 
     /**
@@ -116,9 +106,9 @@ class PurposeController extends Controller
      * @param  \App\Purpose  $purpose
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Purpose $purpose)
+    public function destroy(SubjectType $subject_type)
     {
-        $purpose->delete();
+        $subject_type->delete();
         return 'deleted';
     }
 }

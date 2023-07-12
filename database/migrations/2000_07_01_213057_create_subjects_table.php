@@ -15,9 +15,11 @@ class CreateSubjectsTable extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('parent_id')->nullable();
-            $table->string('address')->nullable();
+            $table->string('name')->unique();
+            $table->string('address_legal')->nullable();
+            $table->string('address_fact')->nullable();
+            $table->unsignedBigInteger('subject_type_id')->nullable();
+            $table->foreign('subject_type_id')->references('id')->on('subject_types')->onDelete('set null');
             $table->json('documents')->nullable();
             $table->timestamps();
         });

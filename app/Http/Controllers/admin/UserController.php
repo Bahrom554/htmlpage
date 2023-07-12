@@ -58,6 +58,7 @@ class UserController extends Controller
 
     public function update(UserEditRequest $request, $id)
     {
+      
         $user = $this->FilterByRole($id);
 
         $this->service->edit($request, $user);

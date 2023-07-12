@@ -15,9 +15,13 @@ class CreateTelecommunicationsTable extends Migration
     {
         Schema::create('telecommunications', function (Blueprint $table) {
             $table->id();
-            $table->string('provider')->nullable();
-            $table->string('contract')->nullable();
-            $table->json('documents')->nullable();
+            $table->string('name');
+            $table->unsignedBigInteger('network_topology')->nullable();
+            $table->unsignedBigInteger('contract')->nullable();
+            $table->boolean('connect_net')->default(false);
+            $table->boolean('connect_nat')->default(false);
+            $table->integer('points_connect_net')->default(0);
+            $table->integer('provider_count')->default(0);
             $table->timestamps();
         });
     }

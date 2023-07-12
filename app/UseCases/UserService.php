@@ -26,6 +26,7 @@ class UserService
 
     public function edit(UserEditRequest $request, User $user)
     {
+       
         $user->update($request->only([
             'name',
             'email',

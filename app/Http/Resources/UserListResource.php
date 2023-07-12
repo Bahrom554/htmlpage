@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Subject;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserListResource extends JsonResource
@@ -19,7 +20,6 @@ class UserListResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'subject'=>$this->subject,
-            'organization'=>$this->organization,
             'phone'=>$this->phone,
             'created_at' => $this->created_at,
             'roles'=>$this->roles

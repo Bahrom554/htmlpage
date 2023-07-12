@@ -12,19 +12,27 @@ class TelecommunicationController extends Controller
     public function store(Request $request)
     {
         $validated=$request->validate([
-            'provider'=>'required|string',
-            'contract'=>'required|string',
-            'documents'=>'required|array|exists:files,id',
+            'name'=>'required|string',
+            'network_topology'=>'nullable|integer|exists:files,id',
+            'contract'=>'nullable|integer|exists:files,id',
+            'connect_net'=>'nullable|boolean',
+            'connect_nat'=>'nullable|boolean',
+            'points_connect_net'=>'nullable|integer',
+            'provider_count'=>'nullable|integer'
             
-
         ]);
         $telec=Telecommunication::create($validated); 
         return $telec;
     }
 
    
-    public function show(Telecommunication $telecommunication)
+    public function show(Request $request,Telecommunication $telecommunication)
     {
+        
+        if (!empty($request->include)) {
+            $telecommunication->load(explode(',', $request->include));
+        }
+
         return $telecommunication;
     }
 
@@ -34,11 +42,15 @@ class TelecommunicationController extends Controller
     public function update(Request $request, Telecommunication $telecommunication)
     {
         $validated=$request->validate([
-            'provider'=>'required|string',
-            'contract'=>'required|string',
-            'documents'=>'required|array|exists:files,id'
+            'name'=>'required|string',
+            'network_topology'=>'nullable|integer|exists:files,id',
+            'contract'=>'nullable|integer|exists:files,id',
+            'connect_net'=>'nullable|boolean',
+            'connect_nat'=>'nullable|boolean',
+            'points_connect_net'=>'nullable|integer',
+            'provider_count'=>'nullable|integer'
          ]);
-         $telecommunication->update($request->only('provider','contract','documents'));
+         $telecommunication->update($validated);
          return $telecommunication;
     }
 
