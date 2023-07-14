@@ -12,7 +12,7 @@ class TechniqueService
            'name'=>'required|string',
            'manufacturer'=>'required|string',
            'model'=>'required|string',
-           'version'=>'required|string',
+           'version'=>'nullable|string',
            'documents'=>'nullable|array|exists:files,id'
         ]);
         
@@ -27,7 +27,7 @@ class TechniqueService
             'name'=>'required|string',
             'manufacturer'=>'required|string',
             'model'=>'required|string',
-            'version'=>'required|string',
+            'version'=>'nullable|string',
             'documents'=>'nullable|array|exists:files,id'
         ]);
         $technique->update($request->only('name', 'manufacturer', 'model', 'version', 'documents'));
