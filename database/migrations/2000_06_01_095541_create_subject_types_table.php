@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddRejectedAtToApplicationsTable extends Migration
+class CreateSubjectTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class AddRejectedAtToApplicationsTable extends Migration
      */
     public function up()
     {
-        Schema::table('applications', function (Blueprint $table) {
-            $table->timestamp('rejected_at')->nullable();
+        Schema::create('subject_types', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->timestamps();
         });
     }
 
@@ -25,8 +27,6 @@ class AddRejectedAtToApplicationsTable extends Migration
      */
     public function down()
     {
-        Schema::table('applications', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('subject_types');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Subject;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserListResource extends JsonResource

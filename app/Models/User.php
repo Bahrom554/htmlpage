@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use Laravel\Passport\HasApiTokens;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Passport\HasApiTokens;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable,HasRoles;
+    use HasApiTokens, Notifiable, HasRoles;
 
     public const ROLE_USER = 'user';
     public const ROLE_MANAGER = 'manager';
@@ -23,7 +26,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','subject_id'
     ];
 
     /**
@@ -44,8 +47,12 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function applications():HasMany
+    public function applications(): HasMany
     {
         return $this->hasMany(Application::class);
+    }
+
+    public function subject(){
+        return $this->belongsTo(Subject::class);
     }
 }

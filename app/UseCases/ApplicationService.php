@@ -4,10 +4,15 @@ namespace App\UseCases;
 
 
 use Carbon\Carbon;
+use DomainException;
+use App\Models\Reject;
+use App\Models\Comment;
 use App\Models\Application;
 use Illuminate\Http\Request;
+use App\UseCases\CommentService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Http\Requests\application\ApplicationEditRequest;
@@ -15,6 +20,13 @@ use App\Http\Requests\application\ApplicationCreateRequest;
 
 class ApplicationService
 {
+
+    private $commentService;
+
+    public function __construct( CommentService $commentService)
+    {
+    $this->commentService = $commentService;
+    }
     public function dash(Request $request)
     {
         $all = $this->commonAll($request)->count();
@@ -31,14 +43,14 @@ class ApplicationService
         ->get();
         // ------------------------------
         $by_cert = $this->commonAll($request)
-        ->whereNotNull('certificate_id')
+        ->whereNotNull('certificates')
         ->selectRaw('year(updated_at) year, monthname(updated_at) month, count(*) total')
         ->groupBy('year', 'month')
         ->orderBy('year', 'desc')
         ->get();
         // --------------------------------//
         $by_lic = $this->commonAll($request)
-        ->whereNotNull('license_id')
+        ->whereNotNull('licenses')
         ->selectRaw('year(updated_at) year, monthname(updated_at) month, count(*) total')
         ->groupBy('year', 'month')
         ->orderBy('year', 'desc')
@@ -82,32 +94,33 @@ class ApplicationService
         $query->allowedFilters($filter);
         $query->allowedSorts($request->sort);
         $query->orderBy('updated_at', 'desc');
-        return $query->paginate($request->per_page);
+        return $query->paginate(30);
 
     }
 
     public function create(ApplicationCreateRequest $request)
     {
-        $app = Application::make($request->only(
-        'name',
-        'staffs',
-        'scope_and_purpose',
-        'error_or_broken',
-        'devices',
-        'techniques',
-        'license',
-        'certificate',
-        'telecommunications',
-        'provide_cyber_security',
-        'threats_to_information_security',
-        'consequences_of_an_incident',
-        'organizational_and_technical_measures_to_ensure_security',
-        'subject',
-        'subject_type',
-        'subject_definition',
-        'subject_document'
-        ));
+        $app = Application::make($request->only([
+            'name',
+            'staffs',
+            'purpose_id',
+            'importance_id',
+            'documents',
+            'techniques',
+            'devices',
+            'licenses',
+            'certificates',
+            'telecommunications',
+            'error_or_broken',
+            'provide_cyber_security',
+            'threats_to_information_security',
+            'consequences_of_an_incident',
+            'organizational_and_technical_measures_to_ensure_security',
+
+
+        ]));
         $app->user_id = Auth::user()->id;
+        $app->subject_id =Auth::user()->subject_id;
         $app->save();
         return $app;
     }
@@ -115,93 +128,44 @@ class ApplicationService
     public function edit(ApplicationEditRequest $request, Application $application)
     {
 
-
-
         $application->update($request->only([
             'name',
             'staffs',
-            'scope_and_purpose',
-            'error_or_broken',
-            'devices',
+            'purpose_id',
+            'importance_id',
+            'documents',
             'techniques',
-            'license',
-            'certificate',
+            'devices',
+            'licenses',
+            'certificates',
             'telecommunications',
+            'error_or_broken',
             'provide_cyber_security',
             'threats_to_information_security',
             'consequences_of_an_incident',
             'organizational_and_technical_measures_to_ensure_security',
-            'subject',
-            'subject_type',
-            'subject_definition',
-            'subject_document']));
-             Application::findOrFail($application->id)->update(['status'=>1]);
+
+
+        ])+['status'=>0]);
+            //  Application::findOrFail($application->id)->update(['status'=>0]);
             return $application;
     }
 
     public function remove(Application $application)
     {
-        $application->delete();
-        return 'deleted';
-    }
 
-    public function reject(Request $request, Application $application){
+            $application->delete();
+            return 'deleted';
 
-        $request->validate([
-            'reason' => 'nullable|string'
-        ]);
-        $application->status=Application::STATUS_REJECT;
-        $application->rejected_at=Carbon::now();
-        if($request->filled('reason')){
-            $application->reason=$request->reason;
-            $application->importance_id=null;
-        }
-        $application->save();
-        return $application;
-    }
-    public function register(Request $request, Application $application){
-        $request->validate([
-            'reason' => 'nullable|string'
-        ]);
-        $application->status=Application::STATUS_PROCESS;
-        if($request->filled('reason')){
-            $application->reason=$request->reason;
-        }
-        $application->save();
-        return $application;
-    }
-    public function success(Request $request, Application $application){
-        $request->validate([
-            'reason' => 'nullable|string'
-        ]);
-        $application->status=Application::STATUS_SUCCESS;
-        if($request->filled('reason')){
-            $application->reason=$request->reason;
-        }
-        $application->save();
-        return $application;
-    }
-    public function importance(Request $request, Application $application){
-        $request->validate([
-            'importance_id' => 'nullable|integer|exists:importances,id'
-        ]);
-        if($request->filled('importance_id')){
-            $application->importance_id=$request->importance_id;
-        }
-        $application->save();
-        return $application;
-    }
 
-    public function rester(Request $request, Application $application){
-        $application->status=Application::STATUS_WAITING;
-        $application->save();
-        return $application;
     }
 
     private function commonAll(Request $request)
     {
         $query = QueryBuilder::for(Application::class);
-        $query->withoutGlobalScope('permission');
+        if(Gate::denies('user')){
+            $query->withoutGlobalScope('permission');
+        }
         if ($request->filled('from','to')) {
             $from = Carbon::createFromFormat('Y-m-d',$request->from)->startOfDay();
             $to = Carbon::createFromFormat('Y-m-d',$request->to)->endOfDay();
@@ -210,6 +174,45 @@ class ApplicationService
 
         return $query;
     }
+
+    public function writeComment(Request $request, Application $application){
+
+      DB::beginTransaction();
+        try {
+            if(!$rejectID=$request->get('reject_id')){
+                $reject =Reject::create([
+                    'application_id'=>$application->id,
+                ]);
+                $rejectID=$reject->id;
+            }
+
+            for ($n = 1; $n < 15; $n++) {
+                if ($request->filled('column_' . $n)) {
+                    Comment::updateOrCreate(
+                        ['column_id' => $n,
+                         'reject_id' =>$rejectID,],
+                        [
+                        'description' => $request->get('column_' . $n),
+                        'author'=>Auth::user()->id
+                    ]);
+                }
+            }
+
+            if (Gate::allows('manager') && $request->filled('status')) {
+                $application->update(['status' => Application::STATUS_MANAGER_TO_USER]);
+            } elseif (Gate::allows('admin') && $request->filled('status')) {
+                $application->update(['status' => Application::STATUS_ADMIN_TO_MANAGER]);
+            }
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new DomainException($e->getMessage(), $e->getCode());
+        }
+
+        return $application;
+    }
+
+
 
 
 }

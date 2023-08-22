@@ -12,7 +12,7 @@ class DeviceService
            'name'=>'required|string',
            'manufacturer'=>'required|string',
            'model'=>'required|string',
-           'version'=>'required|string',
+           'version'=>'nullable|string',
            'documents'=>'nullable|array|exists:files,id'
         ]);
         
@@ -27,7 +27,7 @@ class DeviceService
             'name'=>'required|string',
             'manufacturer'=>'required|string',
             'model'=>'required|string',
-            'version'=>'required|string',
+            'version'=>'nullable|string',
             'documents'=>'nullable|array|exists:files,id'
         ]);
         $device->update($request->only('name', 'manufacturer', 'model', 'version', 'documents'));
