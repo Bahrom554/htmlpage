@@ -45,17 +45,13 @@ class FilemanagerController extends Controller
      * @bodyParam files file required File
      */
     public function uploads(Request $request)
-    {    
-        $request->validate([
-            'from'=>'nullable|date',
-            'to'=>'nullable|date|after:now',
-            'definition'=>'nullable|string'
-        ]);
+    {
+
         return $this->service->uploads($request);
     }
     public function show($id){
         $file = Files::findOrFail($id);
-        return $file;  
+        return $file;
     }
     public function delete($id)
     {

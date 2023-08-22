@@ -10,9 +10,6 @@ class Files extends Model
     protected $table = 'files';
 
     protected $fillable = [
-        'from',
-        'to',
-        'definition',
         'title',
         'slug',
         'ext',
@@ -28,14 +25,14 @@ class Files extends Model
 //    protected $appends = [
 //        'thumbnails'
 //    ];
-public function setFromAttribute($value)
-{
-   if($value) {$this->attributes['from'] =  Carbon::parse($value);} 
-}
-public function setToAttribute($value)
-{
-    if($value) $this->attributes['to'] =  Carbon::parse($value);
-}
+// public function setFromAttribute($value)
+// {
+//    if($value) {$this->attributes['from'] =  Carbon::parse($value);}
+// }
+// public function setToAttribute($value)
+// {
+//     if($value) $this->attributes['to'] =  Carbon::parse($value);
+// }
 
 public function getIsImage()
     {

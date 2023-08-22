@@ -15,9 +15,6 @@ class CreateFilesTable extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->date('from')->nullable();
-            $table->date('to')->nullable();
-            $table->text('definition')->nullable();
             $table->string('title');
             // $table->string('description')->nullable();
             $table->string('slug')->nullable();
@@ -27,7 +24,7 @@ class CreateFilesTable extends Migration
             $table->integer('size')->nullable();
             $table->text('folder')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');;
             $table->timestamps();
         });
     }

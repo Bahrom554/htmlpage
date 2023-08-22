@@ -32,6 +32,11 @@ class SubjectController extends Controller
         $query = QueryBuilder::for(Subject::class);
         if (!empty($request->get('search'))) {
             $query->where('name', 'like', '%' . $request->get('search') . '%');
+            $query->where('address_legal',  'like', '%' . $request->get('search') . '%');
+            $query->where('address_fact','like', '%' . $request->get('search') . '%');
+            $query->where('email','like', '%' . $request->get('search') . '%');
+            $query->where('phone','like', '%' . $request->get('search') . '%');
+
         }
         $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
         $query->allowedFilters($filter);
@@ -42,7 +47,7 @@ class SubjectController extends Controller
 
     public function store(SubjectCreateRequest $request)
     {
-        
+
         return $this->service->create($request);
     }
     public function show(Request $request, $id)

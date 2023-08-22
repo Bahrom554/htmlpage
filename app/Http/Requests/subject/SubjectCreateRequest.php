@@ -25,7 +25,8 @@ class SubjectCreateRequest extends FormRequest
            'address_legal'=>'nullable|string',
            'address_fact'=>'nullable|string',
            'subject_type_id'=>'nullable|integer|exists:subject_types,id',
-           'documents'=>'nullable|array|exists:files,id'
+           'email'=>'required|email|max:255|unique:subjects',
+           'phone'=>'required|string'
         ];
     }
 }

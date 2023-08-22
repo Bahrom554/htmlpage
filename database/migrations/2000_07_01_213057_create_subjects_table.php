@@ -20,7 +20,8 @@ class CreateSubjectsTable extends Migration
             $table->string('address_fact')->nullable();
             $table->unsignedBigInteger('subject_type_id')->nullable();
             $table->foreign('subject_type_id')->references('id')->on('subject_types')->onDelete('set null');
-            $table->json('documents')->nullable();
+            $table->string('email')->unique();
+            $table->string('phone');
             $table->timestamps();
         });
     }

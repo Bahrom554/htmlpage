@@ -10,17 +10,17 @@ class SubjectService
 {
     public function create(SubjectCreateRequest $request)
     {
-       
-        
-        $subject = Subject::make($request->only('name', 'address_legal','address_fact', 'subject_type_id', 'documents'));
+
+
+        $subject = Subject::make($request->only('name', 'address_legal','address_fact', 'subject_type_id', 'email','phone'));
         $subject->save();
         return $subject;
     }
 
     public function edit(SubjectEditRequest $request, Subject $subject)
     {
-       
-        $subject->update($request->only('name', 'address_legal','address_fact', 'subject_type_id', 'documents'));
+
+        $subject->update($request->only('name', 'address_legal','address_fact', 'subject_type_id', 'email','phone'));
         return $subject;
 
     }

@@ -43,8 +43,9 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::apiResource('device', 'DeviceController'); //done
         Route::apiResource('technique', 'TechniqueController'); //done
         Route::apiResource('staff', 'StaffController'); //done
+        Route::apiResource('appointment-order','AppointmentOrderController');
         Route::apiResource('telecommunication', 'TelecommunicationController'); //done
-        Route::apiResource('subject', 'SubjectController'); //done
+        Route::apiResource('subject', 'SubjectController'); //done, modified
         Route::apiResource('purpose','PurposeController');
         Route::apiResource('item','ItemController');
 

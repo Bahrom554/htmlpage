@@ -20,14 +20,16 @@ class FileService
         $files = $request->file('files');
 
 
-        if (is_array($request->file('files'))) {
-
-            if (!in_array($files[0]->extension(), ['txt','JPG','jpeg', 'jpg', 'svg', 'png', 'doc', 'docx', 'xls', 'xlsx', 'pdf'])) {
-                return response()->json('Unknown extension')->setStatusCode(422);
-            }
+        if (is_array( $files)) {
+      return $files;
 
             $response = [];
             foreach ($files as $file) {
+                if (!in_array($file->extension(), ['txt','JPG','jpeg', 'jpg', 'svg', 'png', 'doc', 'docx', 'xls', 'xlsx', 'pdf'])) {
+                    return response()->json('Unknown extension')->setStatusCode(422);
+
+                }
+
                 $dto = new GeneratePathFileDTO();
                 $dto->file = $file;
                 $response[] = $this->uploadFile($dto,$request);
@@ -45,6 +47,7 @@ class FileService
             return $this->uploadFile($dto,$request);
         }
     }
+
     public function uploadFile(GeneratePathFileDTO $dto, Request $request)
     {
         DB::beginTransaction();
@@ -106,16 +109,10 @@ class FileService
 
         return $generatedPathFileDTO;
     }
-    public function delete(Files $file){
-        return unlink($file->folder.'/'.$file->file);
-    }
 
     private function createFileModel(GeneratedPathFileDTO $generatedDTO,Request $request)
     {
         $data = [
-            'from'=>$request->from,
-            'to'=>$request->to,
-            'definition'=>$request->definition,
             'title' => $generatedDTO->origin_name,
             'slug' => $generatedDTO->file_name,
             'ext' => $generatedDTO->file_ext,
@@ -133,34 +130,10 @@ class FileService
         }
         return $file;
     }
-    // private function createThumbnails(Files $file)
-    // {
-    //     if (!$file->getIsImage()) {
-    //         return null;
-    //     }
 
-    //     $thumbsImages = FileManagerHelper::getThumbsImage();
-    //     $origin = $file->getDist();
-    //     try {
-    //         foreach ($thumbsImages as $thumbsImage) {
-    //             $width = $thumbsImage['w'];
-    //             $quality = $thumbsImage['q'];
-    //             $slug = $thumbsImage['slug'];
-    //             $newFileDist = $file->folder . '/' . $file->slug . "_" . $slug . "." . $file->ext;
-    //             if ($file->ext == 'svg') {
-    //                 copy($origin, $newFileDist);
-    //             } else {
-    //                 $img = Image::make($origin);
-    //                 $height = $width / ($img->getWidth() / $img->getHeight());
-    //                 $img->resize($width, $height)->save($newFileDist, $quality);
-    //             }
-    //         }
-    //     } catch (Throwable $e) {
-    //         report($e);
-    //         return false;
-    //     }
+    public function delete(Files $file){
+        return unlink($file->folder.'/'.$file->file);
+    }
 
-    //     return true;
-    // }
 
 }

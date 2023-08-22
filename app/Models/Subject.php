@@ -9,19 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Subject extends Model
 {
-    protected $fillable = ['name', 'subject_type_id', 'address_legal','address_fact', 'documents'];
+    protected $fillable = ['name', 'subject_type_id', 'address_legal','address_fact', 'email','phone'];
     // protected $with = ['subjects'];
-    protected $casts=[
-        'documents'=>'array'
-    ];
-
-
-     protected $appends = ['document'];
-
-   public function getDocumentAttribute(){
-    return Files::whereIn('id',$this->documents? : [])->get();
-   }
-
 
    public function applications():HasMany
    {
@@ -35,17 +24,5 @@ class Subject extends Model
    public function type(){
     return $this->belongsTo(SubjectType::class,'subject_type_id','id');
    }
-
-  
-
-//    protected static function booted()
-//     {
-//         static::addGlobalScope('permission', function (Builder $builder) {
-            
-//                 $builder->whereNull('parent_id');
-            
-           
-//         });
-//     }
 
 }
