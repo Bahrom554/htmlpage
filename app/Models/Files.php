@@ -34,12 +34,12 @@ class Files extends Model
 //     if($value) $this->attributes['to'] =  Carbon::parse($value);
 // }
 
-public function getIsImage()
-    {
-        return in_array($this->ext,FileManagerHelper::getImagesExt());
+// public function getIsImage()
+//     {
+//         return in_array($this->ext,FileManagerHelper::getImagesExt());
 
 
-    }
+//     }
 
     /**
      * @return string

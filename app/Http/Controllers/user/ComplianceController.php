@@ -1,19 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\user;
+namespace App\Http\Controllers;
 
 
+use App\Models\Compliance;
 use Illuminate\Http\Request;
-use App\Models\AppointmentOrder;
-use App\Http\Controllers\Controller;
+use App\UseCases\ComplianceService;
 use Spatie\QueryBuilder\QueryBuilder;
-use App\UseCases\AppointmentOrderService;
 
-class AppointmentOrderController extends Controller
+class ComplianceController extends Controller
 {
-
     private $service;
-    public function __construct(AppointmentOrderService $service)
+    public function __construct(ComplianceService $service)
     {
         $this->service=$service;
     }
@@ -25,7 +23,7 @@ class AppointmentOrderController extends Controller
     }
     public function show(Request $request, $id)
     {
-        $query = QueryBuilder::for(AppointmentOrder::class);
+        $query = QueryBuilder::for(Compliance::class);
         $task=$query->findOrFail($id);
         if (!empty($request->append)) {
             $task->append(explode(',', $request->append));
@@ -36,13 +34,13 @@ class AppointmentOrderController extends Controller
         return $task;
     }
 
-    public function update(Request $request, AppointmentOrder $appointment_order)
+    public function update(Request $request, Compliance $compliance)
     {
-        return $this->service->edit($request,$appointment_order);
+        return $this->service->edit($request,$compliance);
     }
 
-    public function destroy(AppointmentOrder $appointment_order)
+    public function destroy(Compliance $compliance)
     {
-        return $this->service->remove($appointment_order);
+        return $this->service->remove($compliance);
     }
 }

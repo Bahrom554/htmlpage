@@ -16,6 +16,7 @@ class StaffController extends Controller
         $query = QueryBuilder::for(Staff::class);
         if (!empty($request->get('search'))) {
             $query->where('name', 'like', '%' . $request->get('search') . '%');
+            $query->where('phone', 'like', '%' . $request->get('search') . '%');
         }
         
         $query->orderBy('updated_at', 'desc');

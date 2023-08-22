@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AppointmentOrder extends Model
+class Diploma extends Model
 {
-    protected $fillable = ['file_id', 'date', 'definition'];
+    protected $fillable = ['file_id', 'educational_institution', 'degree','definition'];
 
     public function file(){
         return $this->belongsTo(Files::class);

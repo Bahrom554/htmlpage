@@ -42,12 +42,16 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('dash', 'ApplicationController@dash'); //done
         Route::apiResource('device', 'DeviceController'); //done
         Route::apiResource('technique', 'TechniqueController'); //done
-        Route::apiResource('staff', 'StaffController'); //done
-        Route::apiResource('appointment-order','AppointmentOrderController');
         Route::apiResource('telecommunication', 'TelecommunicationController'); //done
         Route::apiResource('subject', 'SubjectController'); //done, modified
         Route::apiResource('purpose','PurposeController');
         Route::apiResource('item','ItemController');
+        Route::apiResource('staff', 'StaffController'); //done
+        //staff's field which have file
+        Route::apiResource('appointment-order','AppointmentOrderController'); //Lavozimga tayinlanganlik buyrug'i
+        Route::apiResource('diploma','DiplomaController'); //diplom
+        Route::apiResource('professional_development','ProfessionalDevelopmentController'); //Malaka oshirish sertifikati
+        Route::apiResource('compliance','ComplianceController');
 
     });
     Route::group(['namespace' => 'admin'], function () {

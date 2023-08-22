@@ -15,15 +15,16 @@ class CreateStaffTable extends Migration
     {
         Schema::create('staff', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('phone');
-            // ustav
-            $table->string('statue')->nullable();
-            $table->string('file_1')->nullable();
-            $table->string('file_2')->nullable();
-            $table->string('file_3')->nullable();
-            $table->text('definition')->nullable();
             $table->unsignedBigInteger('subject_id');
+            $table->unsignedBigInteger('appointment_order_id');
+            $table->unsignedBigInteger('diploma_id');
+            $table->unsignedBigInteger('professional_development_id');
+            $table->unsignedBigInteger('complience_id');
+            $table->string('name');
+            $table->string('position');
+            $table->string('phone');
+            $table->text('definition')->nullable();
+            $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
             $table->timestamps();
         });
     }

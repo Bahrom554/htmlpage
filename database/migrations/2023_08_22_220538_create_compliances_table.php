@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAppointmentOrdersTable extends Migration
+class CreateCompliancesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateAppointmentOrdersTable extends Migration
      */
     public function up()
     {
-        Schema::create('appointment_orders', function (Blueprint $table) {
+        Schema::create('compliances', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('file_id')->nullable();
             $table->foreign('file_id')->references('id')->on('files')->onDelete('set null');
-            $table->date('date');
+            $table->date('from');
+            $table->date('to');
             $table->string('definition')->nullable();
             $table->timestamps();
         });
@@ -30,6 +31,6 @@ class CreateAppointmentOrdersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('appointment_orders');
+        Schema::dropIfExists('compliances');
     }
 }
