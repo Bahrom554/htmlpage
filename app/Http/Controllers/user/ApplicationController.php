@@ -25,7 +25,7 @@ class ApplicationController extends Controller
 
     public function __construct(ApplicationService $service)
     {
-        $this->middleware('role:user')->only('store', 'update', 'destroy');
+        $this->middleware('role:user|manager')->only('store', 'update', 'destroy');
         $this->service = $service;
     }
     public function dash(Request $request)

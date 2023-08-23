@@ -15,14 +15,17 @@ class Staff extends Model
         'subject_id',
         'appointment_order_id',
         'diploma_id',
-        'professional_development_id',
-        'complience_id',
+        'professional_development',
+        'compliance_id',
         'name',
         'position',
         'phone',
         'definition'
     ];
 
+    protected $casts = [
+        'professional_development'=>'array'
+    ];
     public function subject(){
         return $this->belongsTo(Subject::class);
     }
@@ -35,11 +38,11 @@ class Staff extends Model
         return $this->belongsTo(AppointmentOrder::class,'appointment_order_id','id');
     }
 
-    public function professionalDevelopment(){
-        return $this->belongsTo(ProfessionalDevelopment::class,'professional_development_id','id');
+    public function getProfessionalDevelopment(){
+        return ProfessionalDevelopment::whereIn('id', $this->professional_development ?: [])->get();
     }
 
-    public function complience(){
+    public function compliance(){
         return $this->belongsTo(Compliance::class);
     }
     

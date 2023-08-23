@@ -18,8 +18,8 @@ class CreateStaffTable extends Migration
             $table->unsignedBigInteger('subject_id');
             $table->unsignedBigInteger('appointment_order_id');
             $table->unsignedBigInteger('diploma_id')->nullable();
-            $table->unsignedBigInteger('professional_development_id')->nullable();
-            $table->unsignedBigInteger('complience_id')->nullable();
+            $table->json('professional_development')->nullable();
+            $table->unsignedBigInteger('compliance_id')->nullable();
             $table->string('name');
             $table->string('position')->nullable();
             $table->string('phone');

@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\reference;
 
-use App\Provider;
+
+use App\Models\Provider;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class ProviderController extends Controller
 {
@@ -70,7 +74,8 @@ class ProviderController extends Controller
 
          ]);
 
-         return $provider->update($request->only('name','type','email'));
+         $provider->update($request->only('name','type','email'));
+         return $provider;
     }
 
 

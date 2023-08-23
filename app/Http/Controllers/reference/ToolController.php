@@ -4,6 +4,7 @@ namespace App\Http\Controllers\reference;
 
 use App\Models\Tool;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -55,12 +56,20 @@ class ToolController extends Controller
     {
         $request->validate([
             'name'=>'required|string',
-            'type'=>'required|string'
+            'type'=>'required|integer|between:1,2'
          ]);
-          $tool =Tool::create($request->only('name','type'));
-         if($request->manafucture){
-            $tool->manufactures()->create(['name'=>$request->manafuctur]);
-         }
+         DB::beginTransaction();
+         try{
+            $tool =Tool::create($request->only('name','type'));
+            if($request->manufacture){
+               $tool->manufactures()->create(['name'=>$request->manufacture]);
+            }
+            DB::commit();
+         }catch (\Exception $e) {
+            DB::rollback();
+            // something went wrong
+        }
+       
       return $tool;
     }
 
@@ -69,11 +78,12 @@ class ToolController extends Controller
     {
         $request->validate([
             'name'=>'required|string',
-            'type'=>'required|string'
+            'type'=>'required|integer|between:1,2'
 
          ]);
 
-         return $tool->update($request->only('name','type'));
+          $tool->update($request->only('name','type'));
+          return $tool;
     }
 
 

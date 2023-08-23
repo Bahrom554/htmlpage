@@ -1,11 +1,21 @@
 <?php
 
 namespace App\UseCases;
-use Illuminate\Http\Request;
+use Exception;
 use App\Models\Compliance;
+use Illuminate\Http\Request;
+use App\UseCases\FileService;
 
 class ComplianceService
 {
+    private $service;
+
+    public function __construct( FileService $service)
+    {
+        $this->service=$service;
+
+    }
+    
     public function create(Request $request)
     {
         $request->validate([
@@ -32,10 +42,17 @@ class ComplianceService
         return $compliance;
 
     }
-    public function remove(Compliance $compliance)
+    public function remove($id)
     {
-        $compliance->delete();
-        return 'deleted';
+        try{
+            $compliance =Compliance::findOrFail($id);
+            // $this->service->delete($compliance->file_id);
+            $compliance->delete();
+            return 'deleted';
+        }catch(Exception $e)
+        {
+            return $e;
+        }
     }
 
 

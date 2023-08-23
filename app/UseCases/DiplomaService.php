@@ -1,11 +1,20 @@
 <?php
 
 namespace App\UseCases;
-use Illuminate\Http\Request;
+use Exception;
 use App\Models\Diploma;
+use Illuminate\Http\Request;
+use App\UseCases\FileService;
 
 class DiplomaService
 {
+    private $service;
+
+    public function __construct( FileService $service)
+    {
+        $this->service=$service;
+
+    }
     public function create(Request $request)
     {
         $request->validate([
@@ -32,10 +41,17 @@ class DiplomaService
         return $diploma;
 
     }
-    public function remove(Diploma $diploma)
+    public function remove($id)
     {
-        $diploma->delete();
-        return 'deleted';
+        try{
+            $diploma = Diploma::findOrFail($id);
+            // $this->service->delete($diploma->file_id);
+            $diploma->delete();
+            return 'deleted';
+        }catch(Exception $e)
+        {
+            return $e;
+        }
     }
 
 

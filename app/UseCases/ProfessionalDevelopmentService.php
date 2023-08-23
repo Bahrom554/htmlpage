@@ -1,11 +1,19 @@
 <?php
 
 namespace App\UseCases;
+use Exception;
 use Illuminate\Http\Request;
 use App\Models\ProfessionalDevelopment;
 
 class ProfessionalDevelopmentService
 {
+    private $service;
+
+    public function __construct( FileService $service)
+    {
+        $this->service=$service;
+
+    }
     public function create(Request $request)
     {
         $request->validate([
@@ -30,10 +38,17 @@ class ProfessionalDevelopmentService
         return $professional_development;
 
     }
-    public function remove(ProfessionalDevelopment $professional_development)
+    public function remove($id)
     {
-        $professional_development->delete();
-        return 'deleted';
+        try{
+            $professional_development =ProfessionalDevelopment::findOrFail($id);
+            // $this->service->delete($professional_development->file_id);
+            $professional_development->delete();
+            return 'deleted';
+        }catch(Exception $e)
+        {
+            return $e;
+        }
     }
 
 

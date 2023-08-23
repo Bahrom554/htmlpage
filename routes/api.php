@@ -55,14 +55,15 @@ Route::group(['middleware' => 'auth:api'], function () {
 
         Route::apiResource('subject-type','SubjectTypeController');//done tested
         Route::apiResource('subject', 'SubjectController');//done tested
-        Route::apiResource('manufacture','ManufactureController');
-        Route::apiResource('appointment-order','AppointmentOrderController');
-        Route::apiResource('diploma','DiplomaController');
-        Route::apiResource('professional_development','ProfessionalDevelopmentController');
-        Route::apiResource('compliance','ComplianceController');
+        Route::apiResource('manufacture','ManufactureController');//done tested
+        Route::apiResource('tool','ToolController');//done tested
+        Route::apiResource('appointment-order','AppointmentOrderController');//done tested
+        Route::apiResource('diploma','DiplomaController');//done tested
+        Route::apiResource('professional-development','ProfessionalDevelopmentController');//done tested
+        Route::apiResource('compliance','ComplianceController');//done tested
         Route::apiResource('provider','ProviderController');
         Route::apiResource('staff', 'StaffController');
-        Route::apiResource('tool','ToolController');
+       
 
 
 

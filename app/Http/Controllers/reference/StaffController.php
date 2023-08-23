@@ -4,6 +4,7 @@ namespace App\Http\Controllers\reference;
 
 use App\Models\Staff;
 use Illuminate\Http\Request;
+use App\UseCases\StaffService;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -21,8 +22,11 @@ class StaffController extends Controller
     {
         $query = QueryBuilder::for(Staff::class);
         if (!empty($request->get('search'))) {
-            $query->where('name', 'like', '%' . $request->get('search') . '%');
-            $query->where('phone', 'like', '%' . $request->get('search') . '%');
+            $query->where(function($q) use ($request){
+                $q->where('name', 'like', '%' . $request->get('search') . '%');
+                $q->orwhere('phone', 'like', '%' . $request->get('search') . '%');
+            });
+            
         }
 
         $query->orderBy('updated_at', 'desc');

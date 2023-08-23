@@ -6,6 +6,7 @@ namespace App\Http\Controllers\reference;
 use App\Models\Compliance;
 use Illuminate\Http\Request;
 use App\UseCases\ComplianceService;
+use App\Http\Controllers\Controller;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class ComplianceController extends Controller
@@ -39,8 +40,8 @@ class ComplianceController extends Controller
         return $this->service->edit($request,$compliance);
     }
 
-    public function destroy(Compliance $compliance)
+    public function destroy($id)
     {
-        return $this->service->remove($compliance);
+        return $this->service->remove($id);
     }
 }

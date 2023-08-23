@@ -2,14 +2,15 @@
 
 namespace App\UseCases;
 
+use Exception;
 use DomainException;
 use App\Models\Files;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Dto\GeneratePathFileDTO;
 use App\Dto\GeneratedPathFileDTO;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 
 class FileService
@@ -131,8 +132,14 @@ class FileService
         return $file;
     }
 
-    public function delete(Files $file){
-        return unlink($file->folder.'/'.$file->file);
+    public function delete($id){
+     
+            $file = Files::findOrFail($id);
+            $file->delete();
+            unlink($file->folder.'/'.$file->file);
+            return 'deleted';
+        
+        
     }
 
 

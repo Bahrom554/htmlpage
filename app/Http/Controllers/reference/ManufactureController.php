@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\reference;
 
 
-use Illuminate\Http\Request;
 use App\Models\Manufacture;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
 
 class ManufactureController extends Controller
 {
@@ -57,9 +60,16 @@ class ManufactureController extends Controller
             'name'=>'required|string',
             'definition'=>'nullable|string'
          ]);
-          $manufacture =Manufacture::create($request->only('name','definition'));
-          $manufacture->tools()->attach($request->tool_id);
-
+         DB::beginTransaction();
+         try{
+            $manufacture =Manufacture::create($request->only('name','definition'));
+            $manufacture->tools()->attach($request->tool_id);
+          DB::commit();
+         }catch(\Exception $e){
+          DB::rollBack();
+         }
+         
+      return $manufacture;
     }
 
 
@@ -71,8 +81,9 @@ class ManufactureController extends Controller
 
          ]);
 
-         return $manufacture->update($request->only('name','definition'));
-    }
+          $manufacture->update($request->only('name','definition'));
+          return $manufacture;
+        }
 
 
     public function destroy(Manufacture $manufacture)

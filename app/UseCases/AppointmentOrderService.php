@@ -2,10 +2,20 @@
 
 namespace App\UseCases;
 use Illuminate\Http\Request;
+use App\UseCases\FileService;
 use App\Models\AppointmentOrder;
+use Exception;
 
 class AppointmentOrderService
 {
+    
+    private $service;
+
+    public function __construct( FileService $service)
+    {
+        $this->service=$service;
+
+    }
     public function create(Request $request)
     {
         $request->validate([
@@ -30,10 +40,18 @@ class AppointmentOrderService
         return $appointment_order;
 
     }
-    public function remove(AppointmentOrder $appointment_order)
-    {
-        $appointment_order->delete();
-        return 'deleted';
+    public function remove($id)
+    {   
+        try{
+            $appointment_order =AppointmentOrder::findOrFail($id);
+            // $this->service->delete($appointment_order->file_id);
+            $appointment_order->delete();
+            return 'deleted';
+        }catch(Exception $e)
+        {
+            return $e;
+        }
+        
     }
 
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Model;
 
 class Tool extends Model
@@ -12,6 +13,6 @@ class Tool extends Model
     protected $fillable =['name','type'];
 
     public function manufactures(){
-        return $this->belongsToMany(Manafucture::class,'manufacture_tool');
+        return $this->belongsToMany(Manufacture::class,'manufacture_tool');
     }
 }

@@ -6,6 +6,7 @@ namespace App\Http\Controllers\reference;
 use App\Models\Diploma;
 use Illuminate\Http\Request;
 use App\UseCases\DiplomaService;
+use App\Http\Controllers\Controller;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class DiplomaController extends Controller
@@ -38,8 +39,8 @@ class DiplomaController extends Controller
         return $this->service->edit($request,$diploma);
     }
 
-    public function destroy(Diploma $diploma)
+    public function destroy($id)
     {
-        return $this->service->remove($diploma);
+        return $this->service->remove($id);
     }
 }

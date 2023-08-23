@@ -55,9 +55,7 @@ class FilemanagerController extends Controller
     }
     public function delete($id)
     {
-        $file = Files::findOrFail($id);
-        $this->service->delete($file);
-        $file->delete();
-        return 'deleted';
+      return  $this->service->delete($id);
+        
     }
 }

@@ -41,8 +41,8 @@ class AppointmentOrderController extends Controller
         return $this->service->edit($request,$appointment_order);
     }
 
-    public function destroy(AppointmentOrder $appointment_order)
+    public function destroy($id)
     {
-        return $this->service->remove($appointment_order);
+        return $this->service->remove($id);
     }
 }

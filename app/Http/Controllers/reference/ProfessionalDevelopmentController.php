@@ -4,6 +4,7 @@ namespace App\Http\Controllers\reference;
 
 
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Spatie\QueryBuilder\QueryBuilder;
 use App\Models\ProfessionalDevelopment;
 use App\UseCases\ProfessionalDevelopmentService;
@@ -39,8 +40,8 @@ class ProfessionalDevelopmentController extends Controller
         return $this->service->edit($request,$professional_development);
     }
 
-    public function destroy(ProfessionalDevelopment $professional_development)
+    public function destroy($id)
     {
-        return $this->service->remove($professional_development);
+        return $this->service->remove($id);
     }
 }
