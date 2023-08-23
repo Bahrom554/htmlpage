@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\user;
+namespace App\Http\Controllers\reference;
 
 use App\Models\Staff;
 use Illuminate\Http\Request;
@@ -11,6 +11,12 @@ use Spatie\QueryBuilder\AllowedFilter;
 
 class StaffController extends Controller
 {
+    private $service;
+    public function __construct(StaffService $service)
+    {
+        $this->service=$service;
+    }
+
     public function index(Request $request)
     {
         $query = QueryBuilder::for(Staff::class);
@@ -18,49 +24,25 @@ class StaffController extends Controller
             $query->where('name', 'like', '%' . $request->get('search') . '%');
             $query->where('phone', 'like', '%' . $request->get('search') . '%');
         }
-        
+
         $query->orderBy('updated_at', 'desc');
         return $query->paginate(30);
     }
 
-  
+
     public function store(Request $request)
     {
-       $validated=$request->validate([
-
-            'name'=>'required|string',
-            'phone'=>'required|string',
-            'statue'=>'nullable|string',
-            'definition'=>'nullable|string',
-            'file_1'=>'nullable|string',
-            'file_2'=>'nullable|string',
-            'file_3'=>'nullable|string'
-        ]);
-        $staff=Staff::make($validated);
-        $staff->subject_id=Auth::user()->subject_id;
-        $staff->save();
-        return $staff;
+      return $this->service->create($request);
     }
 
-  
+
     public function show(Staff $staff)
     {
         return $staff;
     }
     public function update(Request $request, Staff $staff)
     {
-        $validated=$request->validate([
-
-            'name'=>'required|string',
-            'phone'=>'required|string',
-            'statue'=>'nullable|string',
-            'definition'=>'nullable|string',
-            'file_1'=>'nullable|string',
-            'file_2'=>'nullable|string',
-            'file_3'=>'nullable|string'
-        ]);
-        $staff->update($request->only([ 'name','phone','statue','definition','file_1','file_2','file_3']));
-        return $staff;
+       return $this->service->edit($request, $staff);
     }
 
     /**
@@ -71,7 +53,6 @@ class StaffController extends Controller
      */
     public function destroy(Staff $staff)
     {
-        $staff->delete();
-        return 'deleted';
+        return $this->service->remove($staff);
     }
 }

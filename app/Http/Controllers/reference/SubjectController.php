@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\user;
+namespace App\Http\Controllers\reference;
 
 use App\Models\Subject;
 use Illuminate\Http\Request;
@@ -31,11 +31,14 @@ class SubjectController extends Controller
         }
         $query = QueryBuilder::for(Subject::class);
         if (!empty($request->get('search'))) {
-            $query->where('name', 'like', '%' . $request->get('search') . '%');
-            $query->where('address_legal',  'like', '%' . $request->get('search') . '%');
-            $query->where('address_fact','like', '%' . $request->get('search') . '%');
-            $query->where('email','like', '%' . $request->get('search') . '%');
-            $query->where('phone','like', '%' . $request->get('search') . '%');
+            $query->where(function($q) use ($request){
+                $q->where('name', 'like', '%' . $request->get('search') . '%');
+                $q->orwhere('address_legal',  'like', '%' . $request->get('search') . '%');
+                $q->orwhere('address_fact','like', '%' . $request->get('search') . '%');
+                $q->orwhere('email','like', '%' . $request->get('search') . '%');
+                $q->orwhere('phone','like', '%' . $request->get('search') . '%');
+            });
+
 
         }
         $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);

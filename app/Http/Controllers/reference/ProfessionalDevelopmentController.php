@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\reference;
 
 
 use Illuminate\Http\Request;
@@ -18,7 +18,7 @@ class ProfessionalDevelopmentController extends Controller
 
     public function store(Request $request)
     {
-        
+
         return $this->service->create($request);
     }
     public function show(Request $request, $id)

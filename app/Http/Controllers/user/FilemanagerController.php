@@ -46,7 +46,7 @@ class FilemanagerController extends Controller
      */
     public function uploads(Request $request)
     {
-
+         
         return $this->service->uploads($request);
     }
     public function show($id){

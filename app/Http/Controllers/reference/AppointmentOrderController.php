@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\user;
+namespace App\Http\Controllers\reference;
 
 
 use Illuminate\Http\Request;
@@ -20,7 +20,7 @@ class AppointmentOrderController extends Controller
 
     public function store(Request $request)
     {
-        
+
         return $this->service->create($request);
     }
     public function show(Request $request, $id)

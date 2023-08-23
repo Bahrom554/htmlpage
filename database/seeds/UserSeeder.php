@@ -38,15 +38,17 @@ class UserSeeder extends Seeder
         $subject_type=SubjectType::create([
             'name'=>'Vazirlik'
         ]);
-        
+
         $subject = Subject::create([
             'name'=> 'test subject',
             'address_legal' => 'test',
             'address_fact' =>'test',
-            'subject_type_id'=> $subject_type->id
+            'subject_type_id'=>$subject_type->id,
+            'email'=>'sdfsdf@gmail.com',
+            'phone'=>'8987987987879'
         ]);
 
-        
+
         $user = User::create([
             'name' => 'User',
             'email' => 'user@example.com',

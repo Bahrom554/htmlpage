@@ -16,11 +16,11 @@ class CreateSubjectsTable extends Migration
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->string('address_legal')->nullable();
+            $table->string('address_legal');
             $table->string('address_fact')->nullable();
-            $table->unsignedBigInteger('subject_type_id')->nullable();
-            $table->foreign('subject_type_id')->references('id')->on('subject_types')->onDelete('set null');
-            $table->string('email')->unique();
+            $table->unsignedBigInteger('subject_type_id');
+            $table->foreign('subject_type_id')->references('id')->on('subject_types');
+            $table->string('email')->nullable();
             $table->string('phone');
             $table->timestamps();
         });

@@ -12,10 +12,11 @@ class SubjectEditRequest extends FormRequest
     {
         return [
             'name' => 'string|unique:subjects,name,'.$this->subject->id,
-            'address_legal'=>'nullable|string',
+            'address_legal'=>'string',
             'address_fact'=>'nullable|string',
-            'subject_type_id' => 'nullable|integer|exists:subject_types,id',
-            'documents' => 'nullable|array|exists:files,id'
+            'subject_type_id' => 'integer|exists:subject_types,id',
+            'email'=>'nullable|email|max:255',
+            'phone'=>'string'
         ];
     }
 }

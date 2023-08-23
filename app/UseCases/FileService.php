@@ -21,7 +21,7 @@ class FileService
 
 
         if (is_array( $files)) {
-      return $files;
+           
 
             $response = [];
             foreach ($files as $file) {

@@ -19,7 +19,7 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::apiResource('users', 'UserController'); //done
             Route::apiResource('comment','CommentController');
             Route::put('users/{user}/change-password', 'UserController@changePassword'); //done
-            Route::apiResource('subject-type','SubjectTypeController');
+
         });
         Route::group(['namespace' => 'user'], function () {
             Route::get('application/{application}/success', 'ApplicationController@success');
@@ -43,15 +43,28 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::apiResource('device', 'DeviceController'); //done
         Route::apiResource('technique', 'TechniqueController'); //done
         Route::apiResource('telecommunication', 'TelecommunicationController'); //done
-        Route::apiResource('subject', 'SubjectController'); //done, modified
         Route::apiResource('purpose','PurposeController');
         Route::apiResource('item','ItemController');
-        Route::apiResource('staff', 'StaffController'); //done
-        //staff's field which have file
-        Route::apiResource('appointment-order','AppointmentOrderController'); //Lavozimga tayinlanganlik buyrug'i
-        Route::apiResource('diploma','DiplomaController'); //diplom
-        Route::apiResource('professional_development','ProfessionalDevelopmentController'); //Malaka oshirish sertifikati
+
+        //references
+
+
+    });
+
+    Route::group(['namespace' =>'reference'], function(){
+
+        Route::apiResource('subject-type','SubjectTypeController');//done tested
+        Route::apiResource('subject', 'SubjectController');//done tested
+        Route::apiResource('manufacture','ManufactureController');
+        Route::apiResource('appointment-order','AppointmentOrderController');
+        Route::apiResource('diploma','DiplomaController');
+        Route::apiResource('professional_development','ProfessionalDevelopmentController');
         Route::apiResource('compliance','ComplianceController');
+        Route::apiResource('provider','ProviderController');
+        Route::apiResource('staff', 'StaffController');
+        Route::apiResource('tool','ToolController');
+
+
 
     });
     Route::group(['namespace' => 'admin'], function () {

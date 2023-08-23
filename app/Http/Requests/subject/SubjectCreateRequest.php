@@ -22,10 +22,10 @@ class SubjectCreateRequest extends FormRequest
     {
         return [
             'name'=>'required|string|unique:subjects',
-           'address_legal'=>'nullable|string',
+           'address_legal'=>'required|string',
            'address_fact'=>'nullable|string',
-           'subject_type_id'=>'nullable|integer|exists:subject_types,id',
-           'email'=>'required|email|max:255|unique:subjects',
+           'subject_type_id'=>'required|integer|exists:subject_types,id',
+           'email'=>'nullable|email|max:255',
            'phone'=>'required|string'
         ];
     }

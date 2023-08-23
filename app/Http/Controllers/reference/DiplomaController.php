@@ -1,29 +1,28 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\reference;
 
 
-use App\Models\Compliance;
+use App\Models\Diploma;
 use Illuminate\Http\Request;
-use App\UseCases\ComplianceService;
+use App\UseCases\DiplomaService;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class ComplianceController extends Controller
-{
-    private $service;
-    public function __construct(ComplianceService $service)
+class DiplomaController extends Controller
+{ private $service;
+    public function __construct(DiplomaService $service)
     {
         $this->service=$service;
     }
 
     public function store(Request $request)
     {
-        
+
         return $this->service->create($request);
     }
     public function show(Request $request, $id)
     {
-        $query = QueryBuilder::for(Compliance::class);
+        $query = QueryBuilder::for(Diploma::class);
         $task=$query->findOrFail($id);
         if (!empty($request->append)) {
             $task->append(explode(',', $request->append));
@@ -34,13 +33,13 @@ class ComplianceController extends Controller
         return $task;
     }
 
-    public function update(Request $request, Compliance $compliance)
+    public function update(Request $request, Diploma $diploma)
     {
-        return $this->service->edit($request,$compliance);
+        return $this->service->edit($request,$diploma);
     }
 
-    public function destroy(Compliance $compliance)
+    public function destroy(Diploma $diploma)
     {
-        return $this->service->remove($compliance);
+        return $this->service->remove($diploma);
     }
 }
