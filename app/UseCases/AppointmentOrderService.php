@@ -1,6 +1,7 @@
 <?php
 
 namespace App\UseCases;
+use DomainException;
 use Illuminate\Http\Request;
 use App\UseCases\FileService;
 use App\Models\AppointmentOrder;

@@ -2,6 +2,7 @@
 
 namespace App\UseCases;
 use Exception;
+use DomainException;
 use Illuminate\Http\Request;
 use App\Models\ProfessionalDevelopment;
 use Illuminate\Support\Facades\DB;

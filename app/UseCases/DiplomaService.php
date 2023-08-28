@@ -2,6 +2,7 @@
 
 namespace App\UseCases;
 use Exception;
+use DomainException;
 use App\Models\Diploma;
 use Illuminate\Http\Request;
 use App\UseCases\FileService;

@@ -2,6 +2,7 @@
 
 namespace App\UseCases;
 use Exception;
+use DomainException;
 use App\Models\Compliance;
 use Illuminate\Http\Request;
 use App\UseCases\FileService;
