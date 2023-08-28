@@ -4,6 +4,8 @@ namespace App\UseCases;
 use Exception;
 use Illuminate\Http\Request;
 use App\Models\ProfessionalDevelopment;
+use Illuminate\Support\Facades\DB;
+
 
 class ProfessionalDevelopmentService
 {
@@ -19,12 +21,21 @@ class ProfessionalDevelopmentService
         $request->validate([
            'definition'=>'nullable|string',
            'date'=>'required|date|before:now',
-           'file_id'=>'required|integer|exists:files,id'
+           'files'=>'required'
         ]);
-        
-        $professional_development = ProfessionalDevelopment::make($request->only('definition', 'date', 'file_id'));
-        $professional_development->save();
-        return $professional_development;
+        DB::beginTransaction();
+        try{
+            $professional_development = ProfessionalDevelopment::make($request->only('definition', 'date'));
+                $file = $this->service->uploads($request->file('files'));
+                $professional_development->file_id = $file->id;
+            $professional_development->save();
+            DB::commit();
+            return $professional_development;
+        }catch(\Exception $e){
+            DB::rollBack();
+            throw new DomainException($e->getMessage(), $e->getCode());
+        }
+
     }
 
     public function edit(Request $request, ProfessionalDevelopment $professional_development)
@@ -32,10 +43,24 @@ class ProfessionalDevelopmentService
         $request->validate([
             'definition'=>'nullable|string',
             'date'=>'date|before:now',
-            'file_id'=>'integer|exists:files,id'
+            'files'=>'nullable'
         ]);
-        $professional_development->update($request->only('definition', 'date', 'file_id'));
-        return $professional_development;
+        DB::beginTransaction();
+        try{
+            $professional_development->definition = $request->definition;
+            $professional_development->date = $request->date;
+            if($request->file('files')){
+                $file = $this->service->uploads($request->file('files'));
+                $professional_development->file_id = $file->id;
+            }
+            DB::commit();
+            return $professional_development;
+        }catch (\Exception $e) {
+            DB::rollBack();
+            throw new DomainException($e->getMessage(), $e->getCode());
+        }
+
+
 
     }
     public function remove($id)

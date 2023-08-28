@@ -5,6 +5,8 @@ use Exception;
 use App\Models\Diploma;
 use Illuminate\Http\Request;
 use App\UseCases\FileService;
+use Illuminate\Support\Facades\DB;
+
 
 class DiplomaService
 {
@@ -21,12 +23,22 @@ class DiplomaService
            'definition'=>'nullable|string',
            'educational_institution'=>'required|string',
            'degree'=>'required|integer',
-           'file_id'=>'required|integer|exists:files,id'
+               'files'=>'required'
         ]);
-        
-        $diploma = Diploma::make($request->only('file_id', 'educational_institution', 'degree','definition'));
+        DB::beginTransaction();
+        try{
+        $diploma = Diploma::make($request->only( 'educational_institution', 'degree','definition'));
+        $file = $this->service->uploads($request->file('files'));
+        $diploma->file_id = $file->id;
         $diploma->save();
+        DB::commit();
         return $diploma;
+        }catch (\Exception $e) {
+            DB::rollBack();
+            throw new DomainException($e->getMessage(), $e->getCode());
+        }
+
+
     }
 
     public function edit(Request $request, Diploma $diploma)
@@ -35,10 +47,25 @@ class DiplomaService
             'definition'=>'nullable|string',
             'educational_institution'=>'string',
             'degree'=>'integer',
-            'file_id'=>'integer|exists:files,id'
+            'files'=>'nullable'
         ]);
-        $diploma->update($request->only('file_id', 'educational_institution', 'degree','definition'));
-        return $diploma;
+
+        DB::beginTransaction();
+        try{
+            $diploma->educational_institution = $request->educational_institution;
+            $diploma->degree = $request->degree;
+            $diploma->definition = $diploma->definition;
+            if($request->file('files')){
+                $file = $this->service->uploads($request->file('files'));
+                $diploma->file_id = $file->id;
+            }
+            $diploma->save();
+            DB::commit();
+            return $diploma;
+        }catch (\Exception $e) {
+            DB::rollBack();
+            throw new DomainException($e->getMessage(), $e->getCode());
+        }
 
     }
     public function remove($id)

@@ -5,6 +5,8 @@ use Exception;
 use App\Models\Compliance;
 use Illuminate\Http\Request;
 use App\UseCases\FileService;
+use Illuminate\Support\Facades\DB;
+
 
 class ComplianceService
 {
@@ -15,19 +17,31 @@ class ComplianceService
         $this->service=$service;
 
     }
-    
+
     public function create(Request $request)
     {
         $request->validate([
            'definition'=>'nullable|string',
            'from'=>'required|date|before:now',
            'to'=>'required|date|after:now',
-           'file_id'=>'required|integer|exists:files,id'
+           'files'=>'required'
         ]);
-        
-        $compliance = Compliance::make($request->only('file_id', 'from','to', 'definition'));
-        $compliance->save();
-        return $compliance;
+
+        DB::beginTransaction();
+        try{
+            $compliance = Compliance::make($request->only( 'from','to', 'definition'));
+            $file = $this->service->uploads($request->file('files'));
+            $compliance->file_id = $file->id;
+            $compliance->save();
+            DB::commit();
+            return $compliance;
+
+        }catch (\Exception $e) {
+            DB::rollBack();
+            throw new DomainException($e->getMessage(), $e->getCode());
+        }
+
+
     }
 
     public function edit(Request $request, Compliance $compliance)
@@ -36,10 +50,24 @@ class ComplianceService
             'definition'=>'nullable|string',
            'from'=>'date|before:now',
            'to'=>'date|after:now',
-           'file_id'=>'integer|exists:files,id'
+           'files'=>'nullable'
         ]);
-        $compliance->update($request->only('file_id', 'from','to', 'definition'));
-        return $compliance;
+        try{
+            $compliance->definition =$request->definition;
+            $compliance->from = $request->from;
+            $compliance->to = $request->to;
+            if($request->file('files')){
+                $file = $this->service->uploads($request->file('files'));
+                $compliance->file_id = $file->id;
+            }
+            $compliance->save();
+            DB::commit();
+            return $compliance;
+
+        }catch (\Exception $e) {
+            DB::rollBack();
+            throw new DomainException($e->getMessage(), $e->getCode());
+        }
 
     }
     public function remove($id)

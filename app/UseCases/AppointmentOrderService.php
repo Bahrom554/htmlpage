@@ -4,11 +4,13 @@ namespace App\UseCases;
 use Illuminate\Http\Request;
 use App\UseCases\FileService;
 use App\Models\AppointmentOrder;
+use Illuminate\Support\Facades\DB;
+
 use Exception;
 
 class AppointmentOrderService
 {
-    
+
     private $service;
 
     public function __construct( FileService $service)
@@ -21,12 +23,26 @@ class AppointmentOrderService
         $request->validate([
            'definition'=>'nullable|string',
            'date'=>'required|date|before:now',
-           'file_id'=>'required|integer|exists:files,id'
+           'files'=>'required'
         ]);
-        
-        $appointment_order = AppointmentOrder::make($request->only('definition', 'date', 'file_id'));
-        $appointment_order->save();
-        return $appointment_order;
+        DB::beginTransaction();
+
+        try{
+
+            $appointment_order = AppointmentOrder::make($request->only('definition', 'date'));
+            $file = $this->service->uploads($request->file('files'));
+            $appointment_order->file_id = $file->id;
+            $appointment_order->save();
+            DB::commit();
+            return $appointment_order;
+
+        }catch (\Exception $e) {
+            DB::rollBack();
+            throw new DomainException($e->getMessage(), $e->getCode());
+        }
+
+
+
     }
 
     public function edit(Request $request, AppointmentOrder $appointment_order)
@@ -34,14 +50,30 @@ class AppointmentOrderService
         $request->validate([
             'definition'=>'nullable|string',
             'date'=>'date|before:now',
-            'file_id'=>'integer|exists:files,id'
+            'files'=>'nullable'
         ]);
-        $appointment_order->update($request->only('definition', 'date', 'file_id'));
-        return $appointment_order;
+        DB::beginTransaction();
+        try{
+            $appointment_order->definition =$request->definition;
+            $appointment_order->date =$request->date;
+            if($request->file('files')){
+                $file = $this->service->uploads($request->file('files'));
+                $appointment_order->file_id = $file->id;
+            }
+            $appointment_order->save();
+            DB::commit();
+            return $appointment_order;
+
+        }catch (\Exception $e) {
+            DB::rollBack();
+            throw new DomainException($e->getMessage(), $e->getCode());
+        }
+
+
 
     }
     public function remove($id)
-    {   
+    {
         try{
             $appointment_order =AppointmentOrder::findOrFail($id);
             // $this->service->delete($appointment_order->file_id);
@@ -51,7 +83,7 @@ class AppointmentOrderService
         {
             return $e;
         }
-        
+
     }
 
 

@@ -16,13 +16,11 @@ use Intervention\Image\Facades\Image;
 class FileService
 {
 
-    public function uploads(Request $request)
+    public function uploads($files)
     {
-        $files = $request->file('files');
-
 
         if (is_array( $files)) {
-           
+
 
             $response = [];
             foreach ($files as $file) {
@@ -33,7 +31,7 @@ class FileService
 
                 $dto = new GeneratePathFileDTO();
                 $dto->file = $file;
-                $response[] = $this->uploadFile($dto,$request);
+                $response[] = $this->uploadFile($dto);
             }
 
             return $response;
@@ -45,11 +43,11 @@ class FileService
             $dto = new GeneratePathFileDTO();
             $dto->file = $files;
 
-            return $this->uploadFile($dto,$request);
+            return $this->uploadFile($dto);
         }
     }
 
-    public function uploadFile(GeneratePathFileDTO $dto, Request $request)
+    public function uploadFile(GeneratePathFileDTO $dto)
     {
         DB::beginTransaction();
         try {
@@ -57,7 +55,7 @@ class FileService
             $generatedDTO->origin_name = $dto->file->getClientOriginalName();
             $generatedDTO->file_size = $dto->file->getSize();
             $dto->file->move($generatedDTO->file_folder, $generatedDTO->file_name . '.' . $generatedDTO->file_ext);
-            $file = $this->createFileModel($generatedDTO,$request);
+            $file = $this->createFileModel($generatedDTO);
 //                $this->createThumbnails($file);
             DB::commit();
         } catch (\Exception $e) {
@@ -111,7 +109,7 @@ class FileService
         return $generatedPathFileDTO;
     }
 
-    private function createFileModel(GeneratedPathFileDTO $generatedDTO,Request $request)
+    private function createFileModel(GeneratedPathFileDTO $generatedDTO)
     {
         $data = [
             'title' => $generatedDTO->origin_name,
@@ -133,13 +131,13 @@ class FileService
     }
 
     public function delete($id){
-     
+
             $file = Files::findOrFail($id);
             $file->delete();
             unlink($file->folder.'/'.$file->file);
             return 'deleted';
-        
-        
+
+
     }
 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\reference;
 
 use App\Models\Tool;
+use App\Models\Manufacture;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -56,20 +57,23 @@ class ToolController extends Controller
     {
         $request->validate([
             'name'=>'required|string',
-            'type'=>'required|integer|between:1,2'
+            'type'=>'required|integer|between:1,2',
+            'manufacture'=>'required|array',
          ]);
          DB::beginTransaction();
          try{
             $tool =Tool::create($request->only('name','type'));
-            if($request->manufacture){
-               $tool->manufactures()->create(['name'=>$request->manufacture]);
-            }
+
+              foreach($request->manufacture as $manufacture){
+                $tool->manufactures()->create(['name'=>$manufacture]);
+              }
             DB::commit();
          }catch (\Exception $e) {
             DB::rollback();
             // something went wrong
+            return $e;
         }
-       
+
       return $tool;
     }
 
