@@ -20,7 +20,16 @@ class ProfessionalDevelopmentController extends Controller
     public function store(Request $request)
     {
 
-        return $this->service->create($request);
+       $model= $this->service->create($request);
+
+        if (!empty($request->append)) {
+            $model->append(explode(',', $request->append));
+        };
+        if (!empty($request->include)) {
+            $model->load(explode(',', $request->include));
+        };
+
+        return $model;
     }
     public function show(Request $request, $id)
     {

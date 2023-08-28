@@ -21,7 +21,17 @@ class AppointmentOrderController extends Controller
     public function store(Request $request)
     {
 
-        return $this->service->create($request);
+        $appointment_order = $this->service->create($request);
+
+        if (!empty($request->append)) {
+            $appointment_order->append(explode(',', $request->append));
+        };
+        if (!empty($request->include)) {
+            $appointment_order->load(explode(',', $request->include));
+        };
+
+        return $appointment_order;
+
     }
     public function show(Request $request, $id)
     {

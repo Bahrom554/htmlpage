@@ -19,7 +19,16 @@ class DiplomaController extends Controller
     public function store(Request $request)
     {
 
-        return $this->service->create($request);
+       $diploma = $this->service->create($request);
+
+        if (!empty($request->append)) {
+            $diploma->append(explode(',', $request->append));
+        };
+        if (!empty($request->include)) {
+            $diploma->load(explode(',', $request->include));
+        };
+
+        return $diploma;
     }
     public function show(Request $request, $id)
     {

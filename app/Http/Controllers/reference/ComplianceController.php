@@ -20,7 +20,16 @@ class ComplianceController extends Controller
     public function store(Request $request)
     {
 
-        return $this->service->create($request);
+        $compliance= $this->service->create($request);
+
+        if (!empty($request->append)) {
+            $compliance->append(explode(',', $request->append));
+        };
+        if (!empty($request->include)) {
+            $compliance->load(explode(',', $request->include));
+        };
+
+        return $compliance;
     }
     public function show(Request $request, $id)
     {
