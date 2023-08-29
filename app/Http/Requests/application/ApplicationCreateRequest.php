@@ -22,22 +22,16 @@ class ApplicationCreateRequest extends FormRequest
     {
         return [
             'name'=>'required|string',
-            'staffs'=>'required|array|exists:staff,id',
-            'purpose_id'=>'required|integer|exists:purposes,id',
-            'error_or_broken'=>'required|string',
-            'devices'=>'nullable|array|exists:devices,id',
-            'techniques'=>'nullable|array|exists:techniques,id',
-            'licenses'=>'nullable|array|exists:files,id',
-            'certificates'=>'nullable|array|exists:files,id',
-            'telecommunications'=>'required|array|exists:telecommunications,id',
-            'provide_cyber_security'=>'required|string',
+            'staff_id'=>'required|integer|exists:staff,id',
+            'subject_id'=>'required|integer|exists:subjects,id',
+            'level_and_function'=>'required|string',
+            'importance_id'=>'required|integer|exists:importances,id',
+            'information_tool'=>'required|array|exists:instruments,id',
+            'network_id'=>'required|integer|exists:networks,id',
+            'cybersecurity_tool'=>'required|array|exists:instruments,id',
             'threats_to_information_security'=>'required|string',
             'consequences_of_an_incident'=>'required|string',
-            'organizational_and_technical_measures_to_ensure_security'=>'required|string',
-            'subject_id'=>'required|integer|exists:subjects,id',
-            'documents'=>'nullable|array|exists:files,id',
-            'importance_id'=>'required|integer|exists:importances,id'
-
+            'provide_cyber_security'=>'required|string',
         ];
     }
 }

@@ -7,6 +7,7 @@ use App\Models\Reject;
 use App\Models\Comment;
 use App\Models\Subject;
 use App\Models\Importance;
+use App\Models\Instrument;
 use App\Models\Telecommunication;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -31,39 +32,26 @@ class Application extends Model
     protected $fillable = [
         'name',
         'user_id',
-        'staffs',
-        'purpose_id',
+        'staff_id',
+        'subject_id',
+        'level_and_function',
         'importance_id',
-        'documents',
-        'techniques',
-        'devices',
-        'licenses',
-        'certificates',
-        'telecommunications',
-        'error_or_broken',
+        'information_tool',
+        'cybersecurity_tool',
+        'network_id',
         'provide_cyber_security',
         'threats_to_information_security',
         'consequences_of_an_incident',
-        'organizational_and_technical_measures_to_ensure_security',
         'status',
-        'subject_id',
-        'organization',
-        'address'
+        
 
     ];
     protected $casts = [
-        'staffs' => 'array',
-        'telecommunications' => 'array',
-        'devices' => 'array',
-        'techniques' => 'array',
-        'licenses' => 'array',
-        'certificates' => 'array',
-        'documents'=>'array'
+        'information_tool' => 'array',
+        'cybersecurity_tool' => 'array',
     ];
 
     protected $dates = ['deleted_at'];
-
-    protected $appends = ['staff'];
 
     public function user()
     {
@@ -74,9 +62,7 @@ class Application extends Model
     {
         return $this->belongsTo(Importance::class);
     }
-    public function purpose(){
-        return $this->belongsTo(Purpose::class);
-    }
+   
     public function subject()
     {
         return $this->belongsTo(Subject::class);
@@ -89,46 +75,17 @@ class Application extends Model
         return $this->hasMany(Reject::class,'application_id','id')->orderBy('id', 'DESC');
     }
 
-    public function getCertificateAttribute()
+    public function getInformationAttribute()
     {
-
-        return Files::whereIn('id', $this->certificates ?: [])->get();
+        return Instrument::whereIn('id', $this->information_tool?: [])->where('type',1)->get();
     }
 
-    public function getLicenseAttribute()
+    public function getCybersecurityAttribute()
     {
-
-        return Files::whereIn('id', $this->licenses ?: [])->get();
+        return Instrument::whereIn('id', $this->cybersecurity_tool?: [])->where('type',2)->get();
     }
 
-    public function getDocumentAttribute()
-    {
-
-        return Files::whereIn('id', $this->documents ?: [])->get();
-    }
-
-
-
-    public function getStaffAttribute()
-    {
-
-        return Staff::whereIn('id', $this->staffs ?: [])->get();
-    }
-
-    public function getTeleCommunicationAttribute()
-    {
-
-        return Telecommunication::whereIn('id', $this->telecommunications ?: [])->get();
-    }
-    public function getDeviceAttribute()
-    {
-        return Device::whereIn('id', $this->devices ?: [])->get();
-    }
-
-    public function getTechniqueAttribute()
-    {
-        return Technique::whereIn('id', $this->techniques ?: [])->get();
-    }
+   
 
     public function scopePopular($query, $request)
     {

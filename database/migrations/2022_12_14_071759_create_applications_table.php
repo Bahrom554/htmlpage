@@ -17,29 +17,20 @@ class CreateApplicationsTable extends Migration
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-
             $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('staff_id');
             // subject many to many
             $table->unsignedBigInteger('subject_id');
-            // shaxs to'grisidegi malumot
-            $table->json('staffs')->nullable();
+    
             // МАИ объектининг кўлами ва мақсади;
-            $table->unsignedBigInteger('purpose_id');
+            $table->text('level_and_function');
             // МАИ объектига берилган аҳамиятлилик тоифаси;
             $table->unsignedBigInteger('importance_id');
-            // МАИ объекти фаолиятида хатолик бўлса ёки у ишдан чиққан тақдирда, юзага келиши мумкин //бўлган оқибатлар ва зарар;
-            $table->text('error_or_broken')->nullable();
-            //МАИ объектида фойдаланиладиган аппарат, дастурий-аппарат 
-            //ва дастурий ахборотлаштириш воситалари ҳақида маълумот, шунингдек, уларнинг ахборот хавфсизлигига мувофиқлиги сертификати;
-            $table->json('devices')->nullable();
-            // МАИ объектида фойдаланиладиган аппарат, дастурий-аппарат 
-             //ва дастурий ахборотлаштириш воситалари ҳақида маълумот, шунингдек, уларнинг ахборот хавфсизлигига мувофиқлиги сертификати;
-             $table->json('techniques')->nullable();
-             $table->json('documents')->nullable();
-             $table->json('licenses')->nullable();
-             $table->json('certificates')->nullable();
-            //  МАИ объектини умумий телекоммуникация тармоғи, шунингдек, Интернетга уланиш ва фойдаланиш тартиби;
-            $table->json('telecommunications')->nullable();
+            //axborotlashtirish vositasi
+            $table->json('information_tool');
+            $table->json('cybersecurity_tool');  
+            $table->unsignedBigInteger('network_id');
+          
             // МАИ объектида киберхавфсизликни таъминлаш бўйича қўлланиладиган чора ва воситалар;
             $table->text('provide_cyber_security')->nullable();
             // МАИ объектига нисбатан ахборот хавфсизлиги таҳдидлари 
@@ -47,8 +38,6 @@ class CreateApplicationsTable extends Migration
             $table->text('threats_to_information_security')->nullable();
             // МАИ объектида киберхавфсизлик инцидентини юз беришининг эҳтимолий оқибатлари;
             $table->text('consequences_of_an_incident')->nullable();
-            // МАИ объектида хавфсизликни таъминлашнинг ташкилий ва техник чоралари.
-            $table->text('organizational_and_technical_measures_to_ensure_security')->nullable();
             $table->unsignedInteger('status')->default(0);
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
             $table->softDeletes();

@@ -11,21 +11,16 @@ class ApplicationEditRequest extends FormRequest
     {
         return [
             'name'=>'string',
-            'staffs'=>'required|array|exists:staff,id',
-            'purpose_id'=>'integer||exists:purposes,id',
-            'error_or_broken'=>'string',
-            'devices'=>'nullable|array|exists:devices,id',
-            'techniques'=>'nullable|array|exists:techniques,id',
-            'licenses'=>'nullable|array|exists:files,id',
-            'certificates'=>'nullable|array|exists:files,id',
-            'telecommunications'=>'array|exists:telecommunications,id',
-            'provide_cyber_security'=>'string',
+            'staff_id'=>'integer|exists:staff,id',
+            'subject_id'=>'integer|exists:subjects,id',
+            'level_and_function'=>'string',
+            'importance_id'=>'integer|exists:importances,id',
+            'information_tool'=>'array|exists:instruments,id',
+            'network_id'=>'integer|exists:networks,id',
+            'cybersecurity_tool'=>'array|exists:instruments,id',
             'threats_to_information_security'=>'string',
             'consequences_of_an_incident'=>'string',
-            'organizational_and_technical_measures_to_ensure_security'=>'string',
-            'subject_id'=>'integer|exists:subjects,id',
-            'documents'=>'nullable|array|exists:files,id',
-            'importance_id'=>'integer|exists:importances,id'
+            'provide_cyber_security'=>'string',
            ];
 
     }

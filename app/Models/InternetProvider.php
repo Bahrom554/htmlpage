@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Files;
+use App\Models\Provider;
 use Illuminate\Database\Eloquent\Model;
 
 class InternetProvider extends Model

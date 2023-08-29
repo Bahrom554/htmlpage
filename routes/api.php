@@ -34,19 +34,23 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::get('profile', 'ProfileController@show'); //done
         Route::put('profile', 'ProfileController@update'); //done
         Route::put('profile/change-password', 'ProfileController@changePassword'); //done
+
         Route::get('file', 'FilemanagerController@index'); //done
         Route::delete('file/{id}', 'FilemanagerController@delete'); //done
         Route::get('file/{id}', 'FilemanagerController@show'); //done
         Route::post('file', 'FilemanagerController@uploads'); //done
+
         Route::apiResource('application', 'ApplicationController'); //done
         Route::get('dash', 'ApplicationController@dash'); //done
-        Route::apiResource('device', 'DeviceController'); //done
-        Route::apiResource('technique', 'TechniqueController'); //done
-        Route::apiResource('telecommunication', 'TelecommunicationController'); //done
-        Route::apiResource('purpose','PurposeController');
-        Route::apiResource('item','ItemController');
+       
 
-        //references
+
+        //yangi
+        Route::apiResource('internet-provider','InternetProviderController');//done tested
+        Route::apiResource('network','NetworkController');//done
+        Route::apiResource('instrument','InstrumentController');
+
+   
 
 
     });

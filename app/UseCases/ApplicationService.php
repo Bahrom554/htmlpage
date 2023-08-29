@@ -42,26 +42,26 @@ class ApplicationService
         ->selectRaw('count(*) as total, status')
         ->get();
         // ------------------------------
-        $by_cert = $this->commonAll($request)
-        ->whereNotNull('certificates')
-        ->selectRaw('year(updated_at) year, monthname(updated_at) month, count(*) total')
-        ->groupBy('year', 'month')
-        ->orderBy('year', 'desc')
-        ->get();
+        // $by_cert = $this->commonAll($request)
+        // ->whereNotNull('certificates')
+        // ->selectRaw('year(updated_at) year, monthname(updated_at) month, count(*) total')
+        // ->groupBy('year', 'month')
+        // ->orderBy('year', 'desc')
+        // ->get();
         // --------------------------------//
-        $by_lic = $this->commonAll($request)
-        ->whereNotNull('licenses')
-        ->selectRaw('year(updated_at) year, monthname(updated_at) month, count(*) total')
-        ->groupBy('year', 'month')
-        ->orderBy('year', 'desc')
-        ->get();
+        // $by_lic = $this->commonAll($request)
+        // ->whereNotNull('licenses')
+        // ->selectRaw('year(updated_at) year, monthname(updated_at) month, count(*) total')
+        // ->groupBy('year', 'month')
+        // ->orderBy('year', 'desc')
+        // ->get();
         // --------------------------------//
 
         $responce = [
             "applications" => $all,
             "allInMont"=>$all_by_mont,
-            "certificates" => $by_cert,
-            "licenses" => $by_lic,
+            // "certificates" => $by_cert,
+            // "licenses" => $by_lic,
             "status"=>$by_status,
 
 
@@ -102,25 +102,18 @@ class ApplicationService
     {
         $app = Application::make($request->only([
             'name',
-            'staffs',
-            'purpose_id',
+            'staff_id',
+            'subject_id',
+            'level_and_function',
             'importance_id',
-            'documents',
-            'techniques',
-            'devices',
-            'licenses',
-            'certificates',
-            'telecommunications',
-            'error_or_broken',
+            'information_tool',
+            'cybersecurity_tool',
+            'network_id',
             'provide_cyber_security',
             'threats_to_information_security',
-            'consequences_of_an_incident',
-            'organizational_and_technical_measures_to_ensure_security',
-
-
+            'consequences_of_an_incident'
         ]));
         $app->user_id = Auth::user()->id;
-        $app->subject_id =Auth::user()->subject_id;
         $app->save();
         return $app;
     }
@@ -130,24 +123,20 @@ class ApplicationService
 
         $application->update($request->only([
             'name',
-            'staffs',
-            'purpose_id',
+            'staff_id',
+            'subject_id',
+            'level_and_function',
             'importance_id',
-            'documents',
-            'techniques',
-            'devices',
-            'licenses',
-            'certificates',
-            'telecommunications',
-            'error_or_broken',
+            'information_tool',
+            'cybersecurity_tool',
+            'network_id',
             'provide_cyber_security',
             'threats_to_information_security',
-            'consequences_of_an_incident',
-            'organizational_and_technical_measures_to_ensure_security',
+            'consequences_of_an_incident'
 
 
         ])+['status'=>0]);
-            //  Application::findOrFail($application->id)->update(['status'=>0]);
+            
             return $application;
     }
 
