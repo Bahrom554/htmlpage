@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\user;
 
+use App\Models\InternetProvider;
 use Illuminate\Http\Request;
 use App\Models\Network;
 use App\Http\Controllers\Controller;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use App\UseCases\NetworkService;
 
@@ -14,6 +16,26 @@ class NetworkController extends Controller
     public function __construct(NetworkService $service)
     {
         $this->service=$service;
+    }
+    public function index(Request $request)
+    {
+        $filters = $request->get('filter');
+        $filter = [];
+        if (!empty($filters)) {
+            foreach ($filters as $k => $item) {
+                $filter[] = AllowedFilter::exact($k);
+            }
+        }
+        $query = QueryBuilder::for(Network::class);
+
+        if (!empty($request->get('search'))) {
+            $query->where('name', 'like', '%' . $request->get('search') . '%');
+        }
+        $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
+        $query->allowedFilters($filter);
+        $query->allowedSorts($request->sort);
+        $query->orderBy('updated_at', 'desc');
+        return $query->paginate(30);
     }
 
     public function store(Request $request)

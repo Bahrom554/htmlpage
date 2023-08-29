@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\reference;
 
 
+use App\Models\Compliance;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use App\Models\ProfessionalDevelopment;
 use App\UseCases\ProfessionalDevelopmentService;
@@ -16,6 +18,24 @@ class ProfessionalDevelopmentController extends Controller
     {
         $this->service=$service;
     }
+
+    public function index(Request $request)
+    {
+        $filters = $request->get('filter');
+        $filter = [];
+        if (!empty($filters)) {
+            foreach ($filters as $k => $item) {
+                $filter[] = AllowedFilter::exact($k);
+            }
+        }
+        $query = QueryBuilder::for(ProfessionalDevelopment::class);
+        $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
+        $query->allowedFilters($filter);
+        $query->allowedSorts($request->sort);
+        $query->orderBy('updated_at', 'desc');
+        return $query->paginate(30);
+    }
+
 
     public function store(Request $request)
     {

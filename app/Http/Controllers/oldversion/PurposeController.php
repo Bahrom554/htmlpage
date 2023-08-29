@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\user;
+namespace App\Http\Controllers\oldversion;
 
+use App\Http\Controllers\Controller;
 use App\Models\Purpose;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class PurposeController extends Controller
 {
@@ -46,7 +46,7 @@ class PurposeController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -59,11 +59,11 @@ class PurposeController extends Controller
     {
         $request->validate([
             'name'=>'required|string',
-            
+
          ]);
-         
+
          return Purpose::create($request->only('name'));
-        
+
     }
 
     /**
@@ -74,7 +74,7 @@ class PurposeController extends Controller
      */
     public function show(Request $request,Purpose $purpose)
     {
-        
+
         if (!empty($request->include)) {
             $purpose->load(explode(',', $request->include));
         }
@@ -104,7 +104,7 @@ class PurposeController extends Controller
     {
         $request->validate([
             'name'=>'required|string',
-            
+
          ]);
          $purpose->update($request->only('name'));
          return $purpose;

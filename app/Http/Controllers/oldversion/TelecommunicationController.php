@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\user;
+namespace App\Http\Controllers\oldversion;
 
 
-use Illuminate\Http\Request;
-use App\Models\Telecommunication;
 use App\Http\Controllers\Controller;
+use App\Models\Telecommunication;
+use Illuminate\Http\Request;
 
 class TelecommunicationController extends Controller
 {
@@ -19,16 +19,16 @@ class TelecommunicationController extends Controller
             'connect_nat'=>'nullable|boolean',
             'points_connect_net'=>'nullable|integer',
             'provider_count'=>'nullable|integer'
-            
+
         ]);
-        $telec=Telecommunication::create($validated); 
+        $telec=Telecommunication::create($validated);
         return $telec;
     }
 
-   
+
     public function show(Request $request,Telecommunication $telecommunication)
     {
-        
+
         if (!empty($request->include)) {
             $telecommunication->load(explode(',', $request->include));
         }
@@ -36,9 +36,9 @@ class TelecommunicationController extends Controller
         return $telecommunication;
     }
 
-   
 
-    
+
+
     public function update(Request $request, Telecommunication $telecommunication)
     {
         $validated=$request->validate([
@@ -54,7 +54,7 @@ class TelecommunicationController extends Controller
          return $telecommunication;
     }
 
-   
+
     public function destroy(Telecommunication $telecommunication)
     {
         $telecommunication->delete();

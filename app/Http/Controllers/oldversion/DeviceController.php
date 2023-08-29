@@ -1,18 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\user;
+namespace App\Http\Controllers\oldversion;
 
-
-use App\Models\Technique;
-use Illuminate\Http\Request;
-use App\UseCases\TechniqueService;
 use App\Http\Controllers\Controller;
+use App\Models\Device;
+use App\UseCases\DeviceService;
+use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 
-class TechniqueController extends Controller
+class DeviceController extends Controller
 {
     private $service;
-    public function __construct(TechniqueService $service)
+    public function __construct(DeviceService $service)
     {
         $this->service=$service;
     }
@@ -24,7 +23,7 @@ class TechniqueController extends Controller
     }
     public function show(Request $request, $id)
     {
-        $query = QueryBuilder::for(Technique::class);
+        $query = QueryBuilder::for(Device::class);
         $task=$query->findOrFail($id);
         if (!empty($request->append)) {
             $task->append(explode(',', $request->append));
@@ -35,13 +34,13 @@ class TechniqueController extends Controller
         return $task;
     }
 
-    public function update(Request $request, Technique $technique)
+    public function update(Request $request, Device $device)
     {
-        return $this->service->edit($request,$technique);
+        return $this->service->edit($request,$device);
     }
 
-    public function destroy(Technique $technique)
+    public function destroy(Device $device)
     {
-        return $this->service->remove($technique);
+        return $this->service->remove($device);
     }
 }

@@ -42,15 +42,15 @@ Route::group(['middleware' => 'auth:api'], function () {
 
         Route::apiResource('application', 'ApplicationController'); //done
         Route::get('dash', 'ApplicationController@dash'); //done
-       
+
 
 
         //yangi
         Route::apiResource('internet-provider','InternetProviderController');//done tested
         Route::apiResource('network','NetworkController');//done
-        Route::apiResource('instrument','InstrumentController');
+        Route::apiResource('instrument','InstrumentController');// done and tested
 
-   
+
 
 
     });
@@ -67,7 +67,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::apiResource('compliance','ComplianceController');//done tested
         Route::apiResource('provider','ProviderController');
         Route::apiResource('staff', 'StaffController');
-       
+
 
 
 

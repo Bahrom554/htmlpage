@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\user;
 
+use App\Models\Instrument;
 use Illuminate\Http\Request;
 use App\Models\InternetProvider;
 use App\Http\Controllers\Controller;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use App\UseCases\InternetProviderService;
 
@@ -14,6 +16,27 @@ class InternetProviderController extends Controller
     public function __construct(InternetProviderService $service)
     {
         $this->service=$service;
+    }
+
+    public function index(Request $request)
+    {
+        $filters = $request->get('filter');
+        $filter = [];
+        if (!empty($filters)) {
+            foreach ($filters as $k => $item) {
+                $filter[] = AllowedFilter::exact($k);
+            }
+        }
+        $query = QueryBuilder::for(InternetProvider::class);
+
+        if (!empty($request->get('search'))) {
+            $query->where('name', 'like', '%' . $request->get('search') . '%');
+        }
+        $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
+        $query->allowedFilters($filter);
+        $query->allowedSorts($request->sort);
+        $query->orderBy('updated_at', 'desc');
+        return $query->paginate(30);
     }
 
     public function store(Request $request)
