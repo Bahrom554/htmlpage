@@ -25,4 +25,8 @@ class Subject extends Model
     return $this->belongsTo(SubjectType::class,'subject_type_id','id');
    }
 
+   public function staffs(){
+       return $this->hasMany(Staff::class);
+   }
+
 }
