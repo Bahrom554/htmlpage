@@ -104,7 +104,7 @@ class ApplicationService
             'name',
             'staff_id',
             'subject_id',
-            'level_and_function',
+            'pupose_id',
             'importance_id',
             'information_tool',
             'cybersecurity_tool',
@@ -125,7 +125,7 @@ class ApplicationService
             'name',
             'staff_id',
             'subject_id',
-            'level_and_function',
+            'purpose_id',
             'importance_id',
             'information_tool',
             'cybersecurity_tool',
@@ -136,7 +136,7 @@ class ApplicationService
 
 
         ])+['status'=>0]);
-            
+
             return $application;
     }
 

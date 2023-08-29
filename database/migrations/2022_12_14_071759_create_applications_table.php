@@ -21,19 +21,20 @@ class CreateApplicationsTable extends Migration
             $table->unsignedBigInteger('staff_id');
             // subject many to many
             $table->unsignedBigInteger('subject_id');
-    
+
             // МАИ объектининг кўлами ва мақсади;
-            $table->text('level_and_function');
+            $table->unsignedBigInteger('purpose_id');
             // МАИ объектига берилган аҳамиятлилик тоифаси;
             $table->unsignedBigInteger('importance_id');
+            $table->unsignedBigInteger('file_id');
             //axborotlashtirish vositasi
             $table->json('information_tool');
-            $table->json('cybersecurity_tool');  
+            $table->json('cybersecurity_tool');
             $table->unsignedBigInteger('network_id');
-          
+
             // МАИ объектида киберхавфсизликни таъминлаш бўйича қўлланиладиган чора ва воситалар;
             $table->text('provide_cyber_security')->nullable();
-            // МАИ объектига нисбатан ахборот хавфсизлиги таҳдидлари 
+            // МАИ объектига нисбатан ахборот хавфсизлиги таҳдидлари
             //  ва қоидабузарлик тоифалари ҳақида маълумотлар;
             $table->text('threats_to_information_security')->nullable();
             // МАИ объектида киберхавфсизлик инцидентини юз беришининг эҳтимолий оқибатлари;

@@ -24,7 +24,7 @@ class ApplicationCreateRequest extends FormRequest
             'name'=>'required|string',
             'staff_id'=>'required|integer|exists:staff,id',
             'subject_id'=>'required|integer|exists:subjects,id',
-            'level_and_function'=>'required|string',
+            'purpose_id'=>'required|integer|exists:purposes,id',
             'importance_id'=>'required|integer|exists:importances,id',
             'information_tool'=>'required|array|exists:instruments,id',
             'network_id'=>'required|integer|exists:networks,id',

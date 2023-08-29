@@ -67,6 +67,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::apiResource('compliance','ComplianceController');//done tested
         Route::apiResource('provider','ProviderController');
         Route::apiResource('staff', 'StaffController');
+        Route::apiResource('purpose','PurposeController');
 
 
 

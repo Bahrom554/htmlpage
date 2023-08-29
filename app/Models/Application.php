@@ -34,7 +34,7 @@ class Application extends Model
         'user_id',
         'staff_id',
         'subject_id',
-        'level_and_function',
+        'purpose_id',
         'importance_id',
         'information_tool',
         'cybersecurity_tool',
@@ -43,7 +43,7 @@ class Application extends Model
         'threats_to_information_security',
         'consequences_of_an_incident',
         'status',
-        
+
 
     ];
     protected $casts = [
@@ -62,10 +62,14 @@ class Application extends Model
     {
         return $this->belongsTo(Importance::class);
     }
-   
+
     public function subject()
     {
         return $this->belongsTo(Subject::class);
+    }
+
+    public function  purpose(){
+        return $this->belongsTo(Purpose::class);
     }
 
     public function reject(){
@@ -85,7 +89,7 @@ class Application extends Model
         return Instrument::whereIn('id', $this->cybersecurity_tool?: [])->where('type',2)->get();
     }
 
-   
+
 
     public function scopePopular($query, $request)
     {

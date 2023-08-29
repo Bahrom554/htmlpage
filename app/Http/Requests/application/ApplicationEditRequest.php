@@ -13,7 +13,7 @@ class ApplicationEditRequest extends FormRequest
             'name'=>'string',
             'staff_id'=>'integer|exists:staff,id',
             'subject_id'=>'integer|exists:subjects,id',
-            'level_and_function'=>'string',
+            'purpose_id'=>'integer|exists:purposes,id',
             'importance_id'=>'integer|exists:importances,id',
             'information_tool'=>'array|exists:instruments,id',
             'network_id'=>'integer|exists:networks,id',

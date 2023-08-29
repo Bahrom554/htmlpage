@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\oldversion;
+namespace App\Http\Controllers\reference;
 
 use App\Http\Controllers\Controller;
 use App\Models\Purpose;
