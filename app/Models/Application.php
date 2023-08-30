@@ -53,6 +53,9 @@ class Application extends Model
     ];
 
     protected $dates = ['deleted_at'];
+    
+    protected $with = ['file','importance','staff','subject','purpose','network'];
+    protected $appends =['information','cybersecurity'];
 
     public function user()
     {

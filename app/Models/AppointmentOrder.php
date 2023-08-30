@@ -8,6 +8,7 @@ class AppointmentOrder extends Model
 {
     protected $fillable = ['file_id', 'date', 'definition'];
 
+    protected $with =['file'];
     public function file(){
         return $this->belongsTo(Files::class);
     }

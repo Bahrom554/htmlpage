@@ -108,4 +108,8 @@ class ApplicationController extends Controller
 
        
     }
+
+    public function report(Request $request){
+        return $this->service->search($request);
+    }
 }

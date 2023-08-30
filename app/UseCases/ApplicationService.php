@@ -17,15 +17,21 @@ use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Http\Requests\application\ApplicationEditRequest;
 use App\Http\Requests\application\ApplicationCreateRequest;
+use App\Models\Staff;
+use App\Models\Subject;
 
 class ApplicationService
 {
 
     private $commentService;
+    private $networkService;
+    private $toolService;
 
-    public function __construct( CommentService $commentService)
+    public function __construct( CommentService $commentService, NetworkService $networkService, ToolService $toolService)
     {
     $this->commentService = $commentService;
+    $this->networkService = $networkService;
+    $this->toolService = $toolService;
     }
     public function dash(Request $request)
     {
@@ -204,6 +210,29 @@ class ApplicationService
     }
 
 
+    public function search(Request $request){
+      $query = QueryBuilder::for(Application::class);
+      if(!empty($request->get('name'))) $query->where('name', 'like', '%' . $request->get('name') . '%'); 
+      $subject_ids=null;
+      if(!empty($request->get('subject_name'))){
+        $subject_ids = Subject::where('name', 'like', '%' . $request->get('subject_name') . '%')->pluck('id')->toArray() ;
+       $query->whereIn('subject_id',$subject_ids? : []);
+      }
+      if(!empty($request->get('staff'))){
+        $staffs =Staff::where('name', 'like', '%' . $request->get('staff') . '%')->pluck('id')->toArray();
+        $query->whereIn('staff_id',$staffs? : []); 
+      }
+
+      $information_tool_ids = $this->toolService->searchInformationTool($request);
+      $cybersecurity_tool_ids = $this->toolService->searchCybersecurityTool($request);
+      $network_ids = $this->networkService->search($request);
+       $query->whereJsonContains('information_tool',$information_tool_ids);
+       $query->whereJsonContains('cybersecurity_tool',$cybersecurity_tool_ids);
+       $query->whereIn('network_id',$network_ids);
+
+       $query->paginate(15);
+
+    }
 
 
 }

@@ -26,6 +26,7 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::get('application/{application}/success', 'ApplicationController@success');
             Route::get('application/{application}/reject', 'ApplicationController@reject');
             Route::post('application/{application}/comment', 'ApplicationController@comment');
+            Route::get('report','ApplicationController@report');
 
         });
     });

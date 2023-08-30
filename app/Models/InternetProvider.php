@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class InternetProvider extends Model
 {
     protected $fillable =['provider_id','file_id','points'];
-
+    
+    protected $with =['file','provider'];
     public function file(){
         return $this->belongsTo(Files::class);
     }

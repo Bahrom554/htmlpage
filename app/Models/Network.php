@@ -10,7 +10,13 @@ class Network extends Model
 
     protected $casts = ['internet_providers'=>'array'];
 
-    public function getInternetAttribute(){
+    protected $with =['file'];
+    protected $appends = ['providers'];
+    public function getProvidersAttribute(){
         return InternetProvider::whereIn('id', $this->internet_providers)->get();
+    }
+
+    public function file(){
+        return $this->belongsTo(Files::class);
     }
 }

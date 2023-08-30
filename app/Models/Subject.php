@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Subject extends Model
 {
     protected $fillable = ['name', 'subject_type_id', 'address_legal','address_fact', 'email','phone'];
-    // protected $with = ['subjects'];
+    protected $with = ['type','staffs'];
 
    public function applications():HasMany
    {

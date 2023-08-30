@@ -10,7 +10,8 @@ class Tool extends Model
     public const CATEGORY_CYBERSECURITY =2;
     protected $fillable = ['category','name','tool_type_id','manufacture_id','from','to','definition','file_id'];
 
-    public function toolType(){
+    protected $with = ['file','manufacture','type'];
+    public function type(){
         return $this->belongsTo(ToolType::class,'tool_type_id','id');
 
     }

@@ -26,6 +26,9 @@ class Staff extends Model
     protected $casts = [
         'professional_development'=>'array'
     ];
+
+    protected $with =['subject_id','diploma','appointment','compliance'];
+    protected $appends = ['professional'];
     public function subject(){
         return $this->belongsTo(Subject::class);
     }
@@ -34,11 +37,11 @@ class Staff extends Model
         return $this->belongsTo(Diploma::class);
     }
 
-    public function appointmentOrder(){
+    public function appointment(){
         return $this->belongsTo(AppointmentOrder::class,'appointment_order_id','id');
     }
 
-    public function getProfessionalDevelopment(){
+    public function getProfessionalAttribute(){
         return ProfessionalDevelopment::whereIn('id', $this->professional_development ?: [])->get();
     }
 

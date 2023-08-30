@@ -10,6 +10,7 @@ class Compliance extends Model
 
     protected $fillable = ['file_id', 'from','to', 'definition'];
 
+    protected $with =['file'];
     public function file(){
         return $this->belongsTo(Files::class);
     }
