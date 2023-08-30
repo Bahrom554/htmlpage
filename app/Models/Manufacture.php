@@ -11,4 +11,8 @@ class Manufacture extends Model
     public function tools(){
         return $this->belongsToMany(Tool::class,'manufacture_tool');
     }
+
+    public function instruments(){
+        return $this->hasMany(Instrument::class);
+    }
 }

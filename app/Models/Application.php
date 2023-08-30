@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\Staff;
 use App\Models\Reject;
+use App\Models\Staff;
 use App\Models\Comment;
 use App\Models\Subject;
 use App\Models\Importance;
@@ -36,6 +36,7 @@ class Application extends Model
         'subject_id',
         'purpose_id',
         'importance_id',
+        'file_id',
         'information_tool',
         'cybersecurity_tool',
         'network_id',
@@ -72,12 +73,15 @@ class Application extends Model
         return $this->belongsTo(Purpose::class);
     }
 
-    public function reject(){
-        return $this->hasMany(Reject::class)->orderBy('id', 'DESC')->limit(1);
+    public function file(){
+        return $this->belongsTo(Files::class);
     }
-    public function rejectAll(){
-        return $this->hasMany(Reject::class,'application_id','id')->orderBy('id', 'DESC');
+
+
+    public function network(){
+        return $this->belongsTo(Network::class);
     }
+
 
     public function getInformationAttribute()
     {
@@ -90,7 +94,12 @@ class Application extends Model
     }
 
 
-
+    public function reject(){
+        return $this->hasMany(Reject::class)->orderBy('id', 'DESC')->limit(1);
+    }
+    public function rejectAll(){
+        return $this->hasMany(Reject::class,'application_id','id')->orderBy('id', 'DESC');
+    }
     public function scopePopular($query, $request)
     {
         if ($request->filled('between')) {

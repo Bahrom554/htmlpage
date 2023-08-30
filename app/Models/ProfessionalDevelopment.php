@@ -11,5 +11,8 @@ class ProfessionalDevelopment extends Model
     public function file(){
         return $this->belongsTo(Files::class);
     }
+
+    public function staff(){
+        return $this->hasOne(Staff::class);
+    }
 }
-    
