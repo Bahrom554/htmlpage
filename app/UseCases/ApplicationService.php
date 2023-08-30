@@ -104,7 +104,7 @@ class ApplicationService
             'name',
             'staff_id',
             'subject_id',
-            'pupose_id',
+            'purpose_id',
             'file_id',
             'importance_id',
             'information_tool',
