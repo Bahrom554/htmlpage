@@ -59,6 +59,12 @@ class Application extends Model
        return $this->belongsTo(User::class);
     }
 
+    public function staff(){
+
+        return $this->belongsTo(Staff::class);
+    }
+
+
     public function importance()
     {
         return $this->belongsTo(Importance::class);

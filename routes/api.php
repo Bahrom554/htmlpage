@@ -20,11 +20,13 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::apiResource('comment','CommentController');
             Route::put('users/{user}/change-password', 'UserController@changePassword'); //done
 
+
         });
         Route::group(['namespace' => 'user'], function () {
             Route::get('application/{application}/success', 'ApplicationController@success');
             Route::get('application/{application}/reject', 'ApplicationController@reject');
             Route::post('application/{application}/comment', 'ApplicationController@comment');
+            Route::get('search-network','NetworkController@search');
 
         });
     });
