@@ -13,11 +13,11 @@ class CreateManufactureToolTable extends Migration
      */
     public function up()
     {
-        Schema::create('manufacture_tool', function (Blueprint $table) {
+        Schema::create('manufacture_tool_type', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('manufacture_id');
-            $table->unsignedBigInteger('tool_id');
-            $table->foreign('tool_id')->references('id')->on('tools')->onDelete('CASCADE');
+            $table->unsignedBigInteger('tool_type_id');
+            $table->foreign('tool_type_id')->references('id')->on('tool_types')->onDelete('CASCADE');
             $table->foreign('manufacture_id')->references('id')->on('manufactures')->onDelete('CASCADE');
             $table->timestamps();
         });
@@ -30,6 +30,6 @@ class CreateManufactureToolTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('manafucture_tool');
+        Schema::dropIfExists('manufacture_tool_type');
     }
 }

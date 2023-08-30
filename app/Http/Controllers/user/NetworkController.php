@@ -77,26 +77,5 @@ class NetworkController extends Controller
         return $this->service->remove($id);
     }
 
-//    public function search(Request $request){
-//
-//        $query = QueryBuilder::for(Network::class);
-//
-//        if(!empty($request->get('network_name'))) $query->where('name', 'like', '%' . $request->get('network_name') . '%');
-//        if(!empty($request->get('connection'))) $query->where('connection',$request->get('connection'));
-//
-//        if(!empty($request->get('internet_provider_name'))){
-//            $providers =Provider::where('name', 'like', '%' . $request->get('internet_provider_name') . '%')->pluck('id')->toArray();
-//            $q = QueryBuilder::for(InternetProvider::class);
-//            $q->whereIn('provider_id', $providers? :[]);
-//            if(!empty($request->get('points'))) $q->where('points',$request->points);
-//            $internet_providers = $q->pluck('id')->toArray();
-//           $query->where();
-//        }
-//
-//
-//
-//
-//    }
-//
 
 }

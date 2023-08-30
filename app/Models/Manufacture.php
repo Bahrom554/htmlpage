@@ -8,11 +8,11 @@ class Manufacture extends Model
 {
     protected $fillable =['name','definition'];
 
-    public function tools(){
-        return $this->belongsToMany(Tool::class,'manufacture_tool');
+    public function tool_types(){
+        return $this->belongsToMany(ToolType::class,'manufacture_tool_type');
     }
 
-    public function instruments(){
-        return $this->hasMany(Instrument::class);
+    public function tools(){
+        return $this->hasMany(Tool::class);
     }
 }

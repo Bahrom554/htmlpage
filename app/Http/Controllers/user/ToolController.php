@@ -4,16 +4,16 @@ namespace App\Http\Controllers\user;
 
 use App\Models\SubjectType;
 use Illuminate\Http\Request;
-use App\Models\Instrument;
+use App\Models\Tool;
 use App\Http\Controllers\Controller;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
-use App\UseCases\InstrumentService;
+use App\UseCases\ToolService;
 
-class InstrumentController extends Controller
+class ToolController extends Controller
 {
     private $service;
-    public function __construct(InstrumentService $service)
+    public function __construct(ToolService $service)
     {
         $this->service=$service;
     }
@@ -27,7 +27,7 @@ class InstrumentController extends Controller
                 $filter[] = AllowedFilter::exact($k);
             }
         }
-        $query = QueryBuilder::for(Instrument::class);
+        $query = QueryBuilder::for(Tool::class);
 
         if (!empty($request->get('search'))) {
             $query->where('name', 'like', '%' . $request->get('search') . '%');
@@ -42,34 +42,34 @@ class InstrumentController extends Controller
     public function store(Request $request)
     {
 
-        $instrument = $this->service->create($request);
+        $tool  = $this->service->create($request);
 
         if (!empty($request->append)) {
-            $instrument->append(explode(',', $request->append));
+            $tool ->append(explode(',', $request->append));
         };
         if (!empty($request->include)) {
-            $instrument->load(explode(',', $request->include));
+            $tool ->load(explode(',', $request->include));
         };
 
-        return $instrument;
+        return $tool ;
 
     }
     public function show(Request $request, $id)
     {
-        $query = QueryBuilder::for(Instrument::class);
-        $task=$query->findOrFail($id);
+        $query = QueryBuilder::for(Tool::class);
+        $tool=$query->findOrFail($id);
         if (!empty($request->append)) {
-            $task->append(explode(',', $request->append));
+            $tool->append(explode(',', $request->append));
         }
         if (!empty($request->include)) {
-            $task->load(explode(',', $request->include));
+            $tool->load(explode(',', $request->include));
         }
-        return $task;
+        return $tool;
     }
 
-    public function update(Request $request, Instrument $instrument)
+    public function update(Request $request, Tool $tool )
     {
-        return $this->service->edit($request,$instrument);
+        return $this->service->edit($request,$tool );
     }
 
     public function destroy($id)

@@ -63,12 +63,12 @@ class ManufactureController extends Controller
          DB::beginTransaction();
          try{
             $manufacture =Manufacture::create($request->only('name','definition'));
-            $manufacture->tools()->attach($request->tool_id);
+            $manufacture->tool_types()->attach($request->tool_id);
           DB::commit();
          }catch(\Exception $e){
           DB::rollBack();
          }
-         
+
       return $manufacture;
     }
 

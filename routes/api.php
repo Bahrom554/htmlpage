@@ -26,7 +26,6 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::get('application/{application}/success', 'ApplicationController@success');
             Route::get('application/{application}/reject', 'ApplicationController@reject');
             Route::post('application/{application}/comment', 'ApplicationController@comment');
-            Route::get('search-network','NetworkController@search');
 
         });
     });
@@ -50,7 +49,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         //yangi
         Route::apiResource('internet-provider','InternetProviderController');//done tested
         Route::apiResource('network','NetworkController');//done
-        Route::apiResource('instrument','InstrumentController');// done and tested
+        Route::apiResource('tool','ToolController');// done and tested
 
 
 
@@ -63,6 +62,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::apiResource('subject', 'SubjectController');//done tested
         Route::apiResource('manufacture','ManufactureController');//done tested
         Route::apiResource('tool','ToolController');//done tested
+        Route::apiResource('tool_type','ToolTypeController');
         Route::apiResource('appointment-order','AppointmentOrderController');//done tested
         Route::apiResource('diploma','DiplomaController');//done tested
         Route::apiResource('professional-development','ProfessionalDevelopmentController');//done tested

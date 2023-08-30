@@ -1,6 +1,8 @@
 <?php
 
 namespace App\UseCases;
+use App\Models\InternetProvider;
+use App\Models\Provider;
 use DomainException;
 use Illuminate\Http\Request;
 use App\UseCases\FileService;
@@ -8,6 +10,7 @@ use App\Models\Network;
 use Illuminate\Support\Facades\DB;
 
 use Exception;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class NetworkService
 {
@@ -90,5 +93,23 @@ class NetworkService
 
     }
 
+     public function search(Request $request){
+         $query = QueryBuilder::for(Network::class);
+
+         if(!empty($request->get('network_name'))) $query->where('name', 'like', '%' . $request->get('network_name') . '%');
+         if(!empty($request->get('connection'))) $query->where('connection',$request->get('connection'));
+         if(!empty($request->get('internet_provider_name'))){
+             $providers =Provider::where('name', 'like', '%' . $request->get('internet_provider_name') . '%')->pluck('id')->toArray();
+             $q = QueryBuilder::for(InternetProvider::class);
+             $q->whereIn('provider_id', $providers? :[]);
+             if(!empty($request->get('points'))) $q->where('points',$request->get('points'));
+             $internet_providers = $q->pluck('id')->toArray();
+             $query->whereJsonContains('internet_providers',$internet_providers);
+         }
+
+         $ids = $query->pluck('id')->toArray();
+
+         return $ids;
+     }
 
 }

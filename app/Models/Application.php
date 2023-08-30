@@ -7,7 +7,7 @@ use App\Models\Staff;
 use App\Models\Comment;
 use App\Models\Subject;
 use App\Models\Importance;
-use App\Models\Instrument;
+use App\Models\Tool;
 use App\Models\Telecommunication;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -91,12 +91,12 @@ class Application extends Model
 
     public function getInformationAttribute()
     {
-        return Instrument::whereIn('id', $this->information_tool?: [])->where('type',1)->get();
+        return Tool::whereIn('id', $this->information_tool?: [])->where('type',1)->get();
     }
 
     public function getCybersecurityAttribute()
     {
-        return Instrument::whereIn('id', $this->cybersecurity_tool?: [])->where('type',2)->get();
+        return Tool::whereIn('id', $this->cybersecurity_tool?: [])->where('type',2)->get();
     }
 
 

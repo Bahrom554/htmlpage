@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers\reference;
 
-use App\Models\Tool;
-use App\Models\Manufacture;
+use App\Http\Controllers\Controller;
+use App\Models\ToolType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
-use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
-class ToolController extends Controller
+class ToolTypeController extends Controller
 {
     public function __construct()
     {
@@ -26,7 +25,7 @@ class ToolController extends Controller
                 $filter[] = AllowedFilter::exact($k);
             }
         }
-        $query = QueryBuilder::for(Tool::class);
+        $query = QueryBuilder::for(ToolType::class);
         if (!empty($request->get('search'))) {
             $query->where('name', 'like', '%' . $request->get('search') . '%');
         }
@@ -41,15 +40,15 @@ class ToolController extends Controller
 
     public function show(Request $request, $id)
     {
-        $query = QueryBuilder::for(Tool::class);
-        $tool=$query->findOrFail($id);
+        $query = QueryBuilder::for(ToolType::class);
+        $tool_type =$query->findOrFail($id);
         if (!empty($request->append)) {
-            $tool->append(explode(',', $request->append));
+            $tool_type ->append(explode(',', $request->append));
         }
         if (!empty($request->include)) {
-            $tool->load(explode(',', $request->include));
+            $tool_type ->load(explode(',', $request->include));
         }
-        return $tool;
+        return $tool_type ;
     }
 
 
@@ -57,43 +56,43 @@ class ToolController extends Controller
     {
         $request->validate([
             'name'=>'required|string',
-            'type'=>'required|integer|between:1,2',
+            'category'=>'required|integer|between:1,2',
             'manufacture'=>'required|array',
-         ]);
-         DB::beginTransaction();
-         try{
-            $tool =Tool::create($request->only('name','type'));
+        ]);
+        DB::beginTransaction();
+        try{
+            $tool_type  =ToolType::create($request->only('name','category'));
 
-              foreach($request->manufacture as $manufacture){
-                $tool->manufactures()->create(['name'=>$manufacture]);
-              }
+            foreach($request->manufacture as $manufacture){
+                $tool_type ->manufactures()->create(['name'=>$manufacture]);
+            }
             DB::commit();
-         }catch (\Exception $e) {
+        }catch (\Exception $e) {
             DB::rollback();
             // something went wrong
             return $e;
         }
 
-      return $tool;
+        return $tool_type ;
     }
 
 
-    public function update(Request $request, Tool $tool)
+    public function update(Request $request, ToolType $tool_type )
     {
         $request->validate([
             'name'=>'required|string',
-            'type'=>'required|integer|between:1,2'
+            'category'=>'required|integer|between:1,2'
 
-         ]);
+        ]);
 
-          $tool->update($request->only('name','type'));
-          return $tool;
+        $tool_type ->update($request->only('name','category'));
+        return $tool_type ;
     }
 
 
-    public function destroy(Tool $tool)
+    public function destroy(ToolType $tool_type )
     {
-        $tool->delete();
+        $tool_type ->delete();
         return 'deleted';
     }
 }
