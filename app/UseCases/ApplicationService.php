@@ -3,6 +3,8 @@
 namespace App\UseCases;
 
 
+use App\Models\Importance;
+use App\Models\Purpose;
 use Carbon\Carbon;
 use DomainException;
 use App\Models\Reject;
@@ -215,14 +217,21 @@ class ApplicationService
       if(!empty($request->get('name'))) $query->where('name', $request->get('name'));
 
       if(!empty($request->get('subject_name'))){
-        $subject_ids = Subject::where('name',  $request->get('subject_name'))->pluck('id')->toArray() ;
+        $subject_ids = Subject::where('name',  $request->get('subject_name'))->pluck('id')->toArray();
        $query->whereIn('subject_id',$subject_ids? : []);
       }
       if(!empty($request->get('staff'))){
         $staffs =Staff::where('name',  $request->get('staff') )->pluck('id')->toArray();
         $query->whereIn('staff_id',$staffs? : []);
       }
-
+      if(!empty($request->get('importance'))){
+          $importance =Importance::where('name',$request->get('importance'))->pluck('id')->toArray();
+          $query->whereIn('importance_id',$importance? : []);
+      }
+        if(!empty($request->get('purpose'))){
+            $importance =Purpose::where('name',$request->get('purpose'))->pluck('id')->toArray();
+            $query->whereIn('purpose_id',$importance? : []);
+        }
       $information_tool_ids = $this->toolService->searchInformationTool($request);
       $cybersecurity_tool_ids = $this->toolService->searchCybersecurityTool($request);
       $network_ids = $this->networkService->search($request);
