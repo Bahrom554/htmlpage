@@ -212,23 +212,23 @@ class ApplicationService
 
     public function search(Request $request){
       $query = QueryBuilder::for(Application::class);
-      if(!empty($request->get('name'))) $query->where('name', 'like', '%' . $request->get('name') . '%'); 
-      $subject_ids=null;
+      if(!empty($request->get('name'))) $query->where('name', $request->get('name'));
+
       if(!empty($request->get('subject_name'))){
-        $subject_ids = Subject::where('name', 'like', '%' . $request->get('subject_name') . '%')->pluck('id')->toArray() ;
+        $subject_ids = Subject::where('name',  $request->get('subject_name'))->pluck('id')->toArray() ;
        $query->whereIn('subject_id',$subject_ids? : []);
       }
       if(!empty($request->get('staff'))){
-        $staffs =Staff::where('name', 'like', '%' . $request->get('staff') . '%')->pluck('id')->toArray();
-        $query->whereIn('staff_id',$staffs? : []); 
+        $staffs =Staff::where('name',  $request->get('staff') )->pluck('id')->toArray();
+        $query->whereIn('staff_id',$staffs? : []);
       }
 
       $information_tool_ids = $this->toolService->searchInformationTool($request);
       $cybersecurity_tool_ids = $this->toolService->searchCybersecurityTool($request);
       $network_ids = $this->networkService->search($request);
-       $query->whereJsonContains('information_tool',$information_tool_ids);
-       $query->whereJsonContains('cybersecurity_tool',$cybersecurity_tool_ids);
-       $query->whereIn('network_id',$network_ids);
+       if( $information_tool_ids) $query->whereJsonContains('information_tool',$information_tool_ids);
+       if($cybersecurity_tool_ids) $query->whereJsonContains('cybersecurity_tool',$cybersecurity_tool_ids);
+       if($network_ids) $query->whereIn('network_id',$network_ids);
 
        $query->paginate(15);
 

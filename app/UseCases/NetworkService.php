@@ -95,21 +95,29 @@ class NetworkService
 
      public function search(Request $request){
          $query = QueryBuilder::for(Network::class);
-
-         if(!empty($request->get('network_name'))) $query->where('name', 'like', '%' . $request->get('network_name') . '%');
-         if(!empty($request->get('connection'))) $query->where('connection',$request->get('connection'));
+         $checker =0;
+         if(!empty($request->get('network_name'))) {
+             $query->where('name', $request->get('network_name'));
+             $checker=1;
+         }
+         if(!empty($request->get('connection')))
+         {
+             $query->where('connection',$request->get('connection'));
+             $checker=1;
+         }
          if(!empty($request->get('internet_provider_name'))){
-             $providers =Provider::where('name', 'like', '%' . $request->get('internet_provider_name') . '%')->pluck('id')->toArray();
+             $providers =Provider::where('name',$request->get('internet_provider_name') )->pluck('id')->toArray();
              $q = QueryBuilder::for(InternetProvider::class);
              $q->whereIn('provider_id', $providers? :[]);
              if(!empty($request->get('points'))) $q->where('points',$request->get('points'));
              $internet_providers = $q->pluck('id')->toArray();
              $query->whereJsonContains('internet_providers',$internet_providers);
+             $checker=1;
          }
-
          $ids = $query->pluck('id')->toArray();
 
-         return $ids;
+         if($checker && !empty($ids)) return $ids;
+          return null;
      }
 
 }

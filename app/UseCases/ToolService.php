@@ -108,53 +108,73 @@ class ToolService
     public function searchInformationTool(Request $request){
 
         $query = QueryBuilder::for(Tool::class);
+        $checker=0;
         $query->where('category',Tool::CATEGORY_INFORMATION);
-        if(!empty($request->get('information_tool_name'))) $query->where('name', 'like', '%' . $request->get('information_tool_name') . '%');
+        if(!empty($request->get('information_tool_name'))) {
+            $query->where('name',  $request->get('information_tool_name'));
+            $checker=1;
+        }
         if(!empty($request->get('information_tool_type'))){
-            $tool_types =ToolType::where('name', 'like', '%' . $request->get('information_tool_type') . '%')->where('category',ToolType::CATEGORY_INFORMATION)->pluck('id')->toArray();
+            $tool_types =ToolType::where('name',  $request->get('information_tool_type'))->where('category',ToolType::CATEGORY_INFORMATION)->pluck('id')->toArray();
             $query->whereIn('tool_type_id',$tool_types);
+            $checker=1;
         }
         if(!empty($request->get('information_tool_manufacture'))){
-            $manufactures =Manufacture::where('name', 'like', '%' . $request->get('information_tool_manufacture') . '%')->pluck('id')->toArray();
+            $manufactures =Manufacture::where('name', $request->get('information_tool_manufacture') )->pluck('id')->toArray();
             $query->whereIn('manufacture_id',$manufactures);
+            $checker=1;
         }
 
        if(!empty($request->get('information_tool_from'))){
            $from = Carbon::createFromFormat('Y-m-d',$request->get('information_tool_from'))->startOfDay();
            $query->whereDate('from',$from);
+           $checker=1;
        }
         if(!empty($request->get('information_tool_to'))){
             $to = Carbon::createFromFormat('Y-m-d',$request->get('information_tool_to'))->startOfDay();
             $query->whereDate('to',$to);
+            $checker=1;
         }
 
-       return $query->pluck('id')->toArray();
+       $ids= $query->pluck('id')->toArray();
+        if($checker && !empty($ids)) return $ids;
+        return null;
     }
 
     public function searchCybersecurityTool(Request $request){
 
         $query = QueryBuilder::for(Tool::class);
+        $checker=0;
         $query->where('category', Tool::CATEGORY_CYBERSECURITY);
-        if(!empty($request->get('cyber_tool_name'))) $query->where('name', 'like', '%' . $request->get('cyber_tool_name') . '%');
+        if(!empty($request->get('cyber_tool_name'))) {
+            $query->where('name',  $request->get('cyber_tool_name') );
+            $checker=1;
+        }
         if(!empty($request->get('cyber_tool_type'))){
-            $tool_types =ToolType::where('name', 'like', '%' . $request->get('cyber_tool_type') . '%')->where('category',ToolType::CATEGORY_CYBERSECURITY)->pluck('id')->toArray();
+            $tool_types =ToolType::where('name',  $request->get('cyber_tool_type') )->where('category',ToolType::CATEGORY_CYBERSECURITY)->pluck('id')->toArray();
             $query->whereIn('tool_type_id',$tool_types);
+            $checker=1;
         }
         if(!empty($request->get('cyber_tool_manufacture'))){
-            $manufactures =Manufacture::where('name', 'like', '%' . $request->get('cyber_tool_manufacture') . '%')->pluck('id')->toArray();
+            $manufactures =Manufacture::where('name',$request->get('cyber_tool_manufacture') )->pluck('id')->toArray();
             $query->whereIn('manufacture_id',$manufactures);
+            $checker=1;
         }
 
         if(!empty($request->get('cyber_tool_from'))){
             $from = Carbon::createFromFormat('Y-m-d',$request->get('cyber_tool_from'))->startOfDay();
             $query->whereDate('from',$from);
+            $checker=1;
         }
         if(!empty($request->get('cyber_tool_to'))){
             $to = Carbon::createFromFormat('Y-m-d',$request->get('cyber_tool_to'))->startOfDay();
             $query->whereDate('to',$to);
+            $checker=1;
         }
 
-        return $query->pluck('id')->toArray();
+       $ids= $query->pluck('id')->toArray();
+        if($checker && !empty($ids)) return $ids;
+        return null;
     }
 
 
