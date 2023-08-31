@@ -136,7 +136,7 @@ class ToolService
             $checker=1;
         }
 
-       $ids= $query->pluck('id')->toArray();
+         $ids= $query->pluck('id')->toArray();
         if($checker && !empty($ids)) return $ids;
         return null;
     }

@@ -213,6 +213,7 @@ class ApplicationService
 
 
     public function search(Request $request){
+
       $query = QueryBuilder::for(Application::class);
       if(!empty($request->get('name'))) $query->where('name', $request->get('name'));
 
@@ -228,7 +229,7 @@ class ApplicationService
           $importance =Importance::where('name',$request->get('importance'))->pluck('id')->toArray();
           $query->whereIn('importance_id',$importance? : []);
       }
-        if(!empty($request->get('purpose'))){
+      if(!empty($request->get('purpose'))){
             $importance =Purpose::where('name',$request->get('purpose'))->pluck('id')->toArray();
             $query->whereIn('purpose_id',$importance? : []);
         }
@@ -239,7 +240,7 @@ class ApplicationService
        if($cybersecurity_tool_ids) $query->whereJsonContains('cybersecurity_tool',$cybersecurity_tool_ids);
        if($network_ids) $query->whereIn('network_id',$network_ids);
 
-       $query->paginate(15);
+      return  $query->paginate(15);
 
     }
 

@@ -94,12 +94,12 @@ class Application extends Model
 
     public function getInformationAttribute()
     {
-        return Tool::whereIn('id', $this->information_tool?: [])->where('type',1)->get();
+        return Tool::whereIn('id', $this->information_tool?: [])->where('category',1)->get();
     }
 
     public function getCybersecurityAttribute()
     {
-        return Tool::whereIn('id', $this->cybersecurity_tool?: [])->where('type',2)->get();
+        return Tool::whereIn('id', $this->cybersecurity_tool?: [])->where('category',2)->get();
     }
 
 
