@@ -40,7 +40,7 @@ class ToolService
 
         try{
 
-            $tool = Tool::make($request->only('name', 'category ','tool_type_id','manufacture_id','definition'));
+            $tool = Tool::make($request->only('name','tool_type_id','manufacture_id','definition','category'));
             $file = $this->service->uploads($request->file('files'));
             $tool->file_id = $file->id;
             $tool->from = Carbon::createFromFormat('Y-m-d',$request->from)->startOfDay();
@@ -51,8 +51,8 @@ class ToolService
 
         }catch (\Exception $e) {
             DB::rollBack();
-
-             throw new DomainException($e->getMessage(), $e->getCode());
+             return $e;
+//             throw new DomainException($e->getMessage(), $e->getCode());
         }
 
 

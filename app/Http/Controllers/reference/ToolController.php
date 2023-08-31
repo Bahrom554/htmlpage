@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\user;
+namespace App\Http\Controllers\reference;
 
-use App\Models\SubjectType;
-use Illuminate\Http\Request;
-use App\Models\Tool;
 use App\Http\Controllers\Controller;
+use App\Models\Tool;
+use App\UseCases\ToolService;
+use Illuminate\Http\Request;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
-use App\UseCases\ToolService;
 
 class ToolController extends Controller
 {
