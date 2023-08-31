@@ -115,12 +115,12 @@ class ToolService
             $checker=1;
         }
         if(!empty($request->get('information_tool_type'))){
-            $tool_types =ToolType::where('name',  $request->get('information_tool_type'))->where('category',ToolType::CATEGORY_INFORMATION)->pluck('id')->toArray();
+            $tool_types =ToolType::where('name',  $request->get('information_tool_type'))->where('category',ToolType::CATEGORY_INFORMATION)->get()->pluck('id')->toArray();
             $query->whereIn('tool_type_id',$tool_types);
             $checker=1;
         }
         if(!empty($request->get('information_tool_manufacture'))){
-            $manufactures =Manufacture::where('name', $request->get('information_tool_manufacture') )->pluck('id')->toArray();
+            $manufactures =Manufacture::where('name', $request->get('information_tool_manufacture') )->get()->pluck('id')->toArray();
             $query->whereIn('manufacture_id',$manufactures);
             $checker=1;
         }
@@ -136,7 +136,7 @@ class ToolService
             $checker=1;
         }
 
-         $ids= $query->pluck('id')->toArray();
+         $ids= $query->get()->pluck('id')->toArray();
         if($checker && !empty($ids)) return $ids;
         return null;
     }
@@ -151,12 +151,12 @@ class ToolService
             $checker=1;
         }
         if(!empty($request->get('cyber_tool_type'))){
-            $tool_types =ToolType::where('name',  $request->get('cyber_tool_type') )->where('category',ToolType::CATEGORY_CYBERSECURITY)->pluck('id')->toArray();
+            $tool_types =ToolType::where('name',  $request->get('cyber_tool_type') )->where('category',ToolType::CATEGORY_CYBERSECURITY)->get()->pluck('id')->toArray();
             $query->whereIn('tool_type_id',$tool_types);
             $checker=1;
         }
         if(!empty($request->get('cyber_tool_manufacture'))){
-            $manufactures =Manufacture::where('name',$request->get('cyber_tool_manufacture') )->pluck('id')->toArray();
+            $manufactures =Manufacture::where('name',$request->get('cyber_tool_manufacture'))->get()->pluck('id')->toArray();
             $query->whereIn('manufacture_id',$manufactures);
             $checker=1;
         }
@@ -172,7 +172,7 @@ class ToolService
             $checker=1;
         }
 
-       $ids= $query->pluck('id')->toArray();
+       $ids= $query->get()->pluck('id')->toArray();
         if($checker && !empty($ids)) return $ids;
         return null;
     }
