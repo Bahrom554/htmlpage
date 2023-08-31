@@ -49,8 +49,16 @@ class StaffController extends Controller
     }
 
 
-    public function show(Staff $staff)
+    public function show(Request $request, $id)
     {
+        $query = QueryBuilder::for(Staff::class);
+        $staff=$query->findOrFail($id);
+        if (!empty($request->append)) {
+            $staff->append(explode(',', $request->append));
+        }
+        if (!empty($request->include)) {
+            $staff->load(explode(',', $request->include));
+        }
         return $staff;
     }
     public function update(Request $request, Staff $staff)

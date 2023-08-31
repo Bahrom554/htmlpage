@@ -27,7 +27,7 @@ class Staff extends Model
         'professional_development'=>'array'
     ];
 
-    protected $with =['subject_id','diploma','appointment','compliance'];
+//    protected $with =['subject','diploma','appointment','compliance'];
     protected $appends = ['professional'];
     public function subject(){
         return $this->belongsTo(Subject::class);
@@ -48,8 +48,8 @@ class Staff extends Model
     public function compliance(){
         return $this->belongsTo(Compliance::class);
     }
-    
-   
+
+
 
     protected static function booted()
     {

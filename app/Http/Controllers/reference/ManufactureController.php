@@ -56,14 +56,14 @@ class ManufactureController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'tool_id'=>'required|integer|exists:tools,id',
+            'tool_type_id'=>'required|integer|exists:tool_types,id',
             'name'=>'required|string',
             'definition'=>'nullable|string'
          ]);
          DB::beginTransaction();
          try{
             $manufacture =Manufacture::create($request->only('name','definition'));
-            $manufacture->tool_types()->attach($request->tool_id);
+            $manufacture->tool_types()->attach($request->tool_type_id);
           DB::commit();
          }catch(\Exception $e){
           DB::rollBack();
