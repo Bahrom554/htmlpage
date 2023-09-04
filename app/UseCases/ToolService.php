@@ -115,29 +115,29 @@ class ToolService
             $checker=1;
         }
         if(!empty($request->get('information_tool_type'))){
-            $tool_types =ToolType::where('name',  $request->get('information_tool_type'))->where('category',ToolType::CATEGORY_INFORMATION)->get()->pluck('id')->toArray();
-            $query->whereIn('tool_type_id',$tool_types);
-            $checker=1;
-        }
-        if(!empty($request->get('information_tool_manufacture'))){
-            $manufactures =Manufacture::where('name', $request->get('information_tool_manufacture') )->get()->pluck('id')->toArray();
-            $query->whereIn('manufacture_id',$manufactures);
+            $query->whereHas('type', function (QueryBuilder $q) use ($request){
+                $q->where('name', $request->get('information_tool_type'));
+            });
             $checker=1;
         }
 
-       if(!empty($request->get('information_tool_from'))){
-           $from = Carbon::createFromFormat('Y-m-d',$request->get('information_tool_from'))->startOfDay();
-           $query->whereDate('from',$from);
+        if(!empty($request->get('information_tool_manufacture'))){
+           $query->whereHas('manufacture', function (QueryBuilder $q) use ($request){
+             $q->where('name',$request->get('information_tool_manufacture'));
+           });
+
+            $checker=1;
+        }
+
+       if(!empty($request->get('information_tool_from')) || !empty($request->get('information_tool_to')) ){
+           $from =(!empty($request->get('information_tool_from'))) ? Carbon::createFromFormat('Y-m-d',$request->get('information_tool_from'))->startOfDay() : Carbon::createFromFormat('Y-m-d','2023-01-01');
+           $to =(!empty($request->get('information_tool_to'))) ? Carbon::createFromFormat('Y-m-d',$request->get('information_tool_to'))->endOfDay() : Carbon::now()->endOfDay();
+           $query->whereBetween('from',[$from,$to]);
            $checker=1;
        }
-        if(!empty($request->get('information_tool_to'))){
-            $to = Carbon::createFromFormat('Y-m-d',$request->get('information_tool_to'))->startOfDay();
-            $query->whereDate('to',$to);
-            $checker=1;
-        }
 
          $ids= $query->get()->pluck('id')->toArray();
-        if($checker && !empty($ids)) return $ids;
+        if($checker) return $ids;
         return null;
     }
 
@@ -145,35 +145,35 @@ class ToolService
 
         $query = QueryBuilder::for(Tool::class);
         $checker=0;
-        $query->where('category', Tool::CATEGORY_CYBERSECURITY);
+        $query->where('category',Tool::CATEGORY_CYBERSECURITY);
         if(!empty($request->get('cyber_tool_name'))) {
-            $query->where('name',  $request->get('cyber_tool_name') );
+            $query->where('name',  $request->get('cyber_tool_name'));
             $checker=1;
         }
         if(!empty($request->get('cyber_tool_type'))){
-            $tool_types =ToolType::where('name',  $request->get('cyber_tool_type') )->where('category',ToolType::CATEGORY_CYBERSECURITY)->get()->pluck('id')->toArray();
-            $query->whereIn('tool_type_id',$tool_types);
+            $query->whereHas('type', function (QueryBuilder $q) use ($request){
+                $q->where('name', $request->get('cyber_tool_type'));
+            });
             $checker=1;
         }
+
         if(!empty($request->get('cyber_tool_manufacture'))){
-            $manufactures =Manufacture::where('name',$request->get('cyber_tool_manufacture'))->get()->pluck('id')->toArray();
-            $query->whereIn('manufacture_id',$manufactures);
+            $query->whereHas('manufacture', function (QueryBuilder $q) use ($request){
+                $q->where('name',$request->get('cyber_tool_manufacture'));
+            });
+
             $checker=1;
         }
 
-        if(!empty($request->get('cyber_tool_from'))){
-            $from = Carbon::createFromFormat('Y-m-d',$request->get('cyber_tool_from'))->startOfDay();
-            $query->whereDate('from',$from);
-            $checker=1;
-        }
-        if(!empty($request->get('cyber_tool_to'))){
-            $to = Carbon::createFromFormat('Y-m-d',$request->get('cyber_tool_to'))->startOfDay();
-            $query->whereDate('to',$to);
+        if(!empty($request->get('cyber_tool_from')) || !empty($request->get('cyber_tool_to')) ){
+            $from =(!empty($request->get('cyber_tool_from'))) ? Carbon::createFromFormat('Y-m-d',$request->get('cyber_tool_from'))->startOfDay() : Carbon::createFromFormat('Y-m-d','2023-01-01');
+            $to =(!empty($request->get('cyber_tool_to'))) ? Carbon::createFromFormat('Y-m-d',$request->get('cyber_tool_to'))->endOfDay() : Carbon::now()->endOfDay();
+            $query->whereBetween('from',[$from,$to]);
             $checker=1;
         }
 
-       $ids= $query->get()->pluck('id')->toArray();
-        if($checker && !empty($ids)) return $ids;
+        $ids= $query->get()->pluck('id')->toArray();
+        if($checker) return $ids;
         return null;
     }
 

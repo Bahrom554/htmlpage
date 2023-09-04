@@ -27,7 +27,7 @@ class Staff extends Model
         'professional_development'=>'array'
     ];
 
-//    protected $with =['subject','diploma','appointment','compliance'];
+    protected $with =['diploma','appointment','compliance'];
     protected $appends = ['professional'];
     public function subject(){
         return $this->belongsTo(Subject::class);

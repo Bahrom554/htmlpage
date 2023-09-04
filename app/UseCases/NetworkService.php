@@ -8,8 +8,10 @@ use Illuminate\Http\Request;
 use App\UseCases\FileService;
 use App\Models\Network;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Builder;
 
 use Exception;
+
 use Spatie\QueryBuilder\QueryBuilder;
 
 class NetworkService
@@ -102,21 +104,23 @@ class NetworkService
          }
          if(!empty($request->get('connection')))
          {
-             $query->where('connection',$request->get('connection'));
-             $checker=1;
-         }
-         if(!empty($request->get('internet_provider_name'))){
-             $providers =Provider::where('name',$request->get('internet_provider_name') )->get()->pluck('id')->toArray();
-             $q = QueryBuilder::for(InternetProvider::class);
-             $q->whereIn('provider_id', $providers? :[]);
-             if(!empty($request->get('points'))) $q->where('points',$request->get('points'));
-             $internet_providers = $q->get()->pluck('id')->toArray();
-             $query->whereJsonContains('internet_providers',$internet_providers);
-             $checker=1;
+             if(!empty($request->get('internet_provider_name'))){
+                 $q = QueryBuilder::for(InternetProvider::class);
+                  $q->whereHas('provider', function (Builder $b) use ($request){
+                      $b->where('name',$request->get('internet_provider_name'));
+                  });
+                 $internet_providers = $q->get()->pluck('id')->toArray();
+                 $query->where(function ($q) use($internet_providers){
+                     foreach ($internet_providers as $provider){
+                         $q->orWhereJsonContains('internet_providers',"{$provider}");
+                     }
+                 });
+
+                 $checker=1;
+             }
          }
          $ids = $query->get()->pluck('id')->toArray();
-
-         if($checker && !empty($ids)) return $ids;
+         if($checker) return $ids;
           return null;
      }
 

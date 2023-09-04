@@ -15,6 +15,7 @@ use App\UseCases\CommentService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Http\Requests\application\ApplicationEditRequest;
@@ -29,11 +30,14 @@ class ApplicationService
     private $networkService;
     private $toolService;
 
-    public function __construct( CommentService $commentService, NetworkService $networkService, ToolService $toolService)
+    private $staffService;
+
+    public function __construct( CommentService $commentService, NetworkService $networkService, ToolService $toolService, StaffService $staffService)
     {
     $this->commentService = $commentService;
     $this->networkService = $networkService;
     $this->toolService = $toolService;
+    $this->staffService = $staffService;
     }
     public function dash(Request $request)
     {
@@ -215,31 +219,57 @@ class ApplicationService
     public function search(Request $request){
 
       $query = QueryBuilder::for(Application::class);
-      if(!empty($request->get('name'))) $query->where('name', $request->get('name'));
+        $query->allowedAppends(!empty($request->append) ? explode(',', $request->get('append')) : []);
+        $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
+
+
+      if(!empty($request->get('name'))) $query->where('name', $request->get('name')); //done tested
 
       if(!empty($request->get('subject_name'))){
-        $subject_ids = Subject::where('name',  $request->get('subject_name'))->get()->pluck('id')->toArray();
+          $query->whereHas('subject', function (Builder $q) use ($request) {
+              $q->where('name', $request->get('subject_name'));
+          }); //done tested
+      }
 
-       $query->whereIn('subject_id',$subject_ids? : []);
-      }
-      if(!empty($request->get('staff'))){
-        $staffs =Staff::where('name',  $request->get('staff') )->get()->pluck('id')->toArray();
-        $query->whereIn('staff_id',$staffs? : []);
-      }
       if(!empty($request->get('importance'))){
-          $importance =Importance::where('name',$request->get('importance'))->get()->pluck('id')->toArray();
-          $query->whereIn('importance_id',$importance? : []);
-      }
+          $query->whereHas('importance', function (Builder $q) use ($request){
+             $q->where('name',$request->get('importance'));
+          });
+      } //done tested
       if(!empty($request->get('purpose'))){
-            $importance =Purpose::where('name',$request->get('purpose'))->get()->pluck('id')->toArray();
-            $query->whereIn('purpose_id',$importance? : []);
-        }
-      $information_tool_ids = $this->toolService->searchInformationTool($request);
-      $cybersecurity_tool_ids = $this->toolService->searchCybersecurityTool($request);
-      $network_ids = $this->networkService->search($request);
-       if( $information_tool_ids) $query->whereJsonContains('information_tool',$information_tool_ids);
-       if($cybersecurity_tool_ids) $query->whereJsonContains('cybersecurity_tool',$cybersecurity_tool_ids);
-       if($network_ids) $query->whereIn('network_id',$network_ids);
+          $query->whereHas('purpose', function (Builder $q) use ($request){
+              $q->where('name',$request->get('purpose'));
+          });
+        } //done tested
+        $network_ids = $this->networkService->search($request);
+
+        if(is_array($network_ids)) $query->whereIn('network_id',$network_ids); //done tested
+
+        $staff_ids = $this->staffService->search($request);
+
+        if(is_array($staff_ids)) $query->whereIn('staff_id',$staff_ids); //done tested
+
+//      $information_tool_ids = $this->toolService->searchInformationTool($request);
+//        if( is_array($information_tool_ids)) {
+//            $query->where(function ($q) use ($information_tool_ids){
+//                foreach ($information_tool_ids as $id){
+//                    $q->orWhereJsonContains('information_tool',"{$id}");
+//                }
+//            });
+//
+//
+//        }
+//      $cyber_security_tool_ids = $this->toolService->searchCybersecurityTool($request);
+//
+//       if(is_array($cyber_security_tool_ids)) {
+//           $query->where(function ($q) use ($cyber_security_tool_ids){
+//               foreach ($cyber_security_tool_ids as $id){
+//                   $q->orWhereJsonContains('cyber_security_tool', "{$id}");
+//               }
+//
+//           });
+//       }
+
 
       return  $query->paginate(15);
 
