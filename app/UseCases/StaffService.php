@@ -117,6 +117,7 @@ class StaffService
 
     public function search(Request $request, $forController = false){
         $query = QueryBuilder::for(Staff::class);
+//        $query->with('diploma','appointment','compliance');
         $checker =0;
 
         if(!empty($request->get('staff_name'))) {

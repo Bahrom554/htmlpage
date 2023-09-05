@@ -13,6 +13,7 @@ use App\Models\ToolType;
 use Illuminate\Support\Facades\DB;
 
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class ToolService
@@ -117,14 +118,14 @@ class ToolService
             $checker=1;
         }
         if(!empty($request->get('information_tool_type'))){
-            $query->whereHas('type', function (QueryBuilder $q) use ($request){
+            $query->whereHas('type', function (Builder $q) use ($request){
                 $q->where('name', $request->get('information_tool_type'));
             });
             $checker=1;
         }
 
         if(!empty($request->get('information_tool_manufacture'))){
-           $query->whereHas('manufacture', function (QueryBuilder $q) use ($request){
+           $query->whereHas('manufacture', function (Builder $q) use ($request){
              $q->where('name',$request->get('information_tool_manufacture'));
            });
 
@@ -153,14 +154,14 @@ class ToolService
             $checker=1;
         }
         if(!empty($request->get('cyber_tool_type'))){
-            $query->whereHas('type', function (QueryBuilder $q) use ($request){
+            $query->whereHas('type', function (Builder $q) use ($request){
                 $q->where('name', $request->get('cyber_tool_type'));
             });
             $checker=1;
         }
 
         if(!empty($request->get('cyber_tool_manufacture'))){
-            $query->whereHas('manufacture', function (QueryBuilder $q) use ($request){
+            $query->whereHas('manufacture', function (Builder $q) use ($request){
                 $q->where('name',$request->get('cyber_tool_manufacture'));
             });
 
@@ -175,6 +176,7 @@ class ToolService
         }
 
         $ids= $query->get()->pluck('id')->toArray();
+
         if($checker) return $ids;
         return null;
     }

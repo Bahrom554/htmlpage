@@ -123,11 +123,7 @@ class NetworkService
                   });
                  $internet_providers = $q->get()->pluck('id')->toArray();
                  if(empty($internet_providers)) $query->where('id',0);
-                 $query->where(function ($q) use($internet_providers){
-                     foreach ($internet_providers as $provider){
-                         $q->orWhereJsonContains('internet_providers',"{$provider}");
-                     }
-                 });
+                 $query->whereJsonContains('internet_providers',$internet_providers);
 
                  $checker=1;
              }

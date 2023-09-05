@@ -260,11 +260,13 @@ class ApplicationService
              $q->where('name',$request->get('importance'));
           });
       } //done tested
+
       if(!empty($request->get('purpose'))){
           $query->whereHas('purpose', function (Builder $q) use ($request){
               $q->where('name',$request->get('purpose'));
           });
         } //done tested
+
         $network_ids = $this->networkService->search($request);
         if(is_array($network_ids)) $query->whereIn('network_id',$network_ids); //done tested
 
@@ -273,33 +275,24 @@ class ApplicationService
         if(is_array($staff_ids)) $query->whereIn('staff_id',$staff_ids); //done tested
 
       $information_tool_ids = $this->toolService->searchInformationTool($request);
+
         if( is_array($information_tool_ids)) {
             if(empty($information_tool_ids)){
                 $query->where('id', 0);
             }
 
-            $query->where(function ($q) use ($information_tool_ids){
-
-                foreach ($information_tool_ids as $id){
-                    $q->orWhereJsonContains('information_tool',"{$id}");
-                }
-            });
+            $query->whereJsonContains('cybersecurity_tool',$information_tool_ids);
 
 
-        }
+        } //done tested
       $cyber_security_tool_ids = $this->toolService->searchCybersecurityTool($request);
-
        if(is_array($cyber_security_tool_ids)) {
-           if(empty($information_tool_ids)){
+           if(empty($cyber_security_tool_ids)){
                $query->where('id', 0);
            }
-           $query->where(function ($q) use ($cyber_security_tool_ids){
-               foreach ($cyber_security_tool_ids as $id){
-                   $q->orWhereJsonContains('cybersecurity_tool', "{$id}");
-               }
+           $query->whereJsonContains('cybersecurity_tool',$cyber_security_tool_ids);
 
-           });
-       }
+       } //done tested
 
 
       return  $query->paginate(15);
