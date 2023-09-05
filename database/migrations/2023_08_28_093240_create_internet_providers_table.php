@@ -19,7 +19,6 @@ class CreateInternetProvidersTable extends Migration
             $table->unsignedBigInteger('file_id')->nullable();
             $table->integer('points');
             $table->foreign('file_id')->references('id')->on('files')->onDelete('set null');
-            $table->foreign('provider_id')->references('id')->on('providers');
             $table->timestamps();
         });
     }

@@ -140,8 +140,8 @@ class StaffService
        }
 
        if($forController){
-           $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
-           return $query->paginate(30);
+
+           return $query;
        }
         $ids = $query->get()->pluck('id')->toArray();
 

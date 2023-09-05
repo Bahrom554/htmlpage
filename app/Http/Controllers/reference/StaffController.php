@@ -27,7 +27,8 @@ class StaffController extends Controller
                 $filter[] = AllowedFilter::exact($k);
             }
         }
-        $query = QueryBuilder::for(Staff::class);
+       $query = $this->service->search($request, true);
+
         if (!empty($request->get('search'))) {
             $query->where(function($q) use ($request){
                 $q->where('name', 'like', '%' . $request->get('search') . '%');
@@ -36,10 +37,10 @@ class StaffController extends Controller
 
         }
 
-        $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
-
-        $query->allowedAppends(!empty($request->append) ? explode(',', $request->get('append')) : []);
-
+//        $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
+//
+//        $query->allowedAppends(!empty($request->append) ? explode(',', $request->get('append')) : []);
+        $query->with('appointment');
         $query->allowedFilters($filter);
         $query->allowedSorts($request->sort);
         $query->orderBy('updated_at', 'desc');
@@ -70,9 +71,6 @@ class StaffController extends Controller
        return $this->service->edit($request, $staff);
     }
 
-    public function search(Request $request){
-        return $this->service->search($request, true);
-    }
     public function destroy(Staff $staff)
     {
         return $this->service->remove($staff);

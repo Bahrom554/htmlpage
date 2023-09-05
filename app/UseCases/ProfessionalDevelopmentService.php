@@ -72,6 +72,7 @@ class ProfessionalDevelopmentService
             if($file = Files::find($development->file_id)){
                 $this->fileService->delete($file);
             }
+
             $development->delete();
             return 'deleted';
         }catch(Exception $e)

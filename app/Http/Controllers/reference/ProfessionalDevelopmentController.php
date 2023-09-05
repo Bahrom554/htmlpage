@@ -69,6 +69,7 @@ class ProfessionalDevelopmentController extends Controller
         return $this->service->edit($request,$professional_development);
     }
 
+
     public function destroy(ProfessionalDevelopment $development)
     {
         return $this->service->remove($development);
