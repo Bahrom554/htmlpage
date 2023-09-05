@@ -249,26 +249,26 @@ class ApplicationService
 
         if(is_array($staff_ids)) $query->whereIn('staff_id',$staff_ids); //done tested
 
-//      $information_tool_ids = $this->toolService->searchInformationTool($request);
-//        if( is_array($information_tool_ids)) {
-//            $query->where(function ($q) use ($information_tool_ids){
-//                foreach ($information_tool_ids as $id){
-//                    $q->orWhereJsonContains('information_tool',"{$id}");
-//                }
-//            });
-//
-//
-//        }
-//      $cyber_security_tool_ids = $this->toolService->searchCybersecurityTool($request);
-//
-//       if(is_array($cyber_security_tool_ids)) {
-//           $query->where(function ($q) use ($cyber_security_tool_ids){
-//               foreach ($cyber_security_tool_ids as $id){
-//                   $q->orWhereJsonContains('cyber_security_tool', "{$id}");
-//               }
-//
-//           });
-//       }
+      $information_tool_ids = $this->toolService->searchInformationTool($request);
+        if( is_array($information_tool_ids)) {
+            $query->where(function ($q) use ($information_tool_ids){
+                foreach ($information_tool_ids as $id){
+                    $q->orWhereJsonContains('information_tool',"{$id}");
+                }
+            });
+
+
+        }
+      $cyber_security_tool_ids = $this->toolService->searchCybersecurityTool($request);
+
+       if(is_array($cyber_security_tool_ids)) {
+           $query->where(function ($q) use ($cyber_security_tool_ids){
+               foreach ($cyber_security_tool_ids as $id){
+                   $q->orWhereJsonContains('cyber_security_tool', "{$id}");
+               }
+
+           });
+       }
 
 
       return  $query->paginate(15);

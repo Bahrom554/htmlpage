@@ -129,10 +129,10 @@ class ToolService
             $checker=1;
         }
 
-       if(!empty($request->get('information_tool_from')) || !empty($request->get('information_tool_to')) ){
-           $from =(!empty($request->get('information_tool_from'))) ? Carbon::createFromFormat('Y-m-d',$request->get('information_tool_from'))->startOfDay() : Carbon::createFromFormat('Y-m-d','2023-01-01');
-           $to =(!empty($request->get('information_tool_to'))) ? Carbon::createFromFormat('Y-m-d',$request->get('information_tool_to'))->endOfDay() : Carbon::now()->endOfDay();
-           $query->whereBetween('from',[$from,$to]);
+       if(!empty($request->get('information_tool_from')) && !empty($request->get('information_tool_to')) ){
+           $from = Carbon::createFromFormat('Y-m-d',$request->get('information_tool_from'))->startOfDay();
+           $to =Carbon::createFromFormat('Y-m-d',$request->get('information_tool_to'))->endOfDay();
+           $query->whereBetween('to',[$from,$to]);
            $checker=1;
        }
 
@@ -165,10 +165,10 @@ class ToolService
             $checker=1;
         }
 
-        if(!empty($request->get('cyber_tool_from')) || !empty($request->get('cyber_tool_to')) ){
-            $from =(!empty($request->get('cyber_tool_from'))) ? Carbon::createFromFormat('Y-m-d',$request->get('cyber_tool_from'))->startOfDay() : Carbon::createFromFormat('Y-m-d','2023-01-01');
-            $to =(!empty($request->get('cyber_tool_to'))) ? Carbon::createFromFormat('Y-m-d',$request->get('cyber_tool_to'))->endOfDay() : Carbon::now()->endOfDay();
-            $query->whereBetween('from',[$from,$to]);
+        if(!empty($request->get('cyber_tool_from')) && !empty($request->get('cyber_tool_to')) ){
+            $from = Carbon::createFromFormat('Y-m-d',$request->get('cyber_tool_from'))->startOfDay() ;
+            $to = Carbon::createFromFormat('Y-m-d',$request->get('cyber_tool_to'))->endOfDay();
+            $query->whereBetween('to',[$from,$to]);
             $checker=1;
         }
 
