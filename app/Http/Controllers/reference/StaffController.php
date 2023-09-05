@@ -37,9 +37,7 @@ class StaffController extends Controller
 
         }
 
-//        $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
-//
-//        $query->allowedAppends(!empty($request->append) ? explode(',', $request->get('append')) : []);
+        $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
         $query->with('appointment');
         $query->allowedFilters($filter);
         $query->allowedSorts($request->sort);
