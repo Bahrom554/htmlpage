@@ -1,8 +1,13 @@
 <?php
 
 namespace App\UseCases;
+use App\Models\AppointmentOrder;
+use App\Models\Compliance;
+use App\Models\Diploma;
+use App\Models\Files;
 use App\Models\InternetProvider;
 use App\Models\Network;
+use App\Models\ProfessionalDevelopment;
 use App\Models\Provider;
 use App\Models\Staff;
 use Carbon\Carbon;
@@ -12,11 +17,23 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class StaffService
 {
-    private $service;
+    private $fileService;
 
-    public function __construct( FileService $service)
+    private $appointmentOrderService;
+
+    private $diplomaService;
+
+    private $complianceService;
+
+    private $professionalDevelopmentService;
+
+    public function __construct( FileService $fileService, AppointmentOrderService $appointmentOrderService, DiplomaService $diplomaService, ComplianceService $complianceService, ProfessionalDevelopmentService $professionalDevelopmentService)
     {
-        $this->service=$service;
+        $this->fileService=$fileService;
+        $this->appointmentOrderService =$appointmentOrderService;
+        $this->diplomaService = $diplomaService;
+        $this->complianceService =$complianceService;
+        $this->professionalDevelopmentService =$professionalDevelopmentService;
 
     }
 
@@ -76,6 +93,26 @@ class StaffService
     }
     public function remove(Staff $staff)
     {
+        if($file =Files::find($staff->file_id)){
+          $this->fileService->delete($file);
+        }
+        if($item =AppointmentOrder::find($staff->appointment_order_id)){
+            $this->appointmentOrderService->remove($item);
+        }
+
+        if($diploma =Diploma::find($staff->diploma_id)){
+            $this->diplomaService->remove($diploma);
+        }
+        if($item = Compliance::find($staff->compliance_id)){
+            $this->complianceService->remove($item);
+        }
+
+        foreach ($staff->professional_development as $id){
+            if($item = ProfessionalDevelopment::find($id)){
+                $this->professionalDevelopmentService->remove($item);
+            }
+
+        }
         $staff->delete();
         return 'deleted';
     }

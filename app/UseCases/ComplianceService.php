@@ -1,6 +1,8 @@
 <?php
 
 namespace App\UseCases;
+use App\Models\Diploma;
+use App\Models\Files;
 use Exception;
 use DomainException;
 use App\Models\Compliance;
@@ -11,11 +13,11 @@ use Illuminate\Support\Facades\DB;
 
 class ComplianceService
 {
-    private $service;
+    private $fileService;
 
-    public function __construct( FileService $service)
+    public function __construct( FileService $fileService)
     {
-        $this->service=$service;
+        $this->fileService=$fileService;
 
     }
 
@@ -71,11 +73,13 @@ class ComplianceService
         }
 
     }
-    public function remove($id)
+    public function remove(Compliance $compliance)
     {
         try{
-            $compliance =Compliance::findOrFail($id);
-            // $this->service->delete($compliance->file_id);
+
+            if($file = Files::find($compliance->file_id)){
+                $this->fileService->delete($file);
+            }
             $compliance->delete();
             return 'deleted';
         }catch(Exception $e)

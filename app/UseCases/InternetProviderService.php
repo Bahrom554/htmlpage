@@ -1,6 +1,7 @@
 <?php
 
 namespace App\UseCases;
+use App\Models\Files;
 use DomainException;
 use Illuminate\Http\Request;
 use App\UseCases\FileService;
@@ -12,11 +13,11 @@ use Exception;
 class InternetProviderService
 {
 
-    private $service;
+    private $fileService;
 
-    public function __construct( FileService $service)
+    public function __construct( FileService $fileService)
     {
-        $this->service=$service;
+        $this->fileService=$fileService;
 
     }
     public function create(Request $request)
@@ -73,12 +74,14 @@ class InternetProviderService
 
 
     }
-    public function remove($id)
+    public function remove(InternetProvider $internetProvider)
     {
         try{
-            $internet_provider =InternetProvider::findOrFail($id);
-            // $this->service->delete($internet_provider->file_id);
-            $internet_provider->delete();
+
+            if($file = Files::find($internetProvider->file_id)){
+                $this->fileService->delete($file);
+            }
+            $internetProvider->delete();
             return 'deleted';
         }catch(Exception $e)
         {

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\UseCases;
+use App\Models\Files;
 use Exception;
 use DomainException;
 use App\Models\Diploma;
@@ -11,11 +12,11 @@ use Illuminate\Support\Facades\DB;
 
 class DiplomaService
 {
-    private $service;
+    private $fileService;
 
-    public function __construct( FileService $service)
+    public function __construct( FileService $fileService)
     {
-        $this->service=$service;
+        $this->fileService=$fileService;
 
     }
     public function create(Request $request)
@@ -69,11 +70,13 @@ class DiplomaService
         }
 
     }
-    public function remove($id)
+    public function remove(Diploma $diploma)
     {
         try{
-            $diploma = Diploma::findOrFail($id);
-            // $this->service->delete($diploma->file_id);
+
+            if($file = Files::find($diploma->file_id)){
+                $this->fileService->delete($file);
+            }
             $diploma->delete();
             return 'deleted';
         }catch(Exception $e)

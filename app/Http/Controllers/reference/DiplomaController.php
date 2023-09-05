@@ -67,8 +67,8 @@ class DiplomaController extends Controller
         return $this->service->edit($request,$diploma);
     }
 
-    public function destroy($id)
+    public function destroy(Diploma $diploma)
     {
-        return $this->service->remove($id);
+        return $this->service->remove($diploma);
     }
 }

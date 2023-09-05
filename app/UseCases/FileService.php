@@ -130,9 +130,7 @@ class FileService
         return $file;
     }
 
-    public function delete($id){
-
-            $file = Files::findOrFail($id);
+    public function delete(Files $file){
             $file->delete();
             unlink($file->folder.'/'.$file->file);
             return 'deleted';

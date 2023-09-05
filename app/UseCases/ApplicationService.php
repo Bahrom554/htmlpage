@@ -3,8 +3,11 @@
 namespace App\UseCases;
 
 
+use App\Models\Files;
 use App\Models\Importance;
+use App\Models\Network;
 use App\Models\Purpose;
+use App\Models\Tool;
 use Carbon\Carbon;
 use DomainException;
 use App\Models\Reject;
@@ -32,12 +35,15 @@ class ApplicationService
 
     private $staffService;
 
-    public function __construct( CommentService $commentService, NetworkService $networkService, ToolService $toolService, StaffService $staffService)
+    private $fileService;
+
+    public function __construct( CommentService $commentService, NetworkService $networkService, ToolService $toolService, StaffService $staffService, FileService $fileService)
     {
     $this->commentService = $commentService;
     $this->networkService = $networkService;
     $this->toolService = $toolService;
     $this->staffService = $staffService;
+    $this->fileService = $fileService;
     }
     public function dash(Request $request)
     {
@@ -156,6 +162,23 @@ class ApplicationService
 
     public function remove(Application $application)
     {
+        foreach ($application->information_tool as $id){
+            if($tool  =Tool::find($id)){
+                $this->toolService->remove($tool);
+            }
+        }
+        foreach ($application->cybersecurity_tool as $id){
+            if($tool = Tool::find($id)){
+                $this->toolService->remove($tool);
+            }
+        }
+
+        if($network = Network::find($application->network_id)){
+            $this->networkService->remove($network);
+        }
+        if($file = Files::find($application->file_id)){
+            $this->fileService->delete($file);
+        }
 
             $application->delete();
             return 'deleted';
@@ -242,7 +265,6 @@ class ApplicationService
           });
         } //done tested
         $network_ids = $this->networkService->search($request);
-
         if(is_array($network_ids)) $query->whereIn('network_id',$network_ids); //done tested
 
         $staff_ids = $this->staffService->search($request);
@@ -251,7 +273,12 @@ class ApplicationService
 
       $information_tool_ids = $this->toolService->searchInformationTool($request);
         if( is_array($information_tool_ids)) {
+            if(empty($information_tool_ids)){
+                $query->where('id', 0);
+            }
+
             $query->where(function ($q) use ($information_tool_ids){
+
                 foreach ($information_tool_ids as $id){
                     $q->orWhereJsonContains('information_tool',"{$id}");
                 }
@@ -262,9 +289,12 @@ class ApplicationService
       $cyber_security_tool_ids = $this->toolService->searchCybersecurityTool($request);
 
        if(is_array($cyber_security_tool_ids)) {
+           if(empty($information_tool_ids)){
+               $query->where('id', 0);
+           }
            $query->where(function ($q) use ($cyber_security_tool_ids){
                foreach ($cyber_security_tool_ids as $id){
-                   $q->orWhereJsonContains('cyber_security_tool', "{$id}");
+                   $q->orWhereJsonContains('cybersecurity_tool', "{$id}");
                }
 
            });

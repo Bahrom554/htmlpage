@@ -1,6 +1,7 @@
 <?php
 
 namespace App\UseCases;
+use App\Models\Files;
 use Exception;
 use DomainException;
 use Illuminate\Http\Request;
@@ -10,11 +11,11 @@ use Illuminate\Support\Facades\DB;
 
 class ProfessionalDevelopmentService
 {
-    private $service;
+    private $fileService;
 
-    public function __construct( FileService $service)
+    public function __construct( FileService $fileService)
     {
-        $this->service=$service;
+        $this->fileService=$fileService;
 
     }
     public function create(Request $request)
@@ -64,12 +65,14 @@ class ProfessionalDevelopmentService
 
 
     }
-    public function remove($id)
+    public function remove(ProfessionalDevelopment $development)
     {
         try{
-            $professional_development =ProfessionalDevelopment::findOrFail($id);
-            // $this->service->delete($professional_development->file_id);
-            $professional_development->delete();
+
+            if($file = Files::find($development->file_id)){
+                $this->fileService->delete($file);
+            }
+            $development->delete();
             return 'deleted';
         }catch(Exception $e)
         {

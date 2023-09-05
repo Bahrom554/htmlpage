@@ -72,9 +72,9 @@ class NetworkController extends Controller
         return $this->service->edit($request,$network);
     }
 
-    public function destroy($id)
+    public function destroy(Network $network)
     {
-        return $this->service->remove($id);
+        return $this->service->remove($network);
     }
 
 

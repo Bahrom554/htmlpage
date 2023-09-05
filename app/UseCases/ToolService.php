@@ -1,6 +1,7 @@
 <?php
 
 namespace App\UseCases;
+use App\Models\Files;
 use App\Models\Manufacture;
 use App\Models\Network;
 use Carbon\Carbon;
@@ -17,11 +18,11 @@ use Spatie\QueryBuilder\QueryBuilder;
 class ToolService
 {
 
-    private $service;
+    private $fileService;
 
-    public function __construct( FileService $service)
+    public function __construct( FileService $fileService)
     {
-        $this->service=$service;
+        $this->fileService=$fileService;
 
     }
     public function create(Request $request)
@@ -91,11 +92,12 @@ class ToolService
 
 
     }
-    public function remove($id)
+    public function remove(Tool $tool)
     {
         try{
-            $tool  =Tool::findOrFail($id);
-            // $this->service->delete($tool ->file_id);
+            if($file = Files::find($tool->file_id)){
+                $this->fileService->delete($file);
+            }
             $tool ->delete();
             return 'deleted';
         }catch(Exception $e)

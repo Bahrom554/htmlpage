@@ -49,15 +49,15 @@ class FilemanagerController extends Controller
 
         return $this->service->uploads($request->file('files'));
     }
-    
+
     public function show($id){
         $file = Files::findOrFail($id);
         return $file;
     }
 
-    public function delete($id)
+    public function delete(Files $file)
     {
-      return  $this->service->delete($id);
+      return  $this->service->delete($file);
 
     }
 }

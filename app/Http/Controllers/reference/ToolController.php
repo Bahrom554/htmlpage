@@ -15,6 +15,7 @@ class ToolController extends Controller
     public function __construct(ToolService $service)
     {
         $this->service=$service;
+        $this->middleware('role:admin|manager')->only('store', 'update', 'destroy');
     }
 
     public function index(Request $request)
@@ -71,8 +72,8 @@ class ToolController extends Controller
         return $this->service->edit($request,$tool );
     }
 
-    public function destroy($id)
+    public function destroy(Tool $tool)
     {
-        return $this->service->remove($id);
+        return $this->service->remove($tool);
     }
 }

@@ -72,8 +72,8 @@ class InternetProviderController extends Controller
         return $this->service->edit($request,$internet_provider);
     }
 
-    public function destroy($id)
+    public function destroy(InternetProvider $internetProvider)
     {
-        return $this->service->remove($id);
+        return $this->service->remove($internetProvider);
     }
 }

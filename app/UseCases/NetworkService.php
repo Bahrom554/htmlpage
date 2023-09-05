@@ -1,6 +1,7 @@
 <?php
 
 namespace App\UseCases;
+use App\Models\Files;
 use App\Models\InternetProvider;
 use App\Models\Provider;
 use DomainException;
@@ -17,11 +18,13 @@ use Spatie\QueryBuilder\QueryBuilder;
 class NetworkService
 {
 
-    private $service;
+    private $fileService;
+    private $internetProviderService;
 
-    public function __construct( FileService $service)
+    public function __construct( FileService $fileService, InternetProviderService $internetProviderService)
     {
-        $this->service=$service;
+        $this->fileService=$fileService;
+        $this->internetProviderService= $internetProviderService;
 
     }
     public function create(Request $request)
@@ -81,11 +84,20 @@ class NetworkService
 
 
     }
-    public function remove($id)
+    public function remove(Network  $network)
     {
         try{
-            $network =Network::findOrFail($id);
-            // $this->service->delete($network->file_id);
+
+            foreach ($network->internet_providers as $id) {
+                if($item = InternetProvider::find($id)){
+                    $this->internetProviderService->remove($item);
+                }
+
+
+            }
+            if($file = Files::find($network->file_id)){
+                $this->fileService->delete($file);
+            }
             $network->delete();
             return 'deleted';
         }catch(Exception $e)
@@ -102,7 +114,7 @@ class NetworkService
              $query->where('name', $request->get('network_name'));
              $checker=1;
          }
-         if(!empty($request->get('connection')))
+         if($request->get('connection'))
          {
              if(!empty($request->get('internet_provider_name'))){
                  $q = QueryBuilder::for(InternetProvider::class);
@@ -110,6 +122,7 @@ class NetworkService
                       $b->where('name',$request->get('internet_provider_name'));
                   });
                  $internet_providers = $q->get()->pluck('id')->toArray();
+                 if(empty($internet_providers)) $query->where('id',0);
                  $query->where(function ($q) use($internet_providers){
                      foreach ($internet_providers as $provider){
                          $q->orWhereJsonContains('internet_providers',"{$provider}");

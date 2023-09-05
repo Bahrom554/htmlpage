@@ -24,9 +24,8 @@ class SubjectService
         return $subject;
 
     }
-    public function remove($id)
+    public function remove(Subject $subject)
     {
-        $subject = Subject::findOrFail($id);
         $subject->delete();
         return 'deleted';
     }

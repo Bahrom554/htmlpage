@@ -1,6 +1,7 @@
 <?php
 
 namespace App\UseCases;
+use App\Models\Files;
 use DomainException;
 use Illuminate\Http\Request;
 use App\UseCases\FileService;
@@ -12,11 +13,11 @@ use Exception;
 class AppointmentOrderService
 {
 
-    private $service;
+    private $fileService;
 
-    public function __construct( FileService $service)
+    public function __construct( FileService $fileService)
     {
-        $this->service=$service;
+        $this->fileService=$fileService;
 
     }
     public function create(Request $request)
@@ -73,12 +74,15 @@ class AppointmentOrderService
 
 
     }
-    public function remove($id)
+    public function remove(AppointmentOrder $appointmentOrder)
     {
         try{
-            $appointment_order =AppointmentOrder::findOrFail($id);
-            // $this->service->delete($appointment_order->file_id);
-            $appointment_order->delete();
+
+            if($file = Files::find($appointmentOrder->file_id)){
+                $this->fileService->delete($file);
+            }
+
+            $appointmentOrder->delete();
             return 'deleted';
         }catch(Exception $e)
         {

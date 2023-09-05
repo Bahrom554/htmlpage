@@ -68,8 +68,8 @@ class ComplianceController extends Controller
         return $this->service->edit($request,$compliance);
     }
 
-    public function destroy($id)
+    public function destroy(Compliance $compliance)
     {
-        return $this->service->remove($id);
+        return $this->service->remove($compliance);
     }
 }
