@@ -17,7 +17,7 @@ class CreateNetworksTable extends Migration
             $table->string('name');
             $table->boolean('connection');
             $table->unsignedBigInteger('file_id');
-            $table->json('internet_providers');
+            $table->json('internet_providers')->nullable();
             $table->foreign('file_id')->references('id')->on('files');
             $table->id();
             $table->timestamps();

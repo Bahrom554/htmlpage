@@ -248,7 +248,7 @@ class ApplicationService
 
 
       if(!empty($request->get('name'))) $query->where('name', $request->get('name')); //done tested
-
+      if(!empty($request->get('status'))) $query->where('status',$request->get('status'));
       if(!empty($request->get('subject_name'))){
           $query->whereHas('subject', function (Builder $q) use ($request) {
               $q->where('name', $request->get('subject_name'));

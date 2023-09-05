@@ -31,7 +31,7 @@ class NetworkService
     {
         $request->validate([
             'name'=>'required|string',
-           'internet_providers'=>'required|array|exists:internet_providers,id',
+           'internet_providers'=>'nullable|array|exists:internet_providers,id',
            'connection'=>'required|boolean',
            'files'=>'required'
         ]);
@@ -59,7 +59,7 @@ class NetworkService
     {
         $request->validate([
             'name'=>'string',
-           'internet_providers'=>'array|exists:internet_providers,id',
+           'internet_providers'=>'nullable|array|exists:internet_providers,id',
            'connection'=>'boolean',
            'files'=>'nullable'
         ]);
