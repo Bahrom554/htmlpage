@@ -93,9 +93,6 @@ class StaffService
     }
     public function remove(Staff $staff)
     {
-        if($file =Files::find($staff->file_id)){
-          $this->fileService->delete($file);
-        }
         if($item =AppointmentOrder::find($staff->appointment_order_id)){
             $this->appointmentOrderService->remove($item);
         }
@@ -118,7 +115,7 @@ class StaffService
     }
 
 
-    public function search(Request $request){
+    public function search(Request $request, $forController = false){
         $query = QueryBuilder::for(Staff::class);
         $checker =0;
 
@@ -142,6 +139,10 @@ class StaffService
 
        }
 
+       if($forController){
+           $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
+           return $query->paginate(30);
+       }
         $ids = $query->get()->pluck('id')->toArray();
 
         if($checker) return $ids;

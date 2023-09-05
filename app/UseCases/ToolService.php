@@ -42,7 +42,7 @@ class ToolService
         try{
 
             $tool = Tool::make($request->only('name','tool_type_id','manufacture_id','definition','category'));
-            $file = $this->service->uploads($request->file('files'));
+            $file = $this->fileService->uploads($request->file('files'));
             $tool->file_id = $file->id;
             $tool->from = Carbon::createFromFormat('Y-m-d',$request->from)->startOfDay();
             $tool->to = Carbon::createFromFormat('Y-m-d',$request->to)->endOfDay();
@@ -75,7 +75,7 @@ class ToolService
         try{
             $tool ->update($request->only('name','tool_type_id','manufacture_id','definition'));
             if($request->file('files')){
-                $file = $this->service->uploads($request->file('files'));
+                $file = $this->fileService->uploads($request->file('files'));
                 $tool ->file_id = $file->id;
                 $tool->from = Carbon::createFromFormat('Y-m-d',$request->from)->startOfDay();
                 $tool->to = Carbon::createFromFormat('Y-m-d',$request->to)->endOfDay();

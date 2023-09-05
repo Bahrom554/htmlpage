@@ -70,6 +70,7 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::apiResource('compliance','ComplianceController');//done tested
         Route::apiResource('provider','ProviderController');
         Route::apiResource('staff', 'StaffController');
+        Route::get('search-staff','StaffController@search');
         Route::apiResource('purpose','PurposeController');
 
 

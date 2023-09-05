@@ -33,7 +33,7 @@ class ComplianceService
         DB::beginTransaction();
         try{
             $compliance = Compliance::make($request->only( 'from','to', 'definition'));
-            $file = $this->service->uploads($request->file('files'));
+            $file = $this->fileService->uploads($request->file('files'));
             $compliance->file_id = $file->id;
             $compliance->save();
             DB::commit();
@@ -60,7 +60,7 @@ class ComplianceService
             $compliance->from = $request->from;
             $compliance->to = $request->to;
             if($request->file('files')){
-                $file = $this->service->uploads($request->file('files'));
+                $file = $this->fileService->uploads($request->file('files'));
                 $compliance->file_id = $file->id;
             }
             $compliance->save();

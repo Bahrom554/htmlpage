@@ -40,7 +40,7 @@ class NetworkService
         try{
 
             $network = Network::make($request->only('name', 'internet_providers','connection'));
-            $file = $this->service->uploads($request->file('files'));
+            $file = $this->fileService->uploads($request->file('files'));
             $network->file_id = $file->id;
             $network->save();
             DB::commit();
@@ -69,7 +69,7 @@ class NetworkService
            if($request->internet_provider) $network->internet_providers =$request->internet_providers;
            if($request->connection) $network->connection = $request->connection;
             if($request->file('files')){
-                $file = $this->service->uploads($request->file('files'));
+                $file = $this->fileService->uploads($request->file('files'));
                 $network->file_id = $file->id;
             }
             $network->save();

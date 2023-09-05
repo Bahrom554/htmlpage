@@ -28,7 +28,7 @@ class ProfessionalDevelopmentService
         DB::beginTransaction();
         try{
             $professional_development = ProfessionalDevelopment::make($request->only('definition', 'date'));
-                $file = $this->service->uploads($request->file('files'));
+                $file = $this->fileService->uploads($request->file('files'));
                 $professional_development->file_id = $file->id;
             $professional_development->save();
             DB::commit();
@@ -52,7 +52,7 @@ class ProfessionalDevelopmentService
             $professional_development->definition = $request->definition;
             $professional_development->date = $request->date;
             if($request->file('files')){
-                $file = $this->service->uploads($request->file('files'));
+                $file = $this->fileService->uploads($request->file('files'));
                 $professional_development->file_id = $file->id;
             }
             DB::commit();

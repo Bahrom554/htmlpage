@@ -35,7 +35,11 @@ class StaffController extends Controller
             });
 
         }
+
         $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
+
+        $query->allowedAppends(!empty($request->append) ? explode(',', $request->get('append')) : []);
+
         $query->allowedFilters($filter);
         $query->allowedSorts($request->sort);
         $query->orderBy('updated_at', 'desc');
@@ -66,12 +70,9 @@ class StaffController extends Controller
        return $this->service->edit($request, $staff);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Staff  $staff
-     * @return \Illuminate\Http\Response
-     */
+    public function search(Request $request){
+        return $this->service->search($request, true);
+    }
     public function destroy(Staff $staff)
     {
         return $this->service->remove($staff);

@@ -242,6 +242,7 @@ class ApplicationService
     public function search(Request $request){
 
       $query = QueryBuilder::for(Application::class);
+
         $query->allowedAppends(!empty($request->append) ? explode(',', $request->get('append')) : []);
         $query->allowedIncludes(!empty($request->include) ? explode(',', $request->get('include')) : []);
 

@@ -32,7 +32,7 @@ class InternetProviderService
         try{
 
             $internet_provider = InternetProvider::make($request->only('points', 'provider_id'));
-            $file = $this->service->uploads($request->file('files'));
+            $file = $this->fileService->uploads($request->file('files'));
             $internet_provider->file_id = $file->id;
             $internet_provider->save();
             DB::commit();
@@ -59,7 +59,7 @@ class InternetProviderService
            if($request->provider_id) $internet_provider->provider_id =$request->provider_id;
            if($request->points) $internet_provider->points =$request->points;
             if($request->file('files')){
-                $file = $this->service->uploads($request->file('files'));
+                $file = $this->fileService->uploads($request->file('files'));
                 $internet_provider->file_id = $file->id;
             }
             $internet_provider->save();

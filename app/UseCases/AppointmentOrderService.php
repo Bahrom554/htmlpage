@@ -32,7 +32,7 @@ class AppointmentOrderService
         try{
 
             $appointment_order = AppointmentOrder::make($request->only('definition', 'date'));
-            $file = $this->service->uploads($request->file('files'));
+            $file = $this->fileService->uploads($request->file('files'));
             $appointment_order->file_id = $file->id;
             $appointment_order->save();
             DB::commit();
@@ -59,7 +59,7 @@ class AppointmentOrderService
             $appointment_order->definition =$request->definition;
             $appointment_order->date =$request->date;
             if($request->file('files')){
-                $file = $this->service->uploads($request->file('files'));
+                $file = $this->fileService->uploads($request->file('files'));
                 $appointment_order->file_id = $file->id;
             }
             $appointment_order->save();

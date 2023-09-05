@@ -30,7 +30,7 @@ class DiplomaService
         DB::beginTransaction();
         try{
         $diploma = Diploma::make($request->only( 'educational_institution', 'degree','definition'));
-        $file = $this->service->uploads($request->file('files'));
+        $file = $this->fileService->uploads($request->file('files'));
         $diploma->file_id = $file->id;
         $diploma->save();
         DB::commit();
@@ -58,7 +58,7 @@ class DiplomaService
             $diploma->degree = $request->degree;
             $diploma->definition = $diploma->definition;
             if($request->file('files')){
-                $file = $this->service->uploads($request->file('files'));
+                $file = $this->fileService->uploads($request->file('files'));
                 $diploma->file_id = $file->id;
             }
             $diploma->save();
