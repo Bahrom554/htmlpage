@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\reference;
 
 use App\Http\Controllers\Controller;
+use App\Models\Manufacture;
 use App\Models\ToolType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -64,6 +65,8 @@ class ToolTypeController extends Controller
             $tool_type  =ToolType::create($request->only('name','category'));
 
             foreach($request->manufacture as $manufacture){
+                $exist =Manufacture::where('name',$manufacture)->first();
+                if($exist) $tool_type->manufactures()->attach($exist->id);
                 $tool_type ->manufactures()->create(['name'=>$manufacture]);
             }
             DB::commit();

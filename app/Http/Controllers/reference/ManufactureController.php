@@ -62,7 +62,7 @@ class ManufactureController extends Controller
          ]);
          DB::beginTransaction();
          try{
-            $manufacture =Manufacture::create($request->only('name','definition'));
+            $manufacture =Manufacture::firstOrCreate(['name'=>$request->name],['definition'=>$request->definition]);
             $manufacture->tool_types()->attach($request->tool_type_id);
           DB::commit();
          }catch(\Exception $e){
