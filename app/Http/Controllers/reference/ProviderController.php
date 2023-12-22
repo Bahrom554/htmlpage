@@ -74,7 +74,7 @@ class ProviderController extends Controller
 
          ]);
 
-         $provider->update($request->only('name','type','email'));
+         $provider->update($request->only('name','phone','email'));
          return $provider;
     }
 
