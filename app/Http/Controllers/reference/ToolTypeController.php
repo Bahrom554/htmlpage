@@ -80,17 +80,43 @@ class ToolTypeController extends Controller
     }
 
 
-    public function update(Request $request, ToolType $tool_type )
+    public function update(Request $request, ToolType $tool_type)
     {
         $request->validate([
-            'name'=>'required|string',
-            'category'=>'required|integer|between:1,2'
-
+            'name' => 'required|string',
+            'category' => 'required|integer|between:1,2',
+            'manufacture' => 'required|array',
         ]);
 
-        $tool_type ->update($request->only('name','category'));
-        return $tool_type ;
+        // Initialize an empty array to store the manufacture IDs
+        $manufactureIds = [];
+
+        foreach ($request->manufacture as $manufacture) {
+            // Check if the manufacture already exists
+            $existingManufacture = Manufacture::where('name', $manufacture)->first();
+
+            if (!$existingManufacture) {
+                // If it doesn't exist, create a new manufacture
+                $newManufacture = Manufacture::create(['name' => $manufacture]);
+
+                // Add the new manufacture's ID to the array
+                $manufactureIds[] = $newManufacture->id;
+            } else {
+                // If it exists, add its ID to the array
+                $manufactureIds[] = $existingManufacture->id;
+            }
+        }
+
+        // Update the ToolType model with the provided data
+        $tool_type->update($request->only('name', 'category'));
+
+        // Sync the related manufactures using the manufacture IDs
+        $tool_type->manufactures()->sync($manufactureIds);
+
+        // Return the updated tool_type
+        return $tool_type;
     }
+
 
 
     public function destroy(ToolType $tool_type )
