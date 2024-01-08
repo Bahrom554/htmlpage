@@ -42,8 +42,8 @@ class ProfileController extends Controller
         //Changing the password only if is different of null
         if (isset($data['oldPassword']) && !empty($data['oldPassword']) && $data['oldPassword'] !== "" && $data['oldPassword'] !== 'undefined') {
             //checking the old password first
-            $check = Auth::guard('web')->attempt([
-                'username' => $user['username'],
+            $check = Auth::guard('api')->attempt([
+                'email' => $user['email'],
                 'password' => $data['oldPassword']
             ]);
             if ($check && isset($data['newPassword']) && !empty($data['newPassword']) && $data['newPassword'] !== "" && $data['newPassword'] !== 'undefined') {
@@ -53,7 +53,7 @@ class ProfileController extends Controller
                 $request->headers->set('Content-Type', 'application/x-www-form-urlencoded');
                 $client = Client::where('password_client', 1)->first();
                 $request->request->add([
-                    "username" => $user['username'],
+                    "email" => $user['username'],
                     "password" => $data['newPassword'],
                     "client_id" => $client->id,
                     "client_secret" => $client->secret,
