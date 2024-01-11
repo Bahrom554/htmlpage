@@ -8,7 +8,6 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::group(['middleware' => 'role:' . User::ROLE_ADMIN], function () {
         Route::group(['namespace' => 'admin'], function () {
-            Route::get('roles', 'RoleController@index');   //done
             Route::get('roles/{role}', 'RoleController@show'); //done
         });
     });
@@ -16,6 +15,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::group(['middleware' => ['role:' . User::ROLE_ADMIN . '|' . User::ROLE_MANAGER]], function () {
 
         Route::group(['namespace' => 'admin'], function () {
+            Route::get('roles', 'RoleController@index');   //done
             Route::apiResource('users', 'UserController'); //done
             Route::apiResource('comment','CommentController');
             Route::put('users/{user}/change-password', 'UserController@changePassword'); //done
