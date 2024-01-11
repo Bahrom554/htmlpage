@@ -58,12 +58,13 @@ class FilemanagerController extends Controller
 
     public function delete($id)
     {
-        $file = Files::findOrFail($id);
-        if ($file) {
+        try {
+            $file = Files::findOrFail($id);
             return $this->service->delete($file);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Handle the case where the file is not found
+            return "file not found";
         }
-
-        return "file not found";
 
     }
 }
