@@ -21,6 +21,7 @@ class ApplicationEditRequest extends FormRequest
             'threats_to_information_security'=>'string',
             'consequences_of_an_incident'=>'string',
             'provide_cyber_security'=>'string',
+            'mai'=>'string'
            ];
 
     }
