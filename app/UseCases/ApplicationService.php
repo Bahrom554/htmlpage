@@ -130,9 +130,11 @@ class ApplicationService
             'network_id',
             'provide_cyber_security',
             'threats_to_information_security',
-            'consequences_of_an_incident'
+            'consequences_of_an_incident',
+            'mai_task'
         ]));
         $app->user_id = Auth::user()->id;
+        $app->status =5;
         $app->save();
         return $app;
     }
@@ -152,10 +154,14 @@ class ApplicationService
             'network_id',
             'provide_cyber_security',
             'threats_to_information_security',
-            'consequences_of_an_incident'
+            'consequences_of_an_incident',
+            'mai_task'
 
 
-        ])+['status'=>0]);
+        ])
+//            +['status'=>0]
+        );
+
 
             return $application;
     }

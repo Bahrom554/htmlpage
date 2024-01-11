@@ -44,6 +44,7 @@ class Application extends Model
         'threats_to_information_security',
         'consequences_of_an_incident',
         'status',
+        'mai_task'
 
 
     ];

@@ -32,6 +32,7 @@ class ApplicationCreateRequest extends FormRequest
             'threats_to_information_security'=>'required|string',
             'consequences_of_an_incident'=>'required|string',
             'provide_cyber_security'=>'required|string',
+            'mai_task' =>'required|string',
         ];
     }
 }
