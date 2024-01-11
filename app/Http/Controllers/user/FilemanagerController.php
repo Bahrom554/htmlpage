@@ -35,8 +35,8 @@ class FilemanagerController extends Controller
         $query->allowedFilters($filter);
         $query->allowedAppends($request->include);
         $query->allowedSorts($request->sort);
-        $files=$query->paginate($request->per_page);
-        return view('user.images',compact('files'));
+        $files = $query->paginate($request->per_page);
+        return view('user.images', compact('files'));
     }
 
     /**
@@ -50,14 +50,20 @@ class FilemanagerController extends Controller
         return $this->service->uploads($request->file('files'));
     }
 
-    public function show($id){
+    public function show($id)
+    {
         $file = Files::findOrFail($id);
         return $file;
     }
 
-    public function delete(Files $file)
+    public function delete($id)
     {
-      return  $this->service->delete($file);
+        $file = Files::findOrFail($id);
+        if ($file) {
+            return $this->service->delete($file);
+        }
+
+        return "file not found";
 
     }
 }

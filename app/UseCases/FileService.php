@@ -12,6 +12,7 @@ use App\Dto\GeneratedPathFileDTO;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 
 class FileService
 {
@@ -131,8 +132,9 @@ class FileService
     }
 
     public function delete(Files $file){
-            $file->delete();
+
             unlink($file->folder.'/'.$file->file);
+             $file->delete();
             return 'deleted';
 
 
