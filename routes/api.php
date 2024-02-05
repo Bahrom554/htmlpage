@@ -19,8 +19,6 @@ Route::group(['middleware' => 'auth:api'], function () {
             Route::apiResource('users', 'UserController'); //done
             Route::apiResource('comment','CommentController');
             Route::put('users/{user}/change-password', 'UserController@changePassword'); //done
-
-
         });
         Route::group(['namespace' => 'user'], function () {
             Route::get('application/{application}/success', 'ApplicationController@success');
@@ -32,28 +30,18 @@ Route::group(['middleware' => 'auth:api'], function () {
     });
 
     Route::group(['namespace' => 'user'], function () {
-
         Route::get('profile', 'ProfileController@show'); //done
         Route::put('profile', 'ProfileController@update'); //done
         Route::put('profile/change-password', 'ProfileController@changePassword'); //done
-
         Route::get('file', 'FilemanagerController@index'); //done
         Route::delete('file/{id}', 'FilemanagerController@delete'); //done
         Route::get('file/{id}', 'FilemanagerController@show'); //done
         Route::post('file', 'FilemanagerController@uploads'); //done
-
         Route::apiResource('application', 'ApplicationController'); //done
         Route::get('dash', 'ApplicationController@dash'); //done
-
-
-
-        //yangi
         Route::apiResource('internet-provider','InternetProviderController');//done tested
         Route::apiResource('network','NetworkController');//done
         Route::apiResource('tool','ToolController');// done and tested
-
-
-
 
     });
 

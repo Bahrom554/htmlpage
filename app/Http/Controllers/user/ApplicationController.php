@@ -56,16 +56,11 @@ class ApplicationController extends Controller
     }
     public function update(ApplicationEditRequest $request, Application $application)
     {
-        if (!$application->userActions()) {
-            abort(403);
-        }
+
         return $this->service->edit($request, $application);
     }
     public function destroy(Application $application)
     {
-        if (!$application->userActions()) {
-            abort(403);
-        }
         return $this->service->remove($application);
     }
 
@@ -106,7 +101,7 @@ class ApplicationController extends Controller
         }
 
 
-       
+
     }
 
     public function report(Request $request){
