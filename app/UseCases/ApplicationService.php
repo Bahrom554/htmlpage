@@ -55,32 +55,16 @@ class ApplicationService
         ->orderBy('year', 'desc')
         ->get();
         //-------------------------------//
-        $by_status = $this->commonAll($request)
-        ->groupBy('status')
-        ->selectRaw('count(*) as total, status')
+        $by_purpose = $this->commonAll($request)->
+        with('purpose')
+        ->groupBy('purpose.name')
+        ->selectRaw('count(*) as total, purpose.name')
         ->get();
-        // ------------------------------
-        // $by_cert = $this->commonAll($request)
-        // ->whereNotNull('certificates')
-        // ->selectRaw('year(updated_at) year, monthname(updated_at) month, count(*) total')
-        // ->groupBy('year', 'month')
-        // ->orderBy('year', 'desc')
-        // ->get();
-        // --------------------------------//
-        // $by_lic = $this->commonAll($request)
-        // ->whereNotNull('licenses')
-        // ->selectRaw('year(updated_at) year, monthname(updated_at) month, count(*) total')
-        // ->groupBy('year', 'month')
-        // ->orderBy('year', 'desc')
-        // ->get();
-        // --------------------------------//
 
         $responce = [
             "applications" => $all,
             "allInMont"=>$all_by_mont,
-            // "certificates" => $by_cert,
-            // "licenses" => $by_lic,
-            "status"=>$by_status,
+            "purpose"=>$by_purpose,
 
 
         ];
