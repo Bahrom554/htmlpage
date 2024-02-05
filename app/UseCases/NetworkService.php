@@ -92,13 +92,13 @@ class NetworkService
                 if($item = InternetProvider::find($id)){
                     $this->internetProviderService->remove($item);
                 }
-
-
             }
-            if($file = Files::find($network->file_id)){
+            $id =$network->file_id;
+            $network->delete();
+            if($file = Files::find($id)){
                 $this->fileService->delete($file);
             }
-            $network->delete();
+
             return 'deleted';
         }catch(Exception $e)
         {
