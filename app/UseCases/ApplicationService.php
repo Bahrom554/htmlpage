@@ -49,35 +49,36 @@ class ApplicationService
     {
         $all = $this->commonAll($request)->count();
         // ----------------------------//
-        $all_by_mont=$this->commonAll($request)
-        ->selectRaw('year(updated_at) year, monthname(updated_at) month, count(*) total')
-        ->groupBy('year', 'month')
+        $all_by_day=$this->commonAll($request)
+        ->selectRaw('year(updated_at) year, monthname(updated_at) month, day(updated_at) day, count(*) total')
+        ->groupBy('year', 'month','day')
         ->orderBy('year', 'desc')
         ->get();
         //-------------------------------//
-        $by_purpose = $this->commonAll($request)->withCount(['purpose as applications_count' => function ($query) {
-            $query->select(DB::raw('count(*)'));
-        }])
-            ->get(['purpose_id'])
+        $by_purpose = $this->commonAll($request)->select('purpose_id', DB::raw('count(*) as applications_count'))
             ->groupBy('purpose_id')
-            ->map(function ($item) {
-                // Assuming you can access the purpose's name through the first item of each group
-                return [
-                    'purpose' => $item[0]->purpose->name, // This assumes there's a relation 'purpose' in your Application model
-                    'total' => $item->sum('applications_count'), // Summing up all application counts (should be the same for each item in a group)
-                ];
-            })->values()->all();
+            ->get()
+            ->keyBy('purpose_id');
+
+             $purposes = Purpose::all()->map(function ($purpose) use ($by_purpose) {
+             $applicationsCount = $by_purpose->has($purpose->id) ? $by_purpose[$purpose->id]->applications_count : 0;
+
+                 return [
+                     'purpose_name' => $purpose->name,
+                     'applications_count' => $applicationsCount,
+                 ];
+             })->values()->all();
 
 
-        $responce = [
+        $response = [
             "applications" => $all,
-            "allInMont"=>$all_by_mont,
-            "purpose"=>$by_purpose,
+            "allInDay"=>$all_by_day,
+            "purpose"=>$purposes,
 
 
         ];
 
-        return response($responce);
+        return response($response);
 
 
     }
