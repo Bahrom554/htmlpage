@@ -78,8 +78,7 @@ class ApplicationService
             ->groupBy('purpose_id')
             ->get()
             ->keyBy('purpose_id');
-
-             $purposes = Purpose::all()->map(function ($purpose) use ($by_purpose) {
+        $purposes = Purpose::all()->map(function ($purpose) use ($by_purpose) {
              $applicationsCount = $by_purpose->has($purpose->id) ? $by_purpose[$purpose->id]->applications_count : 0;
 
                  return [
@@ -93,7 +92,7 @@ class ApplicationService
             ->get()
             ->keyBy('importance_id');
 
-        $purposes = Importance::all()->map(function ($importance) use ($by_importance) {
+            $importance = Importance::all()->map(function ($importance) use ($by_importance) {
             $applicationsCount = $by_importance->has($importance->id) ? $by_importance[$importance->id]->applications_count : 0;
 
             return [
@@ -106,7 +105,7 @@ class ApplicationService
             "applications" => $all,
             "allInDay"=>$all_by_day,
             "purpose"=>$purposes,
-            "importance"=>$by_importance
+            "importance"=>$importance
 
 
         ];
