@@ -55,11 +55,19 @@ class ApplicationService
         ->orderBy('year', 'desc')
         ->get();
         //-------------------------------//
-        $by_purpose = $this->commonAll($request)->
-        with('purpose')
-        ->groupBy('purpose.name')
-        ->selectRaw('count(*) as total, purpose.name')
-        ->get();
+        $by_purpose = $this->commonAll($request)->withCount(['purpose as applications_count' => function ($query) {
+            $query->select(DB::raw('count(*)'));
+        }])
+            ->get(['purpose_id'])
+            ->groupBy('purpose_id')
+            ->map(function ($item) {
+                // Assuming you can access the purpose's name through the first item of each group
+                return [
+                    'purpose' => $item[0]->purpose->name, // This assumes there's a relation 'purpose' in your Application model
+                    'total' => $item->sum('applications_count'), // Summing up all application counts (should be the same for each item in a group)
+                ];
+            })->values()->all();
+
 
         $responce = [
             "applications" => $all,
