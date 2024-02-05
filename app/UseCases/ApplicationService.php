@@ -50,10 +50,29 @@ class ApplicationService
         $all = $this->commonAll($request)->count();
         // ----------------------------//
         $all_by_day=$this->commonAll($request)
-        ->selectRaw('year(updated_at) year, monthname(updated_at) month, day(updated_at) day, count(*) total')
-        ->groupBy('year', 'month','day')
-        ->orderBy('year', 'desc')
-        ->get();
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as applications_count'))
+            ->groupBy(DB::raw('DATE(created_at)'))
+            ->get();
+        if ($request->filled('from', 'to')) {
+            $from = Carbon::createFromFormat('Y-m-d',$request->from)->startOfDay();
+            $to = Carbon::createFromFormat('Y-m-d',$request->to)->endOfDay();
+            $period = CarbonPeriod::create($from, $to);
+            $allDatesInRange = [];
+            foreach ($period as $date) {
+                $formattedDate = $date->format('Y-m-d');
+                $allDatesInRange[$formattedDate] = [
+                    'date' => $formattedDate,
+                    'applications_count' => 0, // Default to 0 applications
+                ];
+            }
+
+            // Merge and overwrite the default 0 counts with actual counts where available
+            foreach ($all_by_day as $applicationDate) {
+                $allDatesInRange[$applicationDate->date]['applications_count'] = $applicationDate->applications_count;
+            }
+
+            $all_by_day = array_values($allDatesInRange);
+        }
         //-------------------------------//
         $by_purpose = $this->commonAll($request)->select('purpose_id', DB::raw('count(*) as applications_count'))
             ->groupBy('purpose_id')
@@ -69,11 +88,25 @@ class ApplicationService
                  ];
              })->values()->all();
 
+        $by_importance = $this->commonAll($request)->select('importance_id', DB::raw('count(*) as applications_count'))
+            ->groupBy('importance_id')
+            ->get()
+            ->keyBy('importance_id');
+
+        $purposes = Importance::all()->map(function ($importance) use ($by_importance) {
+            $applicationsCount = $by_importance->has($importance->id) ? $by_importance[$importance->id]->applications_count : 0;
+
+            return [
+                'importance_name' => $importance->name,
+                'applications_count' => $applicationsCount,
+            ];
+        })->values()->all();
 
         $response = [
             "applications" => $all,
             "allInDay"=>$all_by_day,
             "purpose"=>$purposes,
+            "importance"=>$by_importance
 
 
         ];
